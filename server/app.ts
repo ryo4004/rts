@@ -1,13 +1,14 @@
 import express from 'express'
-import NeDB from "nedb"
+import NeDB from 'nedb'
+import path from 'path'
+import { createServer } from 'https'
+import { Server } from 'socket.io'
+import * as lib from './lib'
 
 const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-
-// ライブラリの読み込み
-const lib = require('./server/lib')
 
 const client = './client/build'
 app.use('/', express.static(client))
@@ -18,71 +19,69 @@ app.use('/:id', express.static(client))
 const statusDB = new NeDB({
   filename: path.join(__dirname, 'server/database/status.db'),
   autoload: true,
-  timestampData: true
+  timestampData: true,
 })
 
-statusDB.remove({}, {multi: true}, (err, numRemoved) => {
+statusDB.remove({}, { multi: true }, (err, numRemoved) => {
   console.log('[' + lib.showTime() + '] statusDB refresh: ' + numRemoved)
 })
+
+type Status = {
+  status: string
+  socketid: string
+  id: string
+  disable: boolean
+}
 
 // api設定
 app.post('/api/presenter', (req, res) => {
   const id = req.body.id
   console.log('[' + lib.showTime() + '] api/presenter: ' + id)
-  statusDB.find({type: 'presenter'}, (err, doc) => {
-    res.json({status: true, doc})
+  statusDB.find({ type: 'presenter' }, (err: unknown, doc: Array<Status>) => {
+    res.json({ status: true, doc })
   })
 })
 
 app.post('/api/recorder', (req, res) => {
-  // console.log(req.body)
   const id = req.body.id
   console.log('[' + lib.showTime() + '] api/recorder: ' + id)
-  statusDB.find({type: 'recorder'}, (err, doc) => {
-    if (err || !doc || doc.length === 0) return res.json({status: true, recorder: false})
-    res.json({status: true, recorder: true})
+  statusDB.find({ type: 'recorder' }, (err: unknown, doc: Array<Status>) => {
+    if (err || !doc || doc.length === 0) return res.json({ status: true, recorder: false })
+    res.json({ status: true, recorder: true })
   })
 })
 
 // WebSocketサーバを使用
-const io = require('socket.io')(server)
+const server = createServer(app)
+const io = new Server(server)
 
-// function getSocketID (id, callback) {
-//   statusDB.findOne({ id }, (err, status) => {
-//     if (err) return callback('[getSocketID] database error: findOneエラー', null)
-//     if (!status) return callback('[getSocketID] ' + id + ' not found', null)
-//     return callback(null, status.socketid)
-//   })
-// }
-
-const getSocketID = (id) => {
+const getSocketID = (id: string): Promise<any> => {
   return new Promise((resolve, reject) => {
     statusDB.findOne({ id }, (err, status) => {
-      if (err) return resolve(null, 'id error')
-      if (!status) return resolve(null, 'id error')
-      return resolve(status.socketid, null)
+      if (err) return resolve([null, 'id error'])
+      if (!status) return resolve([null, 'id error'])
+      return resolve([status.socketid, null])
     })
   })
 }
 
-const getSocketIDWithCheck = (id) => {
+const getSocketIDWithCheck = (id: string): Promise<any> => {
   return new Promise((resolve, reject) => {
     statusDB.findOne({ id }, (err, status) => {
-      if (err) return resolve(null, 'id error')
-      if (!status) return resolve(null, 'id error')
-      if (status.disable === true) return resolve(null, 'id error')
-      return resolve(status.socketid, null)
+      if (err) return resolve([null, 'id error'])
+      if (!status) return resolve([null, 'id error'])
+      if (status.disable === true) return resolve([null, 'id error'])
+      return resolve([status.socketid, null])
     })
   })
 }
 
-function disableSocket (id) {
+function disableSocket(id: string) {
   statusDB.findOne({ id }, (err, status) => {
     // console.log(status)
     if (!status) return
     status.disable = true
-    statusDB.update({ id }, status, {}, (err, n) => {
-    })
+    statusDB.update({ id }, status, {}, (err, n) => {})
   })
 }
 
@@ -90,9 +89,8 @@ function disableSocket (id) {
 io.on('connection', (socket) => {
   // URL用ID作成
   const id = lib.shuffle(lib.randomString())
-  // console.log('(socket)[' + lib.showTime() + '] connection: ', socket.client.id, 'id: ', id)
   const reg = { status: 'connection', socketid: socket.client.id, id, disable: false }
-  statusDB.insert(reg, (err, newdoc) => {
+  statusDB.insert(reg, (err) => {
     if (err) return console.log('database error')
     // id を通知
     io.to(socket.client.id).emit('connection_complete', { id })
@@ -100,29 +98,17 @@ io.on('connection', (socket) => {
   })
 
   // First request from Receiver to Sender
-  // socket.on('request_to_sender', (obj) => {
-  //   console.log('(socket)[' + lib.showTime() + '] request_to_sender: ', obj)
-  //   getSocketID(obj.from, (err, fromSocket) => {
-  //     console.log('from: ', fromSocket)
-  //     getSocketID(obj.to, (err, toSocket) => {
-  //       console.log('to: ', toSocket)
-  //       io.to(toSocket).emit('request_to_sender', obj)
-  //     })
-  //   })
-  // })
-
-  // First request from Receiver to Sender
   socket.on('request_to_sender', async (obj) => {
     console.log('(socket)[' + lib.showTime() + '] request_to_sender')
     // const fromSocket = await getSocketID(obj.from)
-    const toSocket = await getSocketIDWithCheck(obj.to)
+    const [toSocket, toSocketError] = await getSocketIDWithCheck(obj.to)
     disableSocket(obj.to)
     // console.log('from: ', fromSocket)
     console.log('to: ', toSocket)
     if (toSocket) {
       io.to(toSocket).emit('request_to_sender', obj)
     } else {
-      const fromSocket = await getSocketID(obj.from)
+      const [fromSocket, fromSocketError] = await getSocketID(obj.from)
       io.to(fromSocket).emit('request_to_sender_error', { error: 'not_found' })
     }
   })
@@ -130,96 +116,37 @@ io.on('connection', (socket) => {
   // Reciever send offer SDP
   socket.on('send_offer_sdp', async (obj) => {
     console.log('(socket)[' + lib.showTime() + '] send_offer_sdp')
-    const toSocket = await getSocketID(obj.to)
+    const [toSocket, toSocketError] = await getSocketID(obj.to)
     io.to(toSocket).emit('send_offer_sdp', obj)
   })
 
   // Sender send answer SDP
   socket.on('send_answer_sdp', async (obj) => {
     console.log('(socket)[' + lib.showTime() + '] send_answer_sdp')
-    const toSocket = await getSocketID(obj.to)
+    const [toSocket, toSocketError] = await getSocketID(obj.to)
     io.to(toSocket).emit('send_answer_sdp', obj)
   })
 
   // お互いに交換
   socket.on('send_found_candidate', async (obj) => {
-    const toSocket = await getSocketID(obj.to)
-    console.log('(socket)[' + lib.showTime() + '] find: from ' + obj.selfType + ' to ' +  obj.to)
+    const [toSocket, toSocketError] = await getSocketID(obj.to)
+    console.log('(socket)[' + lib.showTime() + '] find: from ' + obj.selfType + ' to ' + obj.to)
     // console.log(JSON.stringify(obj.candidate, null, 2))
     io.to(toSocket).emit('send_found_candidate', obj)
   })
 
   // 接続解除
   socket.on('disconnecting', (reason) => {
-    statusDB.findOne({socketid: socket.client.id}, (err, status) => {
+    statusDB.findOne({ socketid: socket.client.id }, (err, status) => {
       if (err) return console.log('database error: findOneエラー')
       if (!status) return console.log(socket.client.id + ' not found')
-      statusDB.remove({socketid: socket.client.id}, {multi: false}, (err,numRemoved) => {
+      statusDB.remove({ socketid: socket.client.id }, { multi: false }, (err, numRemoved) => {
         if (err || !numRemoved) return console.log('database error: removeエラー')
         console.log('(socket)[' + lib.showTime() + '] disconnect complete: ' + socket.client.id, reason)
       })
     })
   })
-
-  // socket.on('recorder_standby', (data) => {
-  //   console.log('(socket)[' + lib.showTime() + '] recorder_standby: ', data)
-  //   const reg = {type: 'recorder', status: data.status, id: data.recorderid}
-  //   statusDB.insert(reg, (err, newdoc) => {
-  //     if (err) return console.log('recorder standbyエラー')
-  //     console.log('recorder standby...')
-  //     // console.log(newdoc)
-  //     io.emit('recorder_standby', data)
-  //   })
-  // })
-
-  // socket.on('cast_start', (data) => {
-  //   console.log('(socket)[' + lib.showTime() + '] cast_start: ', data)
-  //   const reg = {type: 'presenter', status: data.status, id: data.presenterid}
-  //   statusDB.insert(reg, (err, newdoc) => {
-  //     if (err) return console.log('cast startエラー')
-  //     console.log('cast start...')
-  //     io.emit('cast_start', data)
-  //   })
-  // })
-
-  // socket.on('cast_end', (data) => {
-  //   console.log('(socket)[' + lib.showTime() + '] cast_end: ', data)
-  //   const reg = {type: 'presenter', status: data.status, id: data.presenterid}
-  //   statusDB.update({id: data.presenterid}, reg, {}, (err, newdoc) => {
-  //     if (err) return console.log('cast endエラー')
-  //     console.log('cast end')
-  //     io.emit('cast_end', data)
-  //   })
-  // })
-
-  // SDP交換
-  // Receiver から Presenter へ
-  // socket.on('offer', (data) => {
-  //   const to = data.to
-  //   console.log('(socket)[' + lib.showTime() + '] send offer to: ', to)
-  //   io.to(to).emit('offer', data)
-  // })
-  // // Presenter から Receiver へ
-  // socket.on('answer', (data) => {
-  //   const to = data.to
-  //   console.log('(socket)[' + lib.showTime() + '] send answer to: ', to)
-  //   io.to(to).emit('answer', data)
-  // })
-
-
 })
-
-// app.use('/reg', express.static(client))
-// app.use('/score', express.static(client))
-// app.use('/score/add', express.static(client))
-// app.use('/score/edit', express.static(client))
-// app.use('/score/edit/:id', express.static(client))
-// app.use('/score/detail/:id', express.static(client))
-// app.use('/score/box', express.static(client))
-// app.use('/score/csv', express.static(client))
-// app.use('/score/setting', express.static(client))
-// app.use('/score/setting/:path', express.static(client))
-
 
 const PORT_NUMBER = 3003
 app.listen(PORT_NUMBER)
