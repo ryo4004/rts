@@ -64,7 +64,7 @@ class Guest extends Component {
 
   renderTutorial() {
     const selfID = this.props.selfID ? this.props.selfID : false
-    const url = selfID ? 'https://' + location.host + '/' + selfID : 'generating...'
+    const url = selfID ? 'https://' + window.location.host + '/' + selfID : 'generating...'
     const qrCode = selfID ? (
       <img className="qr-code" src={'https://chart.apis.google.com/chart?cht=qr&chs=150x150&chl=' + url} />
     ) : (

@@ -86,13 +86,13 @@ function updateReceiveFileList(id, property, value, dispatch, getState) {
   dispatch(setReceiveFileList(receiveFileList))
 }
 
-function updateReceiveFileInfo(property, value, dispatch, getState) {
-  // JSON.parse(JSON.stringify())は使わない
-  const receiveFileList = {}
-  Object.assign(receiveFileList, getState().sender.receiveFileList)
-  receiveFileList[id][property] = value
-  dispatch(setReceiveFileList(receiveFileList))
-}
+// function updateReceiveFileInfo(property, value, dispatch, getState) {
+//   // JSON.parse(JSON.stringify())は使わない
+//   const receiveFileList = {}
+//   Object.assign(receiveFileList, getState().sender.receiveFileList)
+//   receiveFileList[id][property] = value
+//   dispatch(setReceiveFileList(receiveFileList))
+// }
 
 function resetReceiveFileStorage(id, dispatch, getState) {
   const receiveFileStorage = {}
