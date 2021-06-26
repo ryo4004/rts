@@ -46,10 +46,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 class FileController extends Component {
-  constructor(props) {
-    super(props)
-  }
-
   // componentDidMount () {
   //   this.props.senderConnect()
   // }
@@ -75,7 +71,7 @@ class FileController extends Component {
   renderSendButton() {
     let button = false
     // ひとつでも送信処理未完了のものがあれば有効
-    Object.keys(this.props.sendFileList).map((id, i) => {
+    Object.keys(this.props.sendFileList).forEach((id, i) => {
       if (this.props.sendFileList[id].send === false) {
         button = true
       }
@@ -234,7 +230,7 @@ class FileController extends Component {
 
       return (
         <li key={'filelist-' + i} className="send-filelist">
-          <div className={'send-status' + ' ' + statusClass}>
+          <div className={'send-status ' + statusClass}>
             <span onClick={() => this.deleteConfirm(each.id)}>
               {status}
               <span className="delete">
@@ -374,7 +370,7 @@ class FileController extends Component {
 
       return (
         <li key={'filelist-' + i} className="receive-filelist">
-          <div className={'receive-status' + ' ' + statusClass}>{status}</div>
+          <div className={'receive-status ' + statusClass}>{status}</div>
           <div className="receive-info">
             <div className="file-icon">
               {icon}

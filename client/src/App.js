@@ -4,7 +4,7 @@ import { applyMiddleware, compose, createStore } from 'redux'
 import { Provider } from 'react-redux'
 import { createBrowserHistory } from 'history'
 import createRootReducer from './Store/Store'
-import logger from 'redux-logger'
+// import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 
 import Main from './Component/Main/Main'

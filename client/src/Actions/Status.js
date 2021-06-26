@@ -1,4 +1,3 @@
-import { replace } from 'connected-react-router'
 import { divisionWidth } from '../Library/Library'
 // import { connectSocket } from './Socket'
 
@@ -31,10 +30,8 @@ export const prepare = () => {
   return async (dispatch) => {
     dispatch(loading(true))
     dispatch(setAvailable(false))
-    let fileAPI = false
     if (window.File && window.FileReader && window.FileList && window.Blob) {
       dispatch(setFileAPI(true))
-      fileAPI = true
     } else {
       dispatch(setFileAPI(false))
     }

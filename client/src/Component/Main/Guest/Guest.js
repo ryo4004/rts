@@ -47,10 +47,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 class Guest extends Component {
-  constructor(props) {
-    super(props)
-  }
-
   componentDidMount() {
     this.props.prepare()
     const { params } = this.props.match
@@ -63,13 +59,6 @@ class Guest extends Component {
   }
 
   renderTutorial() {
-    const selfID = this.props.selfID ? this.props.selfID : false
-    const url = selfID ? 'https://' + window.location.host + '/' + selfID : 'generating...'
-    const qrCode = selfID ? (
-      <img className="qr-code" src={'https://chart.apis.google.com/chart?cht=qr&chs=150x150&chl=' + url} />
-    ) : (
-      false
-    )
     return (
       <div className="tutorial">
         <h3>使い方</h3>

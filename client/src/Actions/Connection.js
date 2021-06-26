@@ -1,7 +1,5 @@
 import socketio from 'socket.io-client'
 
-import { randomString, stringToBuffer, bufferToString } from '../Library/Library'
-
 import { senderReceiveData, dataChannelOnOpen } from './Sender'
 
 import { receiverReceiveData, receiverError } from './Receiver'

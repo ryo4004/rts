@@ -54,10 +54,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 class Host extends Component {
-  constructor(props) {
-    super(props)
-  }
-
   componentDidMount() {
     this.props.senderConnect()
   }
@@ -70,7 +66,11 @@ class Host extends Component {
     const selfID = this.props.selfID ? this.props.selfID : false
     const url = selfID ? 'https://' + window.location.host + '/' + selfID : 'generating...'
     const qrCode = selfID ? (
-      <img className="qr-code" src={'https://chart.apis.google.com/chart?cht=qr&chs=150x150&chl=' + url} />
+      <img
+        className="qr-code"
+        src={'https://chart.apis.google.com/chart?cht=qr&chs=150x150&chl=' + url}
+        alt="qr-code"
+      />
     ) : (
       false
     )

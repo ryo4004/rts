@@ -1,5 +1,3 @@
-import socketio from 'socket.io-client'
-
 import { bufferToString } from '../Library/Library'
 
 import { sendDataChannel } from './Connection'
@@ -11,7 +9,6 @@ const prefix = 'RECEIVER_'
 let idLength = 16
 // 終了フラグサイズ
 let flagLength = 1
-let packetSize = 1024 * 16 - flagLength - idLength
 
 // // // IndexedDB
 // let db = null
@@ -59,11 +56,6 @@ let packetSize = 1024 * 16 - flagLength - idLength
 //     console.log('transaction complete');
 //   }
 // }
-
-const loading = (loading) => ({
-  type: prefix + 'LOADING',
-  payload: { loading },
-})
 
 export const receiverError = (errorTextClient, errorTextServer) => ({
   type: prefix + 'SET_RECEIVE_ERROR',

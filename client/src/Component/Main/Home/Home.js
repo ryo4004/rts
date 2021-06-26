@@ -64,7 +64,7 @@ class Home extends Component {
                   WebRTC はユーザー(ブラウザ)の間にP2P接続を確立し直接データのやりとりを行う技術です。
                 </p>
                 <p className="webrtc">
-                  <a href="https://webrtc.org/" target="_blank" className="webrtc">
+                  <a href="https://webrtc.org/" target="_blank" className="webrtc" rel="noreferrer">
                     WebRTCについて
                   </a>
                 </p>
@@ -136,7 +136,7 @@ class Home extends Component {
             <h3>その他</h3>
             <p>
               詳しくは
-              <a href="https://blog.zatsuzen.com/blog/rts/" target="_blank">
+              <a href="https://blog.zatsuzen.com/blog/rts/" target="_blank" rel="noreferrer">
                 こちら
               </a>
               (まだ書いてない笑)
@@ -161,10 +161,10 @@ class Home extends Component {
             </h2>
           </div>
           <div className="author">
-            <img src={Profile} />
+            <img src={Profile} alt="profile" />
             <p>
               akanewz
-              <a href="https://twitter.com/akanewz" target="_blank">
+              <a href="https://twitter.com/akanewz" target="_blank" rel="noreferrer">
                 <i className="fab fa-twitter"></i>
               </a>
             </p>

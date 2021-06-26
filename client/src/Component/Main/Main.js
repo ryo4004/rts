@@ -15,7 +15,6 @@ import './Main.css'
 function mapStateToProps(state) {
   return {
     mobile: state.status.mobile,
-    location: state.router.location,
   }
 }
 
@@ -61,7 +60,7 @@ class Main extends Component {
   }
 
   render() {
-    const { mobile, location } = this.props
+    const { mobile } = this.props
     const mobileMode = mobile ? ' mobile' : ' pc'
     // console.log('location',location)
     // if (loading) return <div className='full-loading'><div className="loading"><div className="loading1"></div><div className="loading2"></div><div className="loading3"></div></div></div>

@@ -1,6 +1,6 @@
 // import socketio from 'socket.io-client'
 
-import { randomString, stringToBuffer, bufferToString } from '../Library/Library'
+import { randomString, stringToBuffer } from '../Library/Library'
 
 import { sendDataChannel, dataChannelBufferedAmount } from './Connection'
 
@@ -13,11 +13,6 @@ let idLength = 16
 let flagLength = 1
 // 1つのpacketは16KB以下にする
 let packetSize = 1024 * 16 - flagLength - idLength
-
-const loading = (loading) => ({
-  type: prefix + 'LOADING',
-  payload: { loading },
-})
 
 function updateSendFileList(id, property, value, dispatch, getState) {
   // JSON.parse(JSON.stringify())は使わない
