@@ -118,3 +118,5 @@ export function stringToBuffer(str) {
 export function bufferToString(buffer) {
   return String.fromCharCode.apply('', new Uint8Array(buffer))
 }
+
+export const noop = () => void 0
