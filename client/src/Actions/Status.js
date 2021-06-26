@@ -6,7 +6,7 @@ const prefix = 'STATUS_'
 
 const loading = (loading) => ({
   type: prefix + 'LOADING',
-  payload: { loading }
+  payload: { loading },
 })
 
 export const windowWidthChange = () => {
@@ -23,8 +23,8 @@ export const setWidth = (width, pc, mobile) => ({
   payload: {
     width,
     pc,
-    mobile
-  }
+    mobile,
+  },
 })
 
 export const prepare = () => {
@@ -45,10 +45,10 @@ export const prepare = () => {
 
 const setFileAPI = (fileAPI) => ({
   type: prefix + 'SET_FILE_API',
-  payload: { fileAPI }
+  payload: { fileAPI },
 })
 
 const setAvailable = (available) => ({
   type: prefix + 'SET_AVAILABLE',
-  payload: { available }
+  payload: { available },
 })

@@ -16,32 +16,32 @@ let dataChannel = null
 
 const loading = (loading) => ({
   type: prefix + 'LOADING',
-  payload: { loading }
+  payload: { loading },
 })
 
 const setSocket = (socket) => ({
   type: prefix + 'SET_SOCKET',
-  payload: { socket }
+  payload: { socket },
 })
 
 const setSelfSocketID = (selfSocketID) => ({
   type: prefix + 'SET_SELF_SOCKET_ID',
-  payload: { selfSocketID }
+  payload: { selfSocketID },
 })
 
 const setSenderSocketID = (senderSocketID) => ({
   type: prefix + 'SET_SENDER_SOCKET_ID',
-  payload: { senderSocketID }
+  payload: { senderSocketID },
 })
 
 const setReceiverSocketID = (receiverSocketID) => ({
   type: prefix + 'SET_RECEIVER_SOCKET_ID',
-  payload: { receiverSocketID }
+  payload: { receiverSocketID },
 })
 
 const dataChannelOpenStatus = (dataChannelOpenStatus) => ({
   type: prefix + 'DATACHANNEL_OPEN_STATUS',
-  payload: { dataChannelOpenStatus }
+  payload: { dataChannelOpenStatus },
 })
 
 // Sender Connection Start
@@ -49,7 +49,7 @@ export const senderConnect = () => {
   return async (dispatch, getState) => {
     dispatch(loading(true))
     // Socket接続
-    const socket = await socketio.connect('https://' + location.host + '/', {secure: true})
+    const socket = await socketio.connect('https://' + location.host + '/', { secure: true })
     socket.on('connect', () => {
       dispatch(setSocket(socket))
     })
@@ -66,8 +66,8 @@ export const senderConnect = () => {
     socket.on('send_offer_sdp', async (obj) => {
       // PeerConnection作成
       peerConnection = new RTCPeerConnection({
-        iceServers: [{ urls: 'stun:stun.l.google.com:19302'}],
-        iceTransportPolicy: 'all'
+        iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+        iceTransportPolicy: 'all',
       })
       peerConnection.ondatachannel = (event) => {
         dataChannel = event.channel
@@ -132,7 +132,7 @@ export const senderConnect = () => {
             // console.log('peerConnection disconnected', dataChannel.readyState)
             break
           default:
-            // console.log('peerConnection default', peerConnection.iceConnectionState)
+          // console.log('peerConnection default', peerConnection.iceConnectionState)
         }
       }
       peerConnection.onicegatheringstatechange = (event) => {
@@ -145,7 +145,7 @@ export const senderConnect = () => {
             selfType: 'Sender',
             to: getState().connection.receiverSocketID,
             from: getState().connection.selfSocketID,
-            candidate: event.candidate
+            candidate: event.candidate,
           })
         } else {
           // event.candidateが空の場合は終了
@@ -157,7 +157,7 @@ export const senderConnect = () => {
       socket.emit('send_answer_sdp', {
         to: getState().connection.receiverSocketID,
         type: 'answer',
-        sdp: answerSdp
+        sdp: answerSdp,
       })
     })
     socket.on('send_found_candidate', async (obj) => {
@@ -174,7 +174,7 @@ export const receiverConnect = (senderSocketID) => {
     dispatch(loading(true))
     dispatch(setSenderSocketID(senderSocketID))
     // Socket接続
-    const socket = await socketio.connect('https://' + location.host + '/', {secure: true})
+    const socket = await socketio.connect('https://' + location.host + '/', { secure: true })
     // const socket = socketio.connect('https://rts.zatsuzen.com', {secure: true})
     socket.on('connect', () => {
       dispatch(setSocket(socket))
@@ -186,7 +186,7 @@ export const receiverConnect = (senderSocketID) => {
       // senderにRequestを送る(IDを通知)
       socket.emit('request_to_sender', {
         from: obj.id,
-        to: senderSocketID
+        to: senderSocketID,
       })
       // request_to_senderに対するエラー(相手が見つからない)
       socket.on('request_to_sender_error', (obj) => {
@@ -196,15 +196,12 @@ export const receiverConnect = (senderSocketID) => {
 
       // peerConnectionを作成
       peerConnection = new RTCPeerConnection({
-        iceServers: [{ urls: 'stun:stun.l.google.com:19302'}],
-        iceTransportPolicy: 'all'
+        iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+        iceTransportPolicy: 'all',
       })
-      dataChannel = peerConnection.createDataChannel(
-        'dataChannel',
-        {
-          ordered: true
-        }
-      )
+      dataChannel = peerConnection.createDataChannel('dataChannel', {
+        ordered: true,
+      })
       dataChannel.onopen = () => {
         socket.disconnect()
         dispatch(dataChannelOpenStatus(true))
@@ -264,7 +261,7 @@ export const receiverConnect = (senderSocketID) => {
             // console.log('peerConnection disconnected', dataChannel.readyState)
             break
           default:
-            // console.log('peerConnection default', peerConnection.iceConnectionState)
+          // console.log('peerConnection default', peerConnection.iceConnectionState)
         }
       }
       peerConnection.onicegatheringstatechange = (event) => {
@@ -277,7 +274,7 @@ export const receiverConnect = (senderSocketID) => {
             selfType: 'Receiver',
             to: senderSocketID,
             from: obj.id,
-            candidate: event.candidate
+            candidate: event.candidate,
           })
         } else {
           // event.candidateが空の場合は終了
@@ -304,9 +301,8 @@ export const receiverConnect = (senderSocketID) => {
       socket.emit('send_offer_sdp', {
         to: senderSocketID,
         type: 'offer',
-        sdp: offerSdp
+        sdp: offerSdp,
       })
-
     })
     // 受信
     socket.on('send_answer_sdp', async (obj) => {
@@ -347,7 +343,7 @@ export const sendDataChannel = (data) => {
 }
 
 export const receiveDataChannel = (event, dispatch, getState) => {
-  if (typeof(event.data) === 'string') {
+  if (typeof event.data === 'string') {
     if (JSON.parse(event.data).to === 'sender') {
       return senderReceiveData(event, dispatch, getState)
     }

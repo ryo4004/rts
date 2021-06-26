@@ -8,7 +8,7 @@ import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 
 import Main from './Component/Main/Main'
-import { routerMiddleware, ConnectedRouter } from 'connected-react-router';
+import { routerMiddleware, ConnectedRouter } from 'connected-react-router'
 
 const history = createBrowserHistory()
 const store = createStore(
@@ -28,12 +28,12 @@ history.listen((location) => {
 })
 
 export default class App extends Component {
-  render () {
+  render() {
     return (
       <Provider store={store}>
         <ConnectedRouter history={history}>
           <Switch>
-            <Route path='/' component={Main} />
+            <Route path="/" component={Main} />
           </Switch>
         </ConnectedRouter>
       </Provider>

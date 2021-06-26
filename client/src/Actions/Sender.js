@@ -16,10 +16,10 @@ let packetSize = 1024 * 16 - flagLength - idLength
 
 const loading = (loading) => ({
   type: prefix + 'LOADING',
-  payload: { loading }
+  payload: { loading },
 })
 
-function updateSendFileList (id, property, value, dispatch, getState) {
+function updateSendFileList(id, property, value, dispatch, getState) {
   // JSON.parse(JSON.stringify())は使わない
   const sendFileList = {}
   Object.assign(sendFileList, getState().sender.sendFileList)
@@ -37,7 +37,7 @@ export const addFile = (fileList) => {
       let sendFileList = {
         [id]: {
           id: id,
-          timestamp: (new Date()).getTime(),
+          timestamp: new Date().getTime(),
           add: true,
           delete: false,
           err: false,
@@ -76,8 +76,8 @@ export const addFile = (fileList) => {
           webkitRelativePath: fileList[num].webkitRelativePath,
 
           // file object (FileReaderで利用)
-          file: fileList[num]
-        }
+          file: fileList[num],
+        },
       }
       Object.assign(sendFileList, getState().sender.sendFileList)
       dispatch(setSendFileList(sendFileList))
@@ -101,7 +101,7 @@ export const deleteFile = (id) => {
         to: 'receiver',
         delete: {
           id: id,
-        }
+        },
       }
       sendDataChannel(JSON.stringify(deleteFileInfo))
     }
@@ -119,7 +119,7 @@ export const errorFile = (id) => {
         to: 'receiver',
         err: {
           id: id,
-        }
+        },
       }
       sendDataChannel(JSON.stringify(errorFileInfo))
     }
@@ -133,48 +133,50 @@ export const dataChannelOnOpen = (dispatch, getState) => {
   return
 }
 
-function sendFileListOnDataChannel (dispatch, getState) {
+function sendFileListOnDataChannel(dispatch, getState) {
   if (getState().connection.dataChannelOpenStatus) {
     const sendFileList = getState().sender.sendFileList
-    Object.keys(sendFileList).reverse().forEach((num) => {
-      const id = sendFileList[num].id
-      if (!sendFileList[num].preSendInfo) {
-        const sendFileInfo = {
-          to: 'receiver',
-          add: {
-            [id]: Object.assign({}, sendFileList[id])
+    Object.keys(sendFileList)
+      .reverse()
+      .forEach((num) => {
+        const id = sendFileList[num].id
+        if (!sendFileList[num].preSendInfo) {
+          const sendFileInfo = {
+            to: 'receiver',
+            add: {
+              [id]: Object.assign({}, sendFileList[id]),
+            },
           }
+          // Receiverに不要な情報を削除
+          delete sendFileInfo.add[id].load
+          delete sendFileInfo.add[id].preSendInfo
+          delete sendFileInfo.add[id].send
+          delete sendFileInfo.add[id].sendPacketCount
+          delete sendFileInfo.add[id].idBuffer
+          delete sendFileInfo.add[id].file
+          sendFileInfo.add[id].receive = false
+          sendFileInfo.add[id].preReceiveInfo = false
+          sendFileInfo.add[id].receivePacketCount = 0
+          // console.log('preSendInfo')
+          sendDataChannel(JSON.stringify(sendFileInfo))
+          updateSendFileList(id, 'preSendInfo', true, dispatch, getState)
         }
-        // Receiverに不要な情報を削除
-        delete sendFileInfo.add[id].load
-        delete sendFileInfo.add[id].preSendInfo
-        delete sendFileInfo.add[id].send
-        delete sendFileInfo.add[id].sendPacketCount
-        delete sendFileInfo.add[id].idBuffer
-        delete sendFileInfo.add[id].file
-        sendFileInfo.add[id].receive = false
-        sendFileInfo.add[id].preReceiveInfo = false
-        sendFileInfo.add[id].receivePacketCount = 0
-        // console.log('preSendInfo')
-        sendDataChannel(JSON.stringify(sendFileInfo))
-        updateSendFileList(id, 'preSendInfo', true, dispatch, getState)
-      }
-    })
+      })
   }
 }
 
 const setFileList = (fileList) => ({
   type: prefix + 'SET_FILELIST',
-  payload: { fileList }
+  payload: { fileList },
 })
 
 const setSendFileList = (sendFileList) => ({
   type: prefix + 'SET_SEND_FILE_LIST',
-  payload: { sendFileList }
+  payload: { sendFileList },
 })
 
-export function senderReceiveData (event, dispatch, getState) {
-  if (typeof(event.data) === 'string') {
+export function senderReceiveData(event, dispatch, getState) {
+  if (typeof event.data === 'string') {
     if (JSON.parse(event.data).receiveComplete !== undefined) {
       const receiveComplete = JSON.parse(event.data).receiveComplete
       // 受信完了通知
@@ -207,7 +209,7 @@ export const sendData = () => {
   }
 }
 
-function sendFileData (id, dispatch, getState) {
+function sendFileData(id, dispatch, getState) {
   // console.log('ファイル送信処理開始', id)
 
   // ファイル情報を取得
@@ -277,7 +279,7 @@ function sendFileData (id, dispatch, getState) {
 //         // 送信および状態更新
 //         sendDataChannel(packet)
 //         updateSendFileList(id, 'send', Math.ceil(sendPacketCount / fileInfo.sendTime * 1000.0) / 10.0, dispatch, getState)
-//         updateSendFileList(id, 'sendPacketCount', sendPacketCount+1, dispatch, getState)        
+//         updateSendFileList(id, 'sendPacketCount', sendPacketCount+1, dispatch, getState)
 //         sendPacketCount++
 //         start = end
 //         // console.log('データ送信中')
@@ -290,7 +292,7 @@ function sendFileData (id, dispatch, getState) {
 //   openSend()
 // }
 
-function openSendFile (id, fileInfo, dispatch, getState) {
+function openSendFile(id, fileInfo, dispatch, getState) {
   if (!getState().connection.dataChannelOpenStatus) {
     return console.error('dataChannel not open')
   }
@@ -300,7 +302,9 @@ function openSendFile (id, fileInfo, dispatch, getState) {
   fileReader.onloadstart = (event) => {
     updateSendFileList(id, 'load', 0, dispatch, getState)
   }
-  fileReader.onabort = (event) => { console.log('fileReader onabort', event) }
+  fileReader.onabort = (event) => {
+    console.log('fileReader onabort', event)
+  }
   fileReader.onerror = (event) => {
     console.log('fileReader onerror', event)
     dispatch(errorFile(id))
@@ -310,7 +314,7 @@ function openSendFile (id, fileInfo, dispatch, getState) {
   }
   fileReader.onprogress = (event) => {
     // console.log('load', event.loaded)
-    const percent = Math.ceil(event.loaded / event.total * 1000.0) / 10.0
+    const percent = Math.ceil((event.loaded / event.total) * 1000.0) / 10.0
     updateSendFileList(id, 'load', percent, dispatch, getState)
   }
   fileReader.onload = async (event) => {
@@ -327,7 +331,7 @@ function openSendFile (id, fileInfo, dispatch, getState) {
         size: {
           byteLength: data.byteLength,
           sendTime: Math.ceil(data.byteLength / packetSize),
-          rest: data.byteLength % packetSize
+          rest: data.byteLength % packetSize,
         },
         // file: {
         //   lastModified: fileInfo.lastModified,
@@ -336,7 +340,7 @@ function openSendFile (id, fileInfo, dispatch, getState) {
         //   type: fileInfo.type,
         //   webkitRelativePath: fileInfo.webkitRelativePath
         // }
-      }
+      },
     }
     sendDataChannel(JSON.stringify(startFileInfo))
 
@@ -382,13 +386,13 @@ function openSendFile (id, fileInfo, dispatch, getState) {
     // updateSendFileList(id, 'send', 100, dispatch, getState)
 
     // 送信2
-    function sendPacket () {
+    function sendPacket() {
       if (!(start < data.byteLength)) {
         const endFileInfo = {
           to: 'receiver',
           end: {
             id,
-          }
+          },
         }
         sendDataChannel(JSON.stringify(endFileInfo))
         updateSendFileList(id, 'send', 100, dispatch, getState)
@@ -398,14 +402,20 @@ function openSendFile (id, fileInfo, dispatch, getState) {
         let end = start + packetSize
         let packetData = data.slice(start, end)
         let packet = new Uint8Array(packetData.byteLength + flagLength + idLength)
-        packet[0] = (end >= data.byteLength ? 1 : 0 )
+        packet[0] = end >= data.byteLength ? 1 : 0
         packet.set(fileInfo.idBuffer, flagLength)
         packet.set(new Uint8Array(packetData), flagLength + idLength)
 
         // 送信および状態更新
         sendDataChannel(packet)
-        updateSendFileList(id, 'send', Math.ceil(sendPacketCount / fileInfo.sendTime * 1000.0) / 10.0, dispatch, getState)
-        updateSendFileList(id, 'sendPacketCount', sendPacketCount+1, dispatch, getState)
+        updateSendFileList(
+          id,
+          'send',
+          Math.ceil((sendPacketCount / fileInfo.sendTime) * 1000.0) / 10.0,
+          dispatch,
+          getState
+        )
+        updateSendFileList(id, 'sendPacketCount', sendPacketCount + 1, dispatch, getState)
         sendPacketCount++
         start = end
       }

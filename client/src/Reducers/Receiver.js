@@ -16,33 +16,33 @@ const initialState = {
 
 const prefix = 'RECEIVER_'
 
-export default function receiverReducer (state = initialState, action) {
+export default function receiverReducer(state = initialState, action) {
   switch (action.type) {
     case prefix + 'LOADING':
       return {
         ...state,
-        loading: action.payload.loading
+        loading: action.payload.loading,
       }
     case prefix + 'SET_RECEIVE_FILE_LIST':
       return {
         ...state,
-        receiveFileList: action.payload.receiveFileList
+        receiveFileList: action.payload.receiveFileList,
       }
     case prefix + 'SET_RECEIVE_FILE_STORAGE':
       return {
         ...state,
-        receiveFileStorage: action.payload.receiveFileStorage
+        receiveFileStorage: action.payload.receiveFileStorage,
       }
     case prefix + 'SET_RECEIVE_FILE_URL_LIST':
       return {
         ...state,
-        receiveFileUrlList: action.payload.receiveFileUrlList
+        receiveFileUrlList: action.payload.receiveFileUrlList,
       }
     case prefix + 'SET_RECEIVE_ERROR':
       return {
         ...state,
         errorState: action.payload.errorState,
-        errorText: action.payload.errorText
+        errorText: action.payload.errorText,
       }
     default:
       return state

@@ -15,65 +15,68 @@ import './Main.css'
 function mapStateToProps(state) {
   return {
     mobile: state.status.mobile,
-    location: state.router.location
+    location: state.router.location,
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    windowWidthChange () {
+    windowWidthChange() {
       dispatch(windowWidthChange())
     },
-    addFile (fileList) {
+    addFile(fileList) {
       dispatch(addFile(fileList))
-    }
+    },
   }
 }
 
 class Main extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.contents = React.createRef()
   }
 
-  componentWillMount () {
-  }
+  componentWillMount() {}
 
   // Windowサイズの検出と記録
-  componentDidMount () {
+  componentDidMount() {
     this.props.windowWidthChange()
     window.addEventListener('resize', () => {
       this.props.windowWidthChange()
     })
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     window.removeEventListener('resize', () => {})
   }
 
-  onDragOver (e) {
+  onDragOver(e) {
     e.preventDefault()
   }
 
-  onDrop (e) {
+  onDrop(e) {
     e.preventDefault()
     if (e.dataTransfer.files.length === 0) return false
     this.props.addFile(e.dataTransfer.files)
   }
 
-  render () {
+  render() {
     const { mobile, location } = this.props
     const mobileMode = mobile ? ' mobile' : ' pc'
     // console.log('location',location)
     // if (loading) return <div className='full-loading'><div className="loading"><div className="loading1"></div><div className="loading2"></div><div className="loading3"></div></div></div>
     return (
-      <div className={'contents' + mobileMode} ref={this.contents} onDragOver={(e) => this.onDragOver(e)} onDrop={(e) => this.onDrop(e)}>
-        <div className='drop-frame'>
-        </div>
+      <div
+        className={'contents' + mobileMode}
+        ref={this.contents}
+        onDragOver={(e) => this.onDragOver(e)}
+        onDrop={(e) => this.onDrop(e)}
+      >
+        <div className="drop-frame"></div>
         <Switch>
-          <Route path='/host' component={Host} />
-          <Route path='/:senderSocketID' component={Guest} />
-          <Route path='/' component={Home} />
+          <Route path="/host" component={Host} />
+          <Route path="/:senderSocketID" component={Guest} />
+          <Route path="/" component={Home} />
         </Switch>
       </div>
     )

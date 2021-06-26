@@ -44,7 +44,6 @@ let packetSize = 1024 * 16 - flagLength - idLength
 //   console.log('db open error', event);
 // }
 
-
 // dbRequest.onsuccess = function(event){
 //   var db = event.target.result
 //   var trans = db.transaction(storeName, 'readwrite')
@@ -63,23 +62,23 @@ let packetSize = 1024 * 16 - flagLength - idLength
 
 const loading = (loading) => ({
   type: prefix + 'LOADING',
-  payload: { loading }
+  payload: { loading },
 })
 
 export const receiverError = (errorTextClient, errorTextServer) => ({
   type: prefix + 'SET_RECEIVE_ERROR',
   payload: {
     errorState: true,
-    errorText: errorTextClient + ' ' + errorTextServer
-  }
+    errorText: errorTextClient + ' ' + errorTextServer,
+  },
 })
 
 const setReceiveFileList = (receiveFileList) => ({
   type: prefix + 'SET_RECEIVE_FILE_LIST',
-  payload: { receiveFileList }
+  payload: { receiveFileList },
 })
 
-function updateReceiveFileList (id, property, value, dispatch, getState) {
+function updateReceiveFileList(id, property, value, dispatch, getState) {
   // JSON.parse(JSON.stringify())は使わない
   const receiveFileList = {}
   Object.assign(receiveFileList, getState().receiver.receiveFileList)
@@ -87,7 +86,7 @@ function updateReceiveFileList (id, property, value, dispatch, getState) {
   dispatch(setReceiveFileList(receiveFileList))
 }
 
-function updateReceiveFileInfo (property, value, dispatch, getState) {
+function updateReceiveFileInfo(property, value, dispatch, getState) {
   // JSON.parse(JSON.stringify())は使わない
   const receiveFileList = {}
   Object.assign(receiveFileList, getState().sender.receiveFileList)
@@ -95,14 +94,14 @@ function updateReceiveFileInfo (property, value, dispatch, getState) {
   dispatch(setReceiveFileList(receiveFileList))
 }
 
-function resetReceiveFileStorage (id, dispatch, getState) {
+function resetReceiveFileStorage(id, dispatch, getState) {
   const receiveFileStorage = {}
   Object.assign(receiveFileStorage, getState().receiver.receiveFileStorage)
   receiveFileStorage[id] = { packets: [] }
   dispatch(setReceiveFileStorage(receiveFileStorage))
 }
 
-function updateReceiveFileStorage (id, value, dispatch, getState) {
+function updateReceiveFileStorage(id, value, dispatch, getState) {
   // JSON.parse(JSON.stringify())は使わない
   const receiveFileStorage = {}
   Object.assign(receiveFileStorage, getState().receiver.receiveFileStorage)
@@ -110,8 +109,7 @@ function updateReceiveFileStorage (id, value, dispatch, getState) {
   dispatch(setReceiveFileStorage(receiveFileStorage))
 }
 
-function createReceiveFile (id, dispatch, getState) {
-
+function createReceiveFile(id, dispatch, getState) {
   const receiveFileInfo = getState().receiver.receiveFileList[id]
   const packets = getState().receiver.receiveFileStorage[id].packets
 
@@ -124,8 +122,8 @@ function createReceiveFile (id, dispatch, getState) {
     to: 'sender',
     receiveComplete: {
       id: id,
-      result: receiveResult
-    }
+      result: receiveResult,
+    },
   }
   sendDataChannel(JSON.stringify(receiveComplete))
 
@@ -198,7 +196,7 @@ function createReceiveFile (id, dispatch, getState) {
 
   const file = new File(fileArray, receiveFileInfo.name, {
     type: receiveFileInfo.type,
-    lastModified: receiveFileInfo.lastModified
+    lastModified: receiveFileInfo.lastModified,
   })
 
   const receiveFileUrlList = { [id]: window.URL.createObjectURL(file) }
@@ -211,8 +209,8 @@ function createReceiveFile (id, dispatch, getState) {
 }
 
 // データ受信
-export function receiverReceiveData (event, dispatch, getState) {
-  if (typeof(event.data) === 'string') {
+export function receiverReceiveData(event, dispatch, getState) {
+  if (typeof event.data === 'string') {
     // オブジェクトのプロパティによって処理判定
     if (JSON.parse(event.data).add !== undefined) {
       // 受信ファイル一覧を取得
@@ -269,17 +267,23 @@ export function receiverReceiveData (event, dispatch, getState) {
   const receiveFileInfo = getState().receiver.receiveFileList[id]
   updateReceiveFileStorage(id, receiveData, dispatch, getState)
   updateReceiveFileList(id, 'receivePacketCount', receiveFileInfo.receivePacketCount + 1, dispatch, getState)
-  updateReceiveFileList(id, 'receive', Math.ceil(receiveFileInfo.receivePacketCount / receiveFileInfo.sendTime * 1000.0) / 10.0, dispatch, getState)
+  updateReceiveFileList(
+    id,
+    'receive',
+    Math.ceil((receiveFileInfo.receivePacketCount / receiveFileInfo.sendTime) * 1000.0) / 10.0,
+    dispatch,
+    getState
+  )
   // console.log('データ受信中')
   return
 }
 
 const setReceiveFileUrlList = (receiveFileUrlList) => ({
   type: prefix + 'SET_RECEIVE_FILE_URL_LIST',
-  payload: { receiveFileUrlList }
+  payload: { receiveFileUrlList },
 })
 
 const setReceiveFileStorage = (receiveFileStorage) => ({
   type: prefix + 'SET_RECEIVE_FILE_STORAGE',
-  payload: { receiveFileStorage }
+  payload: { receiveFileStorage },
 })

@@ -15,7 +15,7 @@ export const divisionWidth = 960
 //   return str.split('T')[1].split(':')[0] + ':' + str.split('T')[1].split(':')[1]
 // }
 
-export function fileIcon (name, type) {
+export function fileIcon(name, type) {
   const extension = name.indexOf('.') !== -1 ? name.split('.')[name.split('.').length - 1] : false
   // console.log(extension, name, type)
   if (type === 'text/html') {
@@ -75,7 +75,7 @@ export function fileIcon (name, type) {
   return 'fas fa-file'
 }
 
-export function fileSizeUnit (size) {
+export function fileSizeUnit(size) {
   // 1 KB = 1024 Byte
   const kb = 1024
   const mb = Math.pow(kb, 2)
@@ -84,7 +84,7 @@ export function fileSizeUnit (size) {
   const pb = Math.pow(kb, 5)
 
   const round = (size, unit) => {
-    return Math.round(size / unit * 100.0) / 100.0
+    return Math.round((size / unit) * 100.0) / 100.0
   }
 
   if (size >= pb) {
@@ -101,18 +101,20 @@ export function fileSizeUnit (size) {
   return size + 'バイト'
 }
 
-export function randomString () {
+export function randomString() {
   const character = 'abcdefghijklmnopqrstuvwxyz0123456789'
   let id = ''
-  for (var i=0; i<8; i++) { id += character[Math.floor(Math.random()*character.length)] }
+  for (var i = 0; i < 8; i++) {
+    id += character[Math.floor(Math.random() * character.length)]
+  }
   return uniqid.time() + id
 }
 
 // charCodeAtは65535までの値を返すが、idは英数字のみなので255以内に収まるはず
-export function stringToBuffer (str) {
+export function stringToBuffer(str) {
   return new Uint8Array([].map.call(str, (c) => c.charCodeAt(0)))
 }
 
-export function bufferToString (buffer) {
+export function bufferToString(buffer) {
   return String.fromCharCode.apply('', new Uint8Array(buffer))
 }
