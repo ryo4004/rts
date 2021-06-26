@@ -9,7 +9,7 @@
     "build": "tsc",
     "lint": "eslint ./server --config .eslintrc.json",
     "typecheck": "tsc --noEmit",
-    "prettier": "prettier --write 'server/**/*.{js,jsx,ts,tsx,json,md}'"
+    "prettier": "prettier --write '{client/src,server}/**/*.{js,jsx,ts,tsx,json,md}'"
   },
   "repository": {
     "type": "git",
