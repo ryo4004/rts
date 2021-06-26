@@ -89,12 +89,12 @@ function disableSocket(id: string) {
 io.on('connection', (socket) => {
   // URL用ID作成
   const id = lib.shuffle(lib.randomString())
-  const reg = { status: 'connection', socketid: socket.client.id, id, disable: false }
+  const reg = { status: 'connection', socketid: socket.id, id, disable: false }
   statusDB.insert(reg, (err) => {
     if (err) return console.log('database error')
     // id を通知
-    io.to(socket.client.id).emit('connection_complete', { id })
-    console.log('(socket)[' + lib.showTime() + '] connect complete: ' + socket.client.id, id)
+    io.to(socket.id).emit('connection_complete', { id })
+    console.log('(socket)[' + lib.showTime() + '] connect complete: ' + socket.id, id)
   })
 
   // First request from Receiver to Sender
@@ -137,12 +137,12 @@ io.on('connection', (socket) => {
 
   // 接続解除
   socket.on('disconnecting', (reason) => {
-    statusDB.findOne({ socketid: socket.client.id }, (err, status) => {
+    statusDB.findOne({ socketid: socket.id }, (err, status) => {
       if (err) return console.log('database error: findOneエラー')
-      if (!status) return console.log(socket.client.id + ' not found')
-      statusDB.remove({ socketid: socket.client.id }, { multi: false }, (err, numRemoved) => {
+      if (!status) return console.log(socket.id + ' not found')
+      statusDB.remove({ socketid: socket.id }, { multi: false }, (err, numRemoved) => {
         if (err || !numRemoved) return console.log('database error: removeエラー')
-        console.log('(socket)[' + lib.showTime() + '] disconnect complete: ' + socket.client.id, reason)
+        console.log('(socket)[' + lib.showTime() + '] disconnect complete: ' + socket.id, reason)
       })
     })
   })
