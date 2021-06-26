@@ -78,7 +78,6 @@ const getSocketIDWithCheck = (id: string): Promise<[string, null] | [null, strin
 
 function disableSocket(id: string) {
   statusDB.findOne({ id }, (err, status) => {
-    // console.log(status)
     if (!status) return
     status.disable = true
     statusDB.update({ id }, status, {}, () => {
@@ -102,10 +101,8 @@ io.on('connection', (socket) => {
   // First request from Receiver to Sender
   socket.on('request_to_sender', async (obj) => {
     console.log('(socket)[' + lib.showTime() + '] request_to_sender')
-    // const fromSocket = await getSocketID(obj.from)
     const [toSocket] = await getSocketIDWithCheck(obj.to)
     disableSocket(obj.to)
-    // console.log('from: ', fromSocket)
     console.log('to: ', toSocket)
     if (toSocket) {
       io.to(toSocket).emit('request_to_sender', obj)
@@ -133,7 +130,6 @@ io.on('connection', (socket) => {
   socket.on('send_found_candidate', async (obj) => {
     const [toSocket] = await getSocketID(obj.to)
     console.log('(socket)[' + lib.showTime() + '] find: from ' + obj.selfType + ' to ' + obj.to)
-    // console.log(JSON.stringify(obj.candidate, null, 2))
     toSocket && io.to(toSocket).emit('send_found_candidate', obj)
   })
 
