@@ -1,4 +1,4 @@
-const uniqid = require('uniqid')
+import uniqid from 'uniqid'
 
 export function getHash(pass: string) {
   const salt = '::HXAuymPGKKcThn6n'
