@@ -1,7 +1,8 @@
 import express from 'express'
 import NeDB from 'nedb'
 import path from 'path'
-import { createServer } from 'https'
+import { createServer as createServerHttps } from 'https'
+import { createServer as createServerHttp } from 'http'
 import fs from 'fs'
 import { Server } from 'socket.io'
 import * as lib from './lib'
@@ -10,6 +11,9 @@ const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
+// 本番環境ではhttpsを使わない
+const PRODUCTION = process.env.PRODUCTION
 
 const client = './client/build'
 app.use('/', express.static(client))
@@ -57,7 +61,7 @@ const options = {
   key: fs.readFileSync('./keys/privkey1.pem'),
   cert: fs.readFileSync('./keys/cert1.pem'),
 }
-const server = createServer(options, app)
+const server = PRODUCTION ? createServerHttp(app) : createServerHttps(options, app)
 const io = new Server(server)
 
 const getSocketID = (id: string): Promise<[string, null] | [null, string]> => {
