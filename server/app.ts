@@ -2,6 +2,7 @@ import express from 'express'
 import NeDB from 'nedb'
 import path from 'path'
 import { createServer } from 'https'
+import fs from 'fs'
 import { Server } from 'socket.io'
 import * as lib from './lib'
 
@@ -52,7 +53,11 @@ app.post('/api/recorder', (req, res) => {
 })
 
 // WebSocketサーバを使用
-const server = createServer(app)
+const options = {
+  key: fs.readFileSync('./keys/privkey1.pem'),
+  cert: fs.readFileSync('./keys/cert1.pem'),
+}
+const server = createServer(options, app)
 const io = new Server(server)
 
 const getSocketID = (id: string): Promise<[string, null] | [null, string]> => {
@@ -147,4 +152,4 @@ io.on('connection', (socket) => {
 })
 
 const PORT_NUMBER = 3003
-app.listen(PORT_NUMBER)
+server.listen(PORT_NUMBER)
