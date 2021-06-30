@@ -1,4 +1,4 @@
-import socketio from 'socket.io-client'
+import { io } from 'socket.io-client'
 
 import { senderReceiveData, dataChannelOnOpen } from './Sender'
 
@@ -47,7 +47,7 @@ export const senderConnect = () => {
   return async (dispatch, getState) => {
     dispatch(loading(true))
     // Socket接続
-    const socket = await socketio.connect('https://' + window.location.host + '/', { secure: true })
+    const socket = io('https://' + window.location.host + '/', { secure: true })
     socket.on('connect', () => {
       dispatch(setSocket(socket))
     })
@@ -172,7 +172,7 @@ export const receiverConnect = (senderSocketID) => {
     dispatch(loading(true))
     dispatch(setSenderSocketID(senderSocketID))
     // Socket接続
-    const socket = await socketio.connect('https://' + window.location.host + '/', { secure: true })
+    const socket: Socket = io('https://' + window.location.host + '/', { secure: true })
     // const socket = socketio.connect('https://rts.zatsuzen.com', {secure: true})
     socket.on('connect', () => {
       dispatch(setSocket(socket))
