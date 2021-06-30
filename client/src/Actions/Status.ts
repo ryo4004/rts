@@ -1,15 +1,24 @@
 import { divisionWidth } from '../Library/Library'
 // import { connectSocket } from './Socket'
 
-const prefix = 'STATUS_'
+import type { Dispatch } from 'redux'
 
-const loading = (loading) => ({
-  type: prefix + 'LOADING',
+export const ACTION_TYPE = {
+  loading: 'STATUS_LOADING',
+  setWidth: 'STATUS_WINDOW_WIDTH',
+  setFileAPI: 'STATUS_SET_FILE_API',
+  setAvailable: 'STATUS_SET_AVAILABLE',
+} as const
+
+export type Actions = ReturnType<typeof loading | typeof setWidth | typeof setFileAPI | typeof setAvailable>
+
+const loading = (loading: boolean) => ({
+  type: ACTION_TYPE.loading,
   payload: { loading },
 })
 
 export const windowWidthChange = () => {
-  return (dispatch) => {
+  return (dispatch: Dispatch) => {
     const width = window.innerWidth
     const pc = width > divisionWidth ? true : false
     const mobile = !pc
@@ -17,8 +26,8 @@ export const windowWidthChange = () => {
   }
 }
 
-export const setWidth = (width, pc, mobile) => ({
-  type: prefix + 'WINDOW_WIDTH',
+export const setWidth = (width: number, pc: boolean, mobile: boolean) => ({
+  type: ACTION_TYPE.setWidth,
   payload: {
     width,
     pc,
@@ -27,7 +36,7 @@ export const setWidth = (width, pc, mobile) => ({
 })
 
 export const prepare = () => {
-  return async (dispatch) => {
+  return async (dispatch: Dispatch) => {
     dispatch(loading(true))
     dispatch(setAvailable(false))
     if (window.File && window.FileReader && window.FileList && window.Blob) {
@@ -40,12 +49,12 @@ export const prepare = () => {
   }
 }
 
-const setFileAPI = (fileAPI) => ({
-  type: prefix + 'SET_FILE_API',
+const setFileAPI = (fileAPI: boolean) => ({
+  type: ACTION_TYPE.setFileAPI,
   payload: { fileAPI },
 })
 
-const setAvailable = (available) => ({
-  type: prefix + 'SET_AVAILABLE',
+const setAvailable = (available: boolean) => ({
+  type: ACTION_TYPE.setAvailable,
   payload: { available },
 })
