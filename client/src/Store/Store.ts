@@ -9,7 +9,7 @@ import receiverReducer from '../Reducers/Receiver'
 // import toastReducer from '../Reducers/Toast'
 
 // historyはsrc/App.jsから渡す
-export default function createRootReducer(history) {
+export default function createRootReducer(history: any) {
   return combineReducers({
     status: statusReducer,
     // socket: socketReducer,
