@@ -1,4 +1,23 @@
-const initialState = {
+import { ACTION_TYPE } from '../Actions/Receiver'
+import type { Actions } from '../Actions/Receiver'
+
+type ReceiverState = {
+  loading: boolean
+
+  // 追加されたファイルと状態の管理
+  receiveFileList: object
+  // ファイル一時置き場
+  receiveFileStorage: object
+
+  // ファイルURLリスト
+  receiveFileUrlList: object
+  // receivedFileUrl: undefined,
+
+  errorState: boolean | undefined
+  errorText: any | undefined
+}
+
+const initialState: ReceiverState = {
   loading: false,
 
   // 追加されたファイルと状態の管理
@@ -14,31 +33,24 @@ const initialState = {
   errorText: undefined,
 }
 
-const prefix = 'RECEIVER_'
-
-export default function receiverReducer(state = initialState, action) {
+export default function receiverReducer(state = initialState, action: Actions): ReceiverState {
   switch (action.type) {
-    case prefix + 'LOADING':
-      return {
-        ...state,
-        loading: action.payload.loading,
-      }
-    case prefix + 'SET_RECEIVE_FILE_LIST':
+    case ACTION_TYPE.setReceiveFileList:
       return {
         ...state,
         receiveFileList: action.payload.receiveFileList,
       }
-    case prefix + 'SET_RECEIVE_FILE_STORAGE':
+    case ACTION_TYPE.setReceiveFileStorage:
       return {
         ...state,
         receiveFileStorage: action.payload.receiveFileStorage,
       }
-    case prefix + 'SET_RECEIVE_FILE_URL_LIST':
+    case ACTION_TYPE.setReceiveFileUrlList:
       return {
         ...state,
         receiveFileUrlList: action.payload.receiveFileUrlList,
       }
-    case prefix + 'SET_RECEIVE_ERROR':
+    case ACTION_TYPE.receiverError:
       return {
         ...state,
         errorState: action.payload.errorState,
