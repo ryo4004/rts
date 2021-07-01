@@ -7,11 +7,11 @@ import { prepare } from '../../../Actions/Status'
 
 import Profile from '../../../Assets/profile-pic.jpg'
 
-import type {State}from "../../../Store/Store"
+import type { State } from '../../../Store/Store'
 
 import './Home.css'
 
-function mapStateToProps(state:State) {
+function mapStateToProps(state: State) {
   return {
     loading: state.status.loading,
     mobile: state.status.mobile,
@@ -20,7 +20,7 @@ function mapStateToProps(state:State) {
   }
 }
 
-function mapDispatchToProps(dispatch:any) {
+function mapDispatchToProps(dispatch: any) {
   return {
     prepare() {
       dispatch(prepare())
@@ -28,7 +28,7 @@ function mapDispatchToProps(dispatch:any) {
   }
 }
 
-type Props=ReturnType<typeof mapStateToProps>&ReturnType<typeof mapDispatchToProps>
+type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
 class Home extends Component<Props> {
   render() {
