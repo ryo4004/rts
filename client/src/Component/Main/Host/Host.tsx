@@ -9,9 +9,11 @@ import { addFile, sendData, deleteFile } from '../../../Actions/Sender'
 
 import FileController from '../FileController/FileController'
 
+import type { State } from '../../../Store/Store'
+
 import './Host.css'
 
-function mapStateToProps(state) {
+function mapStateToProps(state: State) {
   return {
     loading: state.status.loading,
     mobile: state.status.mobile,
@@ -30,7 +32,7 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: any) {
   return {
     prepare() {
       dispatch(prepare())
@@ -41,19 +43,21 @@ function mapDispatchToProps(dispatch) {
     disconnect() {
       dispatch(disconnect())
     },
-    addFile(fileList) {
+    addFile(fileList: any) {
       dispatch(addFile(fileList))
     },
     sendData() {
       dispatch(sendData())
     },
-    deleteFile(id) {
+    deleteFile(id: any) {
       dispatch(deleteFile(id))
     },
   }
 }
 
-class Host extends Component {
+type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
+
+class Host extends Component<Props> {
   componentDidMount() {
     this.props.senderConnect()
   }
@@ -126,13 +130,13 @@ class Host extends Component {
     )
   }
 
-  copy(e, url) {
+  copy(e: any, url: string) {
     e.preventDefault()
     // console.log(url)
     const div = document.createElement('div')
     div.appendChild(document.createElement('pre')).textContent = url
     document.body.appendChild(div)
-    document.getSelection().selectAllChildren(div)
+    document.getSelection()?.selectAllChildren(div)
     document.execCommand('copy')
     document.body.removeChild(div)
   }
