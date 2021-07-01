@@ -8,9 +8,11 @@ import { receiverConnect, disconnect } from '../../../Actions/Connection'
 
 import FileController from '../FileController/FileController'
 
+import type { State } from '../../../Store/Store'
+
 import './Guest.css'
 
-function mapStateToProps(state) {
+function mapStateToProps(state: State) {
   return {
     loading: state.status.loading,
     mobile: state.status.mobile,
@@ -32,12 +34,12 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: any) {
   return {
     prepare() {
       dispatch(prepare())
     },
-    receiverConnect(senderSocketID) {
+    receiverConnect(senderSocketID: string) {
       dispatch(receiverConnect(senderSocketID))
     },
     disconnect() {
@@ -46,9 +48,12 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-class Guest extends Component {
+type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
+
+class Guest extends Component<Props> {
   componentDidMount() {
     this.props.prepare()
+    // @ts-ignore
     const { params } = this.props.match
     const senderSocketID = params.senderSocketID ? params.senderSocketID : ''
     this.props.receiverConnect(senderSocketID)
