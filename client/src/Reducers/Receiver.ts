@@ -1,7 +1,7 @@
 import { ACTION_TYPE } from '../Actions/Receiver'
 import type { Actions } from '../Actions/Receiver'
 
-type ReceiverState = {
+export type ReceiverState = {
   loading: boolean
 
   // 追加されたファイルと状態の管理

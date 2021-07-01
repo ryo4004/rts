@@ -1,7 +1,7 @@
 import { ACTION_TYPE } from '../Actions/Sender'
 import type { Actions } from '../Actions/Sender'
 
-type SenderState = {
+export type SenderState = {
   loading: boolean
   sendFileList: object
 }

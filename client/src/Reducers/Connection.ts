@@ -1,7 +1,7 @@
 import { ACTION_TYPE } from '../Actions/Connection'
 import type { Actions } from '../Actions/Connection'
 
-type ConnectionState = {
+export type ConnectionState = {
   loading: boolean
 
   socket: string | undefined

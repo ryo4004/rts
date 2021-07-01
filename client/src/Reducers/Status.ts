@@ -1,7 +1,7 @@
 import { ACTION_TYPE } from '../Actions/Status'
 import type { Actions } from '../Actions/Status'
 
-type StatusState = {
+export type StatusState = {
   loading: boolean
   width: number
   pc: boolean
