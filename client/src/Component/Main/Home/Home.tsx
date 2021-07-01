@@ -7,9 +7,11 @@ import { prepare } from '../../../Actions/Status'
 
 import Profile from '../../../Assets/profile-pic.jpg'
 
+import type {State}from "../../../Store/Store"
+
 import './Home.css'
 
-function mapStateToProps(state) {
+function mapStateToProps(state:State) {
   return {
     loading: state.status.loading,
     mobile: state.status.mobile,
@@ -18,7 +20,7 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch:any) {
   return {
     prepare() {
       dispatch(prepare())
@@ -26,7 +28,9 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-class Home extends Component {
+type Props=ReturnType<typeof mapStateToProps>&ReturnType<typeof mapDispatchToProps>
+
+class Home extends Component<Props> {
   render() {
     const mobileMode = this.props.mobile ? ' mobile' : ' pc'
     return (
