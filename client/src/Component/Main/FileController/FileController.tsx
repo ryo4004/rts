@@ -8,7 +8,7 @@ import { fileSizeUnit, fileIcon } from '../../../Library/Library'
 
 import type { State } from '../../../Store/Store'
 
-import './FileController.css'
+import './FileController.scss'
 
 function mapStateToProps(state: State) {
   return {

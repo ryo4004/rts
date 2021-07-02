@@ -9,7 +9,7 @@ import Profile from '../../../Assets/profile-pic.jpg'
 
 import type { State } from '../../../Store/Store'
 
-import './Home.css'
+import './Home.scss'
 
 function mapStateToProps(state: State) {
   return {

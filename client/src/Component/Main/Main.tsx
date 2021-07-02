@@ -11,7 +11,7 @@ import Guest from './Guest/Guest'
 
 import type { State } from '../../Store/Store'
 
-import './Main.css'
+import './Main.scss'
 
 function mapStateToProps(state: State) {
   return {
