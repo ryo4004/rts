@@ -1,4 +1,3 @@
-import React, { Component } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import { applyMiddleware, compose, createStore } from 'redux'
 import { Provider } from 'react-redux'
@@ -27,16 +26,16 @@ history.listen((location) => {
   window.localStorage.setItem('location', location.pathname)
 })
 
-export default class App extends Component {
-  render() {
-    return (
-      <Provider store={store}>
-        <ConnectedRouter history={history}>
-          <Switch>
-            <Route path="/" component={Main} />
-          </Switch>
-        </ConnectedRouter>
-      </Provider>
-    )
-  }
+const App = () => {
+  return (
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        <Switch>
+          <Route path="/" component={Main} />
+        </Switch>
+      </ConnectedRouter>
+    </Provider>
+  )
 }
+
+export default App

@@ -8,8 +8,22 @@ import senderReducer from '../Reducers/Sender'
 import receiverReducer from '../Reducers/Receiver'
 // import toastReducer from '../Reducers/Toast'
 
+import type { History } from 'history'
+
+import type { StatusState } from '../Reducers/Status'
+import type { ConnectionState } from '../Reducers/Connection'
+import type { SenderState } from '../Reducers/Sender'
+import type { ReceiverState } from '../Reducers/Receiver'
+
+export interface State {
+  status: StatusState
+  connection: ConnectionState
+  sender: SenderState
+  receiver: ReceiverState
+}
+
 // historyはsrc/App.jsから渡す
-export default function createRootReducer(history) {
+export default function createRootReducer(history: History) {
   return combineReducers({
     status: statusReducer,
     // socket: socketReducer,

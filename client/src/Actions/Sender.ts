@@ -4,7 +4,15 @@ import { randomString, stringToBuffer } from '../Library/Library'
 
 import { sendDataChannel, dataChannelBufferedAmount } from './Connection'
 
-const prefix = 'SENDER_'
+import type { Dispatch } from 'redux'
+import { AnyMxRecord } from 'dns'
+
+export const ACTION_TYPE = {
+  setFileList: 'SENDER_SET_FILELIST',
+  setSendFileList: 'SENDER_SET_SEND_FILE_LIST',
+} as const
+
+export type Actions = ReturnType<typeof setSendFileList>
 
 // 定数
 // ファイルIDは16文字
@@ -14,16 +22,17 @@ let flagLength = 1
 // 1つのpacketは16KB以下にする
 let packetSize = 1024 * 16 - flagLength - idLength
 
-function updateSendFileList(id, property, value, dispatch, getState) {
+function updateSendFileList(id: any, property: any, value: any, dispatch: Dispatch, getState: any) {
   // JSON.parse(JSON.stringify())は使わない
   const sendFileList = {}
   Object.assign(sendFileList, getState().sender.sendFileList)
+  // @ts-ignore
   sendFileList[id][property] = value
   dispatch(setSendFileList(sendFileList))
 }
 
-export const addFile = (fileList) => {
-  return (dispatch, getState) => {
+export const addFile = (fileList: React.ChangeEvent<HTMLInputElement>) => {
+  return (dispatch: Dispatch, getState: any) => {
     dispatch(setFileList(fileList))
     Object.keys(fileList).forEach((num) => {
       // ファイルごとにid生成
@@ -59,18 +68,27 @@ export const addFile = (fileList) => {
           // receivePacketCount: 0, (ファイルリスト送信時に追加する)
 
           // ファイルサイズ情報
+          // @ts-ignore
           byteLength: fileList[num].size,
+          // @ts-ignore
           sendTime: Math.ceil(fileList[num].size / packetSize),
+          // @ts-ignore
           rest: fileList[num].size % packetSize,
 
           // ファイル情報
+          // @ts-ignore
           lastModified: fileList[num].lastModified,
+          // @ts-ignore
           name: fileList[num].name,
+          // @ts-ignore
           size: fileList[num].size,
+          // @ts-ignore
           type: fileList[num].type,
+          // @ts-ignore
           webkitRelativePath: fileList[num].webkitRelativePath,
 
           // file object (FileReaderで利用)
+          // @ts-ignore
           file: fileList[num],
         },
       }
@@ -87,8 +105,8 @@ export const addFile = (fileList) => {
 }
 
 // 追加したファイルを1つ削除
-export const deleteFile = (id) => {
-  return (dispatch, getState) => {
+export const deleteFile = (id: any) => {
+  return (dispatch: Dispatch, getState: any) => {
     const deleteFileList = getState().sender.sendFileList[id]
     // preSendInfoを送信済みの場合はReceiverに削除を通知する
     if (deleteFileList.preSendInfo === true) {
@@ -105,8 +123,8 @@ export const deleteFile = (id) => {
   }
 }
 
-export const errorFile = (id) => {
-  return (dispatch, getState) => {
+export const errorFile = (id: any) => {
+  return (dispatch: Dispatch, getState: any) => {
     const errorFileList = getState().sender.sendFileList[id]
     // preSendInfoを送信済みの場合はReceiverに削除を通知する
     if (errorFileList.preSendInfo === true) {
@@ -123,12 +141,12 @@ export const errorFile = (id) => {
   }
 }
 
-export const dataChannelOnOpen = (dispatch, getState) => {
+export const dataChannelOnOpen = (dispatch: Dispatch, getState: any) => {
   sendFileListOnDataChannel(dispatch, getState)
   return
 }
 
-function sendFileListOnDataChannel(dispatch, getState) {
+function sendFileListOnDataChannel(dispatch: Dispatch, getState: any) {
   if (getState().connection.dataChannelOpenStatus) {
     const sendFileList = getState().sender.sendFileList
     Object.keys(sendFileList)
@@ -160,17 +178,17 @@ function sendFileListOnDataChannel(dispatch, getState) {
   }
 }
 
-const setFileList = (fileList) => ({
-  type: prefix + 'SET_FILELIST',
+const setFileList = (fileList: any) => ({
+  type: ACTION_TYPE.setFileList,
   payload: { fileList },
 })
 
-const setSendFileList = (sendFileList) => ({
-  type: prefix + 'SET_SEND_FILE_LIST',
+const setSendFileList = (sendFileList: any) => ({
+  type: ACTION_TYPE.setSendFileList,
   payload: { sendFileList },
 })
 
-export function senderReceiveData(event, dispatch, getState) {
+export function senderReceiveData(event: any, dispatch: Dispatch, getState: any) {
   if (typeof event.data === 'string') {
     if (JSON.parse(event.data).receiveComplete !== undefined) {
       const receiveComplete = JSON.parse(event.data).receiveComplete
@@ -184,7 +202,7 @@ export function senderReceiveData(event, dispatch, getState) {
 }
 
 export const sendData = () => {
-  return (dispatch, getState) => {
+  return (dispatch: Dispatch, getState: any) => {
     if (!getState().connection.dataChannelOpenStatus) return // console.error('Data Channel not open')
     const sendFileList = Object.assign({}, getState().sender.sendFileList)
     if (Object.keys(sendFileList).length === 0) return // console.error('Send file not found')
@@ -204,10 +222,11 @@ export const sendData = () => {
   }
 }
 
-function sendFileData(id, dispatch, getState) {
+function sendFileData(id: any, dispatch: Dispatch, getState: AnyMxRecord) {
   // console.log('ファイル送信処理開始', id)
 
   // ファイル情報を取得
+  // @ts-ignore
   const sendFileList = Object.assign({}, getState().sender.sendFileList)
 
   // 削除されたファイルは何もしない(二重確認)
@@ -287,7 +306,7 @@ function sendFileData(id, dispatch, getState) {
 //   openSend()
 // }
 
-function openSendFile(id, fileInfo, dispatch, getState) {
+function openSendFile(id: any, fileInfo: any, dispatch: Dispatch, getState: any) {
   if (!getState().connection.dataChannelOpenStatus) {
     return console.error('dataChannel not open')
   }
@@ -302,6 +321,7 @@ function openSendFile(id, fileInfo, dispatch, getState) {
   }
   fileReader.onerror = (event) => {
     console.log('fileReader onerror', event)
+    // @ts-ignore
     dispatch(errorFile(id))
   }
   fileReader.onloadend = (event) => {
@@ -315,6 +335,7 @@ function openSendFile(id, fileInfo, dispatch, getState) {
   fileReader.onload = async (event) => {
     updateSendFileList(id, 'load', 100, dispatch, getState)
 
+    // @ts-ignore
     let data = new Uint8Array(event.target.result)
     updateSendFileList(id, 'byteLength', data.byteLength, dispatch, getState)
     updateSendFileList(id, 'sendTime', Math.ceil(data.byteLength / packetSize), dispatch, getState)

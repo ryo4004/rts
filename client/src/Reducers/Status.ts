@@ -1,4 +1,17 @@
-const initialState = {
+import { ACTION_TYPE } from '../Actions/Status'
+import type { Actions } from '../Actions/Status'
+
+export type StatusState = {
+  loading: boolean
+  width: number
+  pc: boolean
+  mobile: boolean
+
+  fileAPI: boolean | undefined
+  available: boolean | undefined
+}
+
+const initialState: StatusState = {
   loading: false,
   width: 0,
   pc: true,
@@ -8,28 +21,26 @@ const initialState = {
   available: undefined,
 }
 
-const prefix = 'STATUS_'
-
-export default function statusReducer(state = initialState, action) {
+export default function statusReducer(state = initialState, action: Actions): StatusState {
   switch (action.type) {
-    case prefix + 'LOADING':
+    case ACTION_TYPE.loading:
       return {
         ...state,
         loading: action.payload.loading,
       }
-    case prefix + 'WINDOW_WIDTH':
+    case ACTION_TYPE.setWidth:
       return {
         ...state,
         width: action.payload.width,
         pc: action.payload.pc,
         mobile: action.payload.mobile,
       }
-    case prefix + 'SET_FILE_API':
+    case ACTION_TYPE.setFileAPI:
       return {
         ...state,
         fileAPI: action.payload.fileAPI,
       }
-    case prefix + 'SET_AVAILABLE':
+    case ACTION_TYPE.setAvailable:
       return {
         ...state,
         available: action.payload.available,

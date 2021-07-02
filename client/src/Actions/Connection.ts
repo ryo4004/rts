@@ -1,67 +1,110 @@
-import socketio from 'socket.io-client'
+import { io } from 'socket.io-client'
 
 import { senderReceiveData, dataChannelOnOpen } from './Sender'
 
 import { receiverReceiveData, receiverError } from './Receiver'
 
-const prefix = 'CONNECTION_'
+import type { Dispatch } from 'redux'
+import type { Socket } from 'socket.io-client'
 
-let peerConnection = null
-let dataChannel = null
+let peerConnection: RTCPeerConnection | null = null
+let dataChannel: RTCDataChannel | null = null
 
 // Usermodeによってイベント処理を分ける
 // dataChannel.onmessage => sender, receiver
 
-const loading = (loading) => ({
-  type: prefix + 'LOADING',
+export const ACTION_TYPE = {
+  loading: 'CONNECTION_LOADING',
+  setSocket: 'CONNECTION_SET_SOCKET',
+  setSelfSocketID: 'CONNECTION_SET_SELF_SOCKET_ID',
+  setSenderSocketID: 'CONNECTION_SET_SENDER_SOCKET_ID',
+  setReceiverSocketID: 'CONNECTION_SET_RECEIVER_SOCKET_ID',
+  dataChannelOpenStatus: 'CONNECTION_DATACHANNEL_OPEN_STATUS',
+} as const
+
+export type Actions = ReturnType<
+  | typeof loading
+  | typeof setSocket
+  | typeof setSelfSocketID
+  | typeof setSenderSocketID
+  | typeof setReceiverSocketID
+  | typeof dataChannelOpenStatus
+>
+
+type LoadingAction = {
+  type: typeof ACTION_TYPE.loading
+  payload: { loading: boolean }
+}
+const loading = (loading: boolean): LoadingAction => ({
+  type: ACTION_TYPE.loading,
   payload: { loading },
 })
 
-const setSocket = (socket) => ({
-  type: prefix + 'SET_SOCKET',
+type SetSocketAction = {
+  type: typeof ACTION_TYPE.setSocket
+  payload: { socket: any }
+}
+const setSocket = (socket: any): SetSocketAction => ({
+  type: ACTION_TYPE.setSocket,
   payload: { socket },
 })
 
-const setSelfSocketID = (selfSocketID) => ({
-  type: prefix + 'SET_SELF_SOCKET_ID',
+type SetSelfSocketID = {
+  type: typeof ACTION_TYPE.setSelfSocketID
+  payload: { selfSocketID: string }
+}
+const setSelfSocketID = (selfSocketID: string): SetSelfSocketID => ({
+  type: ACTION_TYPE.setSelfSocketID,
   payload: { selfSocketID },
 })
 
-const setSenderSocketID = (senderSocketID) => ({
-  type: prefix + 'SET_SENDER_SOCKET_ID',
+type SetSenderSocketID = {
+  type: typeof ACTION_TYPE.setSenderSocketID
+  payload: { senderSocketID: string }
+}
+const setSenderSocketID = (senderSocketID: string): SetSenderSocketID => ({
+  type: ACTION_TYPE.setSenderSocketID,
   payload: { senderSocketID },
 })
 
-const setReceiverSocketID = (receiverSocketID) => ({
-  type: prefix + 'SET_RECEIVER_SOCKET_ID',
+type SetReceiverSocketID = {
+  type: typeof ACTION_TYPE.setReceiverSocketID
+  payload: { receiverSocketID: string }
+}
+const setReceiverSocketID = (receiverSocketID: string): SetReceiverSocketID => ({
+  type: ACTION_TYPE.setReceiverSocketID,
   payload: { receiverSocketID },
 })
 
-const dataChannelOpenStatus = (dataChannelOpenStatus) => ({
-  type: prefix + 'DATACHANNEL_OPEN_STATUS',
+type DataChannelOpenStatus = {
+  type: typeof ACTION_TYPE.dataChannelOpenStatus
+  payload: { dataChannelOpenStatus: any }
+}
+const dataChannelOpenStatus = (dataChannelOpenStatus: any): DataChannelOpenStatus => ({
+  type: ACTION_TYPE.dataChannelOpenStatus,
   payload: { dataChannelOpenStatus },
 })
 
 // Sender Connection Start
 export const senderConnect = () => {
-  return async (dispatch, getState) => {
+  return async (dispatch: Dispatch, getState: any) => {
     dispatch(loading(true))
     // Socket接続
-    const socket = await socketio.connect('https://' + window.location.host + '/', { secure: true })
+    const socket = io('https://' + window.location.host + '/', { secure: true })
     socket.on('connect', () => {
       dispatch(setSocket(socket))
     })
     // 受信 connection_complete で自分のIDを取得
-    socket.on('connection_complete', (obj) => {
+    socket.on('connection_complete', (obj: any) => {
       dispatch(loading(false))
       dispatch(setSelfSocketID(obj.id))
     })
     // 受信 Receiver情報を取得
-    socket.on('request_to_sender', (obj) => {
+    socket.on('request_to_sender', (obj: any) => {
       dispatch(setReceiverSocketID(obj.from))
     })
     // 受信
-    socket.on('send_offer_sdp', async (obj) => {
+    socket.on('send_offer_sdp', async (obj: any) => {
       // PeerConnection作成
       peerConnection = new RTCPeerConnection({
         iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
@@ -92,6 +135,7 @@ export const senderConnect = () => {
       }
       peerConnection.oniceconnectionstatechange = (event) => {
         // console.log('oniceconnectionstatechange', event, peerConnection.iceConnectionState)
+        if (!peerConnection) return false
         switch (peerConnection.iceConnectionState) {
           case 'new':
             // console.log('peerConnection new')
@@ -158,8 +202,9 @@ export const senderConnect = () => {
         sdp: answerSdp,
       })
     })
-    socket.on('send_found_candidate', async (obj) => {
+    socket.on('send_found_candidate', async (obj: any) => {
       // console.log('onicecandidate found')
+      if (!peerConnection) return false
       await peerConnection.addIceCandidate(new RTCIceCandidate(obj.candidate))
     })
   }
@@ -167,12 +212,12 @@ export const senderConnect = () => {
 // Sender Connection End
 
 // Receiver Connection Start
-export const receiverConnect = (senderSocketID) => {
-  return async (dispatch, getState) => {
+export const receiverConnect = (senderSocketID: string) => {
+  return async (dispatch: Dispatch, getState: any) => {
     dispatch(loading(true))
     dispatch(setSenderSocketID(senderSocketID))
     // Socket接続
-    const socket = await socketio.connect('https://' + window.location.host + '/', { secure: true })
+    const socket: Socket = io('https://' + window.location.host + '/', { secure: true })
     // const socket = socketio.connect('https://rts.zatsuzen.com', {secure: true})
     socket.on('connect', () => {
       dispatch(setSocket(socket))
@@ -221,6 +266,7 @@ export const receiverConnect = (senderSocketID) => {
       }
       peerConnection.oniceconnectionstatechange = (event) => {
         // console.log('oniceconnectionstatechange', event, peerConnection.iceConnectionState)
+        if (!peerConnection) return false
         switch (peerConnection.iceConnectionState) {
           case 'new':
             // console.log('peerConnection new')
@@ -304,11 +350,13 @@ export const receiverConnect = (senderSocketID) => {
     })
     // 受信
     socket.on('send_answer_sdp', async (obj) => {
+      if (!peerConnection) return false
       await peerConnection.setRemoteDescription(new RTCSessionDescription(obj.sdp))
     })
     // 受信
     socket.on('send_found_candidate', async (obj) => {
       // console.log('onicecandidate found')
+      if (!peerConnection) return false
       await peerConnection.addIceCandidate(new RTCIceCandidate(obj.candidate))
     })
     dispatch(setSocket(socket))
@@ -317,7 +365,7 @@ export const receiverConnect = (senderSocketID) => {
 // Receiver Connection End
 
 export const disconnect = () => {
-  return async (dispatch, getState) => {
+  return async () => {
     if (peerConnection) {
       if (peerConnection.iceConnectionState !== 'closed') {
         peerConnection.close()
@@ -328,11 +376,11 @@ export const disconnect = () => {
 }
 
 export const dataChannelBufferedAmount = () => {
-  return dataChannel.bufferedAmount
+  return dataChannel && dataChannel.bufferedAmount
 }
 
-export const sendDataChannel = (data) => {
-  dataChannel.send(data)
+export const sendDataChannel = (data: any) => {
+  dataChannel && dataChannel.send(data)
   // if (dataChannel.readyState === 'open') {
   //   dataChannel.send(data)
   //   return true
@@ -340,7 +388,7 @@ export const sendDataChannel = (data) => {
   // return false
 }
 
-export const receiveDataChannel = (event, dispatch, getState) => {
+export const receiveDataChannel = (event: any, dispatch: Dispatch, getState: any) => {
   if (typeof event.data === 'string') {
     if (JSON.parse(event.data).to === 'sender') {
       return senderReceiveData(event, dispatch, getState)

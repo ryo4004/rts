@@ -1,4 +1,18 @@
-const initialState = {
+import { ACTION_TYPE } from '../Actions/Connection'
+import type { Actions } from '../Actions/Connection'
+
+export type ConnectionState = {
+  loading: boolean
+
+  socket: string | undefined
+  selfSocketID: string | undefined
+  senderSocketID: string | undefined
+  receiverSocketID: string | undefined
+
+  dataChannelOpenStatus: boolean
+}
+
+const initialState: ConnectionState = {
   loading: false,
 
   socket: undefined,
@@ -9,36 +23,34 @@ const initialState = {
   dataChannelOpenStatus: false,
 }
 
-const prefix = 'CONNECTION_'
-
-export default function connectionReducer(state = initialState, action) {
+export default function connectionReducer(state = initialState, action: Actions): ConnectionState {
   switch (action.type) {
-    case prefix + 'LOADING':
+    case ACTION_TYPE.loading:
       return {
         ...state,
         loading: action.payload.loading,
       }
-    case prefix + 'SET_SOCKET':
+    case ACTION_TYPE.setSocket:
       return {
         ...state,
         socket: action.payload.socket,
       }
-    case prefix + 'SET_SELF_SOCKET_ID':
+    case ACTION_TYPE.setSelfSocketID:
       return {
         ...state,
         selfSocketID: action.payload.selfSocketID,
       }
-    case prefix + 'SET_SENDER_SOCKET_ID':
+    case ACTION_TYPE.setSenderSocketID:
       return {
         ...state,
         senderSocketID: action.payload.senderSocketID,
       }
-    case prefix + 'SET_RECEIVER_SOCKET_ID':
+    case ACTION_TYPE.setReceiverSocketID:
       return {
         ...state,
         receiverSocketID: action.payload.receiverSocketID,
       }
-    case prefix + 'DATACHANNEL_OPEN_STATUS':
+    case ACTION_TYPE.dataChannelOpenStatus:
       return {
         ...state,
         dataChannelOpenStatus: action.payload.dataChannelOpenStatus,

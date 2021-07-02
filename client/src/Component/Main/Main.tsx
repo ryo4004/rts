@@ -1,36 +1,41 @@
 import React, { Component } from 'react'
 import { Route, Switch } from 'react-router-dom'
-
 import { connect } from 'react-redux'
-import { windowWidthChange } from '../../Actions/Status'
 
+import { windowWidthChange } from '../../Actions/Status'
 import { addFile } from '../../Actions/Sender'
 
 import Home from './Home/Home'
 import Host from './Host/Host'
 import Guest from './Guest/Guest'
 
+import type { State } from '../../Store/Store'
+
 import './Main.css'
 
-function mapStateToProps(state) {
+function mapStateToProps(state: State) {
   return {
     mobile: state.status.mobile,
   }
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: any) {
   return {
     windowWidthChange() {
       dispatch(windowWidthChange())
     },
-    addFile(fileList) {
+    addFile(fileList: any) {
       dispatch(addFile(fileList))
     },
   }
 }
 
-class Main extends Component {
-  constructor(props) {
+type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
+
+class Main extends Component<Props> {
+  contents: any
+
+  constructor(props: Props) {
     super(props)
     this.contents = React.createRef()
   }
@@ -49,11 +54,11 @@ class Main extends Component {
     window.removeEventListener('resize', () => {})
   }
 
-  onDragOver(e) {
+  onDragOver(e: React.DragEvent<HTMLDivElement>) {
     e.preventDefault()
   }
 
-  onDrop(e) {
+  onDrop(e: React.DragEvent<HTMLDivElement>) {
     e.preventDefault()
     if (e.dataTransfer.files.length === 0) return false
     this.props.addFile(e.dataTransfer.files)

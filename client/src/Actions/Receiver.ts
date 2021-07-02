@@ -2,7 +2,7 @@ import { bufferToString } from '../Library/Library'
 
 import { sendDataChannel } from './Connection'
 
-const prefix = 'RECEIVER_'
+import type { Dispatch } from 'redux'
 
 // 定数
 // ファイルIDは16文字
@@ -10,70 +10,35 @@ let idLength = 16
 // 終了フラグサイズ
 let flagLength = 1
 
-// // // IndexedDB
-// let db = null
-// const dbName = 'storageDB'
+export const ACTION_TYPE = {
+  receiverError: 'RECEIVER_SET_RECEIVE_ERROR',
+  setReceiveFileList: 'RECEIVER_SET_RECEIVE_FILE_LIST',
+  setReceiveFileUrlList: 'RECEIVER_SET_RECEIVE_FILE_URL_LIST',
+  setReceiveFileStorage: 'RECEIVER_SET_RECEIVE_FILE_STORAGE',
+} as const
 
-// const dbRequest = indexedDB.open(dbName)
-// dbRequest.onupgradeneeded = function(event){
-//   //onupgradeneededは、DBのバージョン更新(DBの新規作成も含む)時のみ実行
-//   console.log('db upgrade', event)
-//   // db = event.target.result
-//   // const objectStore = db.createObjectStore('data', { keyPath: 'id'})
-//   // console.log('objectStore', objectStore)
-//   // objectStore.createIndex("id", "id", { unique: true })
-//   // objectStore.createIndex("name", "name", { unique: false })
-//   // objectStore.transaction.oncomplete = function(event) {
-//   //   // 新たに作成した objectStore に値を保存します。
-//   //   const customerObjectStore = db.transaction("name", "readwrite").objectStore("name");
-//   //   customerObjectStore.add(insertData)
-//   // };
-// }
-// dbRequest.onsuccess = function(event){
-//   //onupgradeneededの後に実行。更新がない場合はこれだけ実行
-//   console.log('db open success', event)
-//   db = event.target.result
-//   // 接続を解除する
-//   // db.close()
-// }
-// dbRequest.onerror = function(event){
-//   // 接続に失敗
-//   console.log('db open error', event);
-// }
+export type Actions = ReturnType<
+  typeof receiverError | typeof setReceiveFileList | typeof setReceiveFileUrlList | typeof setReceiveFileStorage
+>
 
-// dbRequest.onsuccess = function(event){
-//   var db = event.target.result
-//   var trans = db.transaction(storeName, 'readwrite')
-//   var store = trans.objectStore(storeName)
-//   var putReq = store.put(insertData)
-
-//   putReq.onsuccess = function(){
-//     console.log('put data success');
-//   }
-
-//   trans.oncomplete = function(){
-//   // トランザクション完了時(putReq.onsuccessの後)に実行
-//     console.log('transaction complete');
-//   }
-// }
-
-export const receiverError = (errorTextClient, errorTextServer) => ({
-  type: prefix + 'SET_RECEIVE_ERROR',
+export const receiverError = (errorTextClient: any, errorTextServer: any) => ({
+  type: ACTION_TYPE.receiverError,
   payload: {
     errorState: true,
     errorText: errorTextClient + ' ' + errorTextServer,
   },
 })
 
-const setReceiveFileList = (receiveFileList) => ({
-  type: prefix + 'SET_RECEIVE_FILE_LIST',
+const setReceiveFileList = (receiveFileList: any) => ({
+  type: ACTION_TYPE.setReceiveFileList,
   payload: { receiveFileList },
 })
 
-function updateReceiveFileList(id, property, value, dispatch, getState) {
+function updateReceiveFileList(id: any, property: any, value: any, dispatch: Dispatch, getState: any) {
   // JSON.parse(JSON.stringify())は使わない
   const receiveFileList = {}
   Object.assign(receiveFileList, getState().receiver.receiveFileList)
+  // @ts-ignore
   receiveFileList[id][property] = value
   dispatch(setReceiveFileList(receiveFileList))
 }
@@ -86,22 +51,24 @@ function updateReceiveFileList(id, property, value, dispatch, getState) {
 //   dispatch(setReceiveFileList(receiveFileList))
 // }
 
-function resetReceiveFileStorage(id, dispatch, getState) {
+function resetReceiveFileStorage(id: any, dispatch: Dispatch, getState: any) {
   const receiveFileStorage = {}
   Object.assign(receiveFileStorage, getState().receiver.receiveFileStorage)
+  // @ts-ignore
   receiveFileStorage[id] = { packets: [] }
   dispatch(setReceiveFileStorage(receiveFileStorage))
 }
 
-function updateReceiveFileStorage(id, value, dispatch, getState) {
+function updateReceiveFileStorage(id: any, value: any, dispatch: Dispatch, getState: any) {
   // JSON.parse(JSON.stringify())は使わない
   const receiveFileStorage = {}
   Object.assign(receiveFileStorage, getState().receiver.receiveFileStorage)
+  // @ts-ignore
   receiveFileStorage[id].packets.push(value)
   dispatch(setReceiveFileStorage(receiveFileStorage))
 }
 
-function createReceiveFile(id, dispatch, getState) {
+function createReceiveFile(id: any, dispatch: Dispatch, getState: any) {
   const receiveFileInfo = getState().receiver.receiveFileList[id]
   const packets = getState().receiver.receiveFileStorage[id].packets
 
@@ -163,9 +130,9 @@ function createReceiveFile(id, dispatch, getState) {
   //   console.log('db open error', event);
   // }
 
-  let fileArray = []
+  let fileArray: any = []
 
-  packets.forEach((packet, i) => {
+  packets.forEach((packet: any, i: number) => {
     fileArray.push(packet.slice(flagLength + idLength))
   })
 
@@ -186,6 +153,7 @@ function createReceiveFile(id, dispatch, getState) {
   // const blob = new Blob([data], {type: getState().receiver.receiveFileInfo.file.type})
   // const url = window.URL.createObjectURL(blob)
 
+  // @ts-ignore
   const file = new File(fileArray, receiveFileInfo.name, {
     type: receiveFileInfo.type,
     lastModified: receiveFileInfo.lastModified,
@@ -201,7 +169,7 @@ function createReceiveFile(id, dispatch, getState) {
 }
 
 // データ受信
-export function receiverReceiveData(event, dispatch, getState) {
+export function receiverReceiveData(event: any, dispatch: Dispatch, getState: any) {
   if (typeof event.data === 'string') {
     // オブジェクトのプロパティによって処理判定
     if (JSON.parse(event.data).add !== undefined) {
@@ -270,12 +238,12 @@ export function receiverReceiveData(event, dispatch, getState) {
   return
 }
 
-const setReceiveFileUrlList = (receiveFileUrlList) => ({
-  type: prefix + 'SET_RECEIVE_FILE_URL_LIST',
+const setReceiveFileUrlList = (receiveFileUrlList: any) => ({
+  type: ACTION_TYPE.setReceiveFileUrlList,
   payload: { receiveFileUrlList },
 })
 
-const setReceiveFileStorage = (receiveFileStorage) => ({
-  type: prefix + 'SET_RECEIVE_FILE_STORAGE',
+const setReceiveFileStorage = (receiveFileStorage: any) => ({
+  type: ACTION_TYPE.setReceiveFileStorage,
   payload: { receiveFileStorage },
 })
