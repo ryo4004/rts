@@ -10,7 +10,7 @@ import FileController from '../FileController/FileController'
 
 import type { State } from '../../../Store/Store'
 
-import './Guest.css'
+import './Guest.scss'
 
 function mapStateToProps(state: State) {
   return {

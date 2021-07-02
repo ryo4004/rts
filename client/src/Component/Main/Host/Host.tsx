@@ -11,7 +11,7 @@ import FileController from '../FileController/FileController'
 
 import type { State } from '../../../Store/Store'
 
-import './Host.css'
+import './Host.scss'
 
 function mapStateToProps(state: State) {
   return {
