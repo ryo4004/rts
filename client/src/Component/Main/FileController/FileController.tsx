@@ -6,9 +6,11 @@ import { prepare } from '../../../Actions/Status'
 import { addFile, sendData, deleteFile } from '../../../Actions/Sender'
 import { fileSizeUnit, fileIcon } from '../../../Library/Library'
 
+import type { State } from '../../../Store/Store'
+
 import './FileController.css'
 
-function mapStateToProps(state) {
+function mapStateToProps(state: State) {
   return {
     loading: state.status.loading,
     mobile: state.status.mobile,
@@ -28,24 +30,26 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch: any) {
   return {
     prepare() {
       dispatch(prepare())
     },
-    addFile(fileList) {
+    addFile(fileList: any) {
       dispatch(addFile(fileList))
     },
     sendData() {
       dispatch(sendData())
     },
-    deleteFile(id) {
+    deleteFile(id: any) {
       dispatch(deleteFile(id))
     },
   }
 }
 
-class FileController extends Component {
+type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
+
+class FileController extends Component<Props> {
   // componentDidMount () {
   //   this.props.senderConnect()
   // }
@@ -63,7 +67,7 @@ class FileController extends Component {
   //   this.props.addFile(e.dataTransfer.files)
   // }
 
-  fileSelect(e) {
+  fileSelect(e: any) {
     // console.log('fileSelect', e.target.files)
     this.props.addFile(e.target.files)
   }
@@ -72,6 +76,7 @@ class FileController extends Component {
     let button = false
     // ひとつでも送信処理未完了のものがあれば有効
     Object.keys(this.props.sendFileList).forEach((id, i) => {
+      // @ts-ignore
       if (this.props.sendFileList[id].send === false) {
         button = true
       }
@@ -103,7 +108,7 @@ class FileController extends Component {
     )
   }
 
-  deleteConfirm(id) {
+  deleteConfirm(id: any) {
     confirmAlert({
       customUI: ({ onClose }) => {
         return (
@@ -137,6 +142,7 @@ class FileController extends Component {
         </div>
       )
     const sendFileList = Object.keys(this.props.sendFileList).map((id, i) => {
+      // @ts-ignore
       const each = this.props.sendFileList[id]
       const icon = <i className={fileIcon(each.name, each.type)}></i>
       const fileSize = fileSizeUnit(each.size)
@@ -272,6 +278,7 @@ class FileController extends Component {
       )
     // console.warn('render', this.props.receiveFileList)
     const receiveFileList = Object.keys(this.props.receiveFileList).map((id, i) => {
+      // @ts-ignore
       const each = this.props.receiveFileList[id]
       const icon = <i className={fileIcon(each.name, each.type)}></i>
       const fileSize = fileSizeUnit(each.size)
@@ -297,9 +304,11 @@ class FileController extends Component {
       }
 
       // 受信完了後
+      // @ts-ignore
       if (this.props.receiveFileUrlList[each.id] && each.receiveResult) {
         return (
           <li key={'filelist-' + i} className="receive-filelist complete">
+            {/* @ts-ignore */}
             <a href={this.props.receiveFileUrlList[each.id]} download={each.name}>
               <div className="receive-status complete">
                 <span>完了</span>
