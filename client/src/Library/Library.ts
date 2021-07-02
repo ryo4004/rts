@@ -15,7 +15,7 @@ export const divisionWidth = 960
 //   return str.split('T')[1].split(':')[0] + ':' + str.split('T')[1].split(':')[1]
 // }
 
-export function fileIcon(name, type) {
+export function fileIcon(name: string, type: string): string {
   const extension = name.indexOf('.') !== -1 ? name.split('.')[name.split('.').length - 1] : false
   // console.log(extension, name, type)
   if (type === 'text/html') {
@@ -75,7 +75,7 @@ export function fileIcon(name, type) {
   return 'fas fa-file'
 }
 
-export function fileSizeUnit(size) {
+export function fileSizeUnit(size: number) {
   // 1 KB = 1024 Byte
   const kb = 1024
   const mb = Math.pow(kb, 2)
@@ -83,7 +83,7 @@ export function fileSizeUnit(size) {
   const tb = Math.pow(kb, 4)
   const pb = Math.pow(kb, 5)
 
-  const round = (size, unit) => {
+  const round = (size: number, unit: number) => {
     return Math.round((size / unit) * 100.0) / 100.0
   }
 
@@ -111,11 +111,13 @@ export function randomString() {
 }
 
 // charCodeAtは65535までの値を返すが、idは英数字のみなので255以内に収まるはず
-export function stringToBuffer(str) {
+export function stringToBuffer(str: any) {
+  // @ts-ignore
   return new Uint8Array([].map.call(str, (c) => c.charCodeAt(0)))
 }
 
-export function bufferToString(buffer) {
+export function bufferToString(buffer: any) {
+  // @ts-ignore
   return String.fromCharCode.apply('', new Uint8Array(buffer))
 }
 
