@@ -58,6 +58,7 @@
     "@types/redux-thunk": "^2.1.0",
     "@types/socket.io-client": "^3.0.0",
     "@types/superagent": "^4.1.11",
+    "@types/uniqid": "^5.3.0",
     "sass": "^1.35.1"
   }
 }
