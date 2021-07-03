@@ -46,7 +46,7 @@ function updateSendFileList(
 }
 
 export const addFile = (fileList: FileList | null) => {
-  return (dispatch: Dispatch, getState: any) => {
+  return (dispatch: Dispatch, getState: GetState) => {
     if (fileList === null) return false
     const newFileList = [...Array(fileList.length)].map((_, num) => {
       const id = randomString()
@@ -110,29 +110,28 @@ export const addFile = (fileList: FileList | null) => {
 }
 
 // 追加したファイルを1つ削除
-export const deleteFile = (id: any) => {
-  return (dispatch: Dispatch, getState: any) => {
-    const deleteFileList = getState().sender.sendFileList[id]
+export const deleteFile = (id: string) => {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const deleteFileInfo = getState().sender.sendFileList.find((fileInfo) => fileInfo.id === id)
+    if (!deleteFileInfo) return false
     // preSendInfoを送信済みの場合はReceiverに削除を通知する
-    if (deleteFileList.preSendInfo === true) {
+    if (deleteFileInfo.preSendInfo === true) {
       const deleteFileInfo = {
         to: 'receiver',
-        delete: {
-          id: id,
-        },
+        delete: { id },
       }
       sendDataChannel(JSON.stringify(deleteFileInfo))
     }
-    // console.log('ファイル削除')
     updateSendFileList(id, 'delete', true, dispatch, getState)
   }
 }
 
-export const errorFile = (id: any) => {
-  return (dispatch: Dispatch, getState: any) => {
-    const errorFileList = getState().sender.sendFileList[id]
+export const errorFile = (id: string) => {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const errorFileInfo = getState().sender.sendFileList.find((fileInfo) => fileInfo.id === id)
+    if (!errorFileInfo) return false
     // preSendInfoを送信済みの場合はReceiverに削除を通知する
-    if (errorFileList.preSendInfo === true) {
+    if (errorFileInfo.preSendInfo === true) {
       const errorFileInfo = {
         to: 'receiver',
         err: {
@@ -141,17 +140,16 @@ export const errorFile = (id: any) => {
       }
       sendDataChannel(JSON.stringify(errorFileInfo))
     }
-    // console.log('ファイル削除')
     updateSendFileList(id, 'err', true, dispatch, getState)
   }
 }
 
-export const dataChannelOnOpen = (dispatch: Dispatch, getState: any) => {
+export const dataChannelOnOpen = (dispatch: Dispatch, getState: GetState) => {
   sendFileListOnDataChannel(dispatch, getState)
-  return
+  return false
 }
 
-function sendFileListOnDataChannel(dispatch: Dispatch, getState: any) {
+function sendFileListOnDataChannel(dispatch: Dispatch, getState: GetState) {
   if (getState().connection.dataChannelOpenStatus) {
     const sendFileList = getState().sender.sendFileList
     sendFileList.forEach((each: SendFileInfo, num: number) => {
@@ -177,12 +175,12 @@ function sendFileListOnDataChannel(dispatch: Dispatch, getState: any) {
   }
 }
 
-const setSendFileList = (sendFileList: any) => ({
+const setSendFileList = (sendFileList: Array<SendFileInfo>) => ({
   type: ACTION_TYPE.setSendFileList,
   payload: { sendFileList },
 })
 
-export function senderReceiveData(event: any, dispatch: Dispatch, getState: any) {
+export function senderReceiveData(event: any, dispatch: Dispatch, getState: GetState) {
   if (typeof event.data === 'string') {
     if (JSON.parse(event.data).receiveComplete !== undefined) {
       const receiveComplete = JSON.parse(event.data).receiveComplete
@@ -196,7 +194,7 @@ export function senderReceiveData(event: any, dispatch: Dispatch, getState: any)
 }
 
 export const sendData = () => {
-  return (dispatch: Dispatch, getState: any) => {
+  return (dispatch: Dispatch, getState: GetState) => {
     if (!getState().connection.dataChannelOpenStatus) return // console.error('Data Channel not open')
     const sendFileList = Object.assign({}, getState().sender.sendFileList)
     if (Object.keys(sendFileList).length === 0) return // console.error('Send file not found')
@@ -216,7 +214,7 @@ export const sendData = () => {
   }
 }
 
-function sendFileData(id: any, dispatch: Dispatch, getState: any) {
+function sendFileData(id: any, dispatch: Dispatch, getState: GetState) {
   // console.log('ファイル送信処理開始', id)
 
   // ファイル情報を取得
@@ -300,7 +298,7 @@ function sendFileData(id: any, dispatch: Dispatch, getState: any) {
 //   openSend()
 // }
 
-function openSendFile(id: any, fileInfo: any, dispatch: Dispatch, getState: any) {
+function openSendFile(id: any, fileInfo: any, dispatch: Dispatch, getState: GetState) {
   if (!getState().connection.dataChannelOpenStatus) {
     return console.error('dataChannel not open')
   }
