@@ -24,7 +24,7 @@ let packetSize = 1024 * 16 - flagLength - idLength
 
 function updateSendFileList(
   id: string,
-  property: 'preSendInfo' | any,
+  property: keyof SendFileInfo,
   value: any,
   dispatch: Dispatch,
   getState: GetState
