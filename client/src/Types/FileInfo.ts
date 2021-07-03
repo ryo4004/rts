@@ -1,4 +1,4 @@
-export type FileInfo = {
+export type SendFileInfo = {
   id: string
   timestamp: number
   add: boolean
@@ -23,4 +23,26 @@ export type FileInfo = {
   type: string
   webkitRelativePath: any
   file: File
+}
+
+export type ReceiveFileInfo = {
+  id: string
+  order: number
+  timestamp: number
+  add: boolean
+  delete: boolean
+  err: boolean
+  receiveComplete: boolean
+  receiveResult: boolean
+  receive: boolean
+  preReceiveInfo: boolean
+  receivePacketCount: number
+  byteLength: number
+  sendTime: number
+  rest: number
+  lastModified: number
+  name: string
+  size: number
+  type: string
+  webkitRelativePath: string
 }

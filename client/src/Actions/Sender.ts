@@ -5,7 +5,7 @@ import { randomString, stringToBuffer } from '../Library/Library'
 import { sendDataChannel, dataChannelBufferedAmount } from './Connection'
 
 import type { Dispatch } from 'redux'
-import type { FileInfo } from '../Types/FileInfo'
+import type { SendFileInfo } from '../Types/FileInfo'
 
 export const ACTION_TYPE = {
   setSendFileList: 'SENDER_SET_SEND_FILE_LIST',
@@ -139,7 +139,7 @@ export const dataChannelOnOpen = (dispatch: Dispatch, getState: any) => {
 function sendFileListOnDataChannel(dispatch: Dispatch, getState: any) {
   if (getState().connection.dataChannelOpenStatus) {
     const sendFileList = getState().sender.sendFileList
-    sendFileList.forEach((each: FileInfo, num: number) => {
+    sendFileList.forEach((each: SendFileInfo, num: number) => {
       // Receiverに不要な情報を取り除く
       const { load, preSendInfo, send, sendPacketCount, idBuffer, file, ...attr } = each
       if (!preSendInfo) {

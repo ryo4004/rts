@@ -175,25 +175,26 @@ export function receiverReceiveData(event: any, dispatch: Dispatch, getState: an
     if (JSON.parse(event.data).add !== undefined) {
       // 受信ファイル一覧を取得
       // addプロパティを外す
-      const receiveFileList = JSON.parse(event.data).add
+      const receiveFile = JSON.parse(event.data).add
+      const receiveFileInfo = receiveFile.file
       // console.log('受信ファイルリストに追加')
-      Object.assign(receiveFileList, getState().receiver.receiveFileList)
-      dispatch(setReceiveFileList(receiveFileList))
-      return
+      console.log({ receiveFileInfo })
+      dispatch(setReceiveFileList([...getState().receiver.receiveFileList, receiveFileInfo]))
+      return false
     } else if (JSON.parse(event.data).delete !== undefined) {
       // ファイル削除通知
       // deleteプロパティを外す
       const deleteReceive = JSON.parse(event.data).delete
       updateReceiveFileList(deleteReceive.id, 'delete', true, dispatch, getState)
       resetReceiveFileStorage(deleteReceive.id, dispatch, getState)
-      return
+      return false
     } else if (JSON.parse(event.data).err !== undefined) {
       // ファイルエラー通知
       // errプロパティを外す
       const errReceive = JSON.parse(event.data).err
       updateReceiveFileList(errReceive.id, 'err', true, dispatch, getState)
       resetReceiveFileStorage(errReceive.id, dispatch, getState)
-      return
+      return false
     } else if (JSON.parse(event.data).start !== undefined) {
       // ファイル受信開始
       // startプロパティを外す
@@ -209,7 +210,7 @@ export function receiverReceiveData(event: any, dispatch: Dispatch, getState: an
       updateReceiveFileList(startReceive.id, 'preReceiveInfo', true, dispatch, getState)
 
       // receiveFileInfoは上書き
-      return // dispatch(setReceiveFileInfo(receiveData))
+      return false // dispatch(setReceiveFileInfo(receiveData))
     } else if (JSON.parse(event.data).end !== undefined) {
       // ファイル受信完了
       // endプロパティを外す
@@ -218,7 +219,7 @@ export function receiverReceiveData(event: any, dispatch: Dispatch, getState: an
       // console.log('ファイル受信完了')
       createReceiveFile(endReceive.id, dispatch, getState)
       updateReceiveFileList(endReceive.id, 'receive', 100, dispatch, getState)
-      return
+      return false
     }
   }
   // ファイル本体受信

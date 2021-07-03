@@ -1,12 +1,12 @@
 import { ACTION_TYPE } from '../Actions/Sender'
 import type { Actions } from '../Actions/Sender'
 
-import type { FileInfo } from '../Types/FileInfo'
+import type { SendFileInfo } from '../Types/FileInfo'
 
 export type SenderState = {
   loading: boolean
 
-  sendFileList: Array<FileInfo>
+  sendFileList: Array<SendFileInfo>
   sendFileStorage: object // 使用しているか確認する
 }
 
