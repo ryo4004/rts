@@ -134,9 +134,7 @@ export const errorFile = (id: string) => {
     if (errorFileInfo.preSendInfo === true) {
       const errorFileInfo = {
         to: 'receiver',
-        err: {
-          id: id,
-        },
+        err: { id },
       }
       sendDataChannel(JSON.stringify(errorFileInfo))
     }
@@ -195,20 +193,19 @@ export function senderReceiveData(event: any, dispatch: Dispatch, getState: GetS
 
 export const sendData = () => {
   return (dispatch: Dispatch, getState: GetState) => {
-    if (!getState().connection.dataChannelOpenStatus) return // console.error('Data Channel not open')
-    const sendFileList = Object.assign({}, getState().sender.sendFileList)
-    if (Object.keys(sendFileList).length === 0) return // console.error('Send file not found')
+    if (!getState().connection.dataChannelOpenStatus) return false // console.error('Data Channel not open')
+    const sendFileList = getState().sender.sendFileList
+    if (sendFileList.length === 0) return false // console.error('Send file not found')
     // 未送信ファイルのidのみのリストを作成
-    const sendList = Object.keys(sendFileList).filter((id) => {
-      const file = sendFileList[id]
+    const sendList = sendFileList.filter((fileInfo) => {
       // 送信開始済みと削除済みファイルは除外
-      if (!(file.send === false) || file.delete) return false
-      return id
+      if (fileInfo.send !== null || fileInfo.delete) return false
+      return true
     })
     // 未送信ファイルを追加順で送信する
-    sendList.reverse().forEach((id) => {
-      updateSendFileList(id, 'send', 0, dispatch, getState)
-      sendFileData(id, dispatch, getState)
+    sendList.forEach((fileInfo) => {
+      updateSendFileList(fileInfo.id, 'send', 0, dispatch, getState)
+      sendFileData(fileInfo.id, dispatch, getState)
     })
     // if (sendList.length === 0) console.error('送るファイルはありません', sendList)
   }
@@ -218,14 +215,13 @@ function sendFileData(id: any, dispatch: Dispatch, getState: GetState) {
   // console.log('ファイル送信処理開始', id)
 
   // ファイル情報を取得
-  // @ts-ignore
-  const sendFileList = Object.assign({}, getState().sender.sendFileList)
+  const sendFileInfo = getState().sender.sendFileList.find((fileInfo) => fileInfo.id === id)
 
   // 削除されたファイルは何もしない(二重確認)
-  if (sendFileList.delete) return false
+  if (!sendFileInfo || sendFileInfo.delete) return false
 
   // 送信方法を選択
-  return openSendFile(id, sendFileList[id], dispatch, getState)
+  return openSendFile(id, sendFileInfo, dispatch, getState)
   // return sliceOpenSendFile(id, sendFileList[id], dispatch, getState)
 }
 
@@ -298,7 +294,7 @@ function sendFileData(id: any, dispatch: Dispatch, getState: GetState) {
 //   openSend()
 // }
 
-function openSendFile(id: any, fileInfo: any, dispatch: Dispatch, getState: GetState) {
+function openSendFile(id: string, fileInfo: SendFileInfo, dispatch: Dispatch, getState: GetState) {
   if (!getState().connection.dataChannelOpenStatus) {
     return console.error('dataChannel not open')
   }
@@ -335,19 +331,12 @@ function openSendFile(id: any, fileInfo: any, dispatch: Dispatch, getState: GetS
     const startFileInfo = {
       start: {
         to: 'receiver',
-        id: id,
+        id,
         size: {
           byteLength: data.byteLength,
           sendTime: Math.ceil(data.byteLength / packetSize),
           rest: data.byteLength % packetSize,
         },
-        // file: {
-        //   lastModified: fileInfo.lastModified,
-        //   name: fileInfo.name,
-        //   size: fileInfo.size,
-        //   type: fileInfo.type,
-        //   webkitRelativePath: fileInfo.webkitRelativePath
-        // }
       },
     }
     sendDataChannel(JSON.stringify(startFileInfo))
@@ -355,52 +344,12 @@ function openSendFile(id: any, fileInfo: any, dispatch: Dispatch, getState: GetS
     let start = 0
     let sendPacketCount = 0
 
-    // 送信 (レンダリングエンジンが止まる)
-    // while (start < data.byteLength) {
-    //   if (dataChannel.bufferedAmount === 0) {
-    //     let end = start + packetSize
-
-    //     let packetData = data.slice(start, end)
-
-    //     console.log('ファイル送信中')
-
-    //     let packet = new Uint8Array(packetData.byteLength + flagLength + idLength)
-    //     // [0] は終了フラグ
-    //     packet[0] = (end >= data.byteLength ? 1 : 0 )
-    //     // idBufferをpacketに追加
-    //     packet.set(fileInfo.idBuffer, flagLength)
-    //     // dataを追加
-    //     packet.set(new Uint8Array(packetData), flagLength + idLength)
-
-    //     // 送信および状態更新
-    //     sendDataChannel(packet)
-    //     updateSendFileList(id, 'send', Math.ceil(sendPacketCount / fileInfo.sendTime * 1000.0) / 10.0, dispatch, getState)
-
-    //     sendPacketCount++
-    //     start = end
-    //   }
-    // }
-
-    // console.log('送信完了')
-
-    // const endFileInfo = {
-    //   end: {
-    //     id,
-    //   }
-    // }
-    // sendDataChannel(JSON.stringify(endFileInfo))
-    // console.timeEnd('sendFile' + id)
-
-    // updateSendFileList(id, 'send', 100, dispatch, getState)
-
-    // 送信2
+    // 送信処理
     function sendPacket() {
       if (!(start < data.byteLength)) {
         const endFileInfo = {
           to: 'receiver',
-          end: {
-            id,
-          },
+          end: { id },
         }
         sendDataChannel(JSON.stringify(endFileInfo))
         updateSendFileList(id, 'send', 100, dispatch, getState)
