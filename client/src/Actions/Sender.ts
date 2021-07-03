@@ -5,10 +5,8 @@ import { randomString, stringToBuffer } from '../Library/Library'
 import { sendDataChannel, dataChannelBufferedAmount } from './Connection'
 
 import type { Dispatch } from 'redux'
-import { AnyMxRecord } from 'dns'
 
 export const ACTION_TYPE = {
-  setFileList: 'SENDER_SET_FILELIST',
   setSendFileList: 'SENDER_SET_SEND_FILE_LIST',
 } as const
 
@@ -31,9 +29,9 @@ function updateSendFileList(id: any, property: any, value: any, dispatch: Dispat
   dispatch(setSendFileList(sendFileList))
 }
 
-export const addFile = (fileList: React.ChangeEvent<HTMLInputElement>) => {
+export const addFile = (fileList: FileList | null) => {
   return (dispatch: Dispatch, getState: any) => {
-    dispatch(setFileList(fileList))
+    // @ts-ignore
     Object.keys(fileList).forEach((num) => {
       // ファイルごとにid生成
       const id = randomString()
@@ -178,11 +176,6 @@ function sendFileListOnDataChannel(dispatch: Dispatch, getState: any) {
   }
 }
 
-const setFileList = (fileList: any) => ({
-  type: ACTION_TYPE.setFileList,
-  payload: { fileList },
-})
-
 const setSendFileList = (sendFileList: any) => ({
   type: ACTION_TYPE.setSendFileList,
   payload: { sendFileList },
@@ -222,7 +215,7 @@ export const sendData = () => {
   }
 }
 
-function sendFileData(id: any, dispatch: Dispatch, getState: AnyMxRecord) {
+function sendFileData(id: any, dispatch: Dispatch, getState: any) {
   // console.log('ファイル送信処理開始', id)
 
   // ファイル情報を取得

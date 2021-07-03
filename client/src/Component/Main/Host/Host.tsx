@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 import { prepare } from '../../../Actions/Status'
 import { senderConnect, disconnect } from '../../../Actions/Connection'
-import { addFile, sendData, deleteFile } from '../../../Actions/Sender'
+import { sendData, deleteFile } from '../../../Actions/Sender'
 import { version } from '../../../Library/Library'
 
 import FileController from '../FileController/FileController'
@@ -27,7 +27,6 @@ function mapStateToProps(state: State) {
     dataChannelOpenStatus: state.connection.dataChannelOpenStatus,
 
     // ファイル送信用
-    fileList: state.sender.fileList,
     sendFileList: state.sender.sendFileList,
     sendFileStorage: state.sender.sendFileStorage,
   }
@@ -43,9 +42,6 @@ function mapDispatchToProps(dispatch: any) {
     },
     disconnect() {
       dispatch(disconnect())
-    },
-    addFile(fileList: any) {
-      dispatch(addFile(fileList))
     },
     sendData() {
       dispatch(sendData())

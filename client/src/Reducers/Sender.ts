@@ -4,7 +4,6 @@ import type { Actions } from '../Actions/Sender'
 export type SenderState = {
   loading: boolean
 
-  fileList: object // 使用しているか確認する
   sendFileList: object
   sendFileStorage: object // 使用しているか確認する
 }
@@ -14,8 +13,6 @@ const initialState: SenderState = {
 
   // 追加されたファイルと状態の管理
   sendFileList: {},
-
-  fileList: {},
   sendFileStorage: {},
 }
 
