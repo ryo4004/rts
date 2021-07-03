@@ -89,7 +89,7 @@ export const addFile = (fileList: FileList | null) => {
       }
     })
 
-    dispatch(setSendFileList([...getState().sender.sendFileList, newFileList]))
+    dispatch(setSendFileList([...getState().sender.sendFileList, ...newFileList]))
     sendFileListOnDataChannel(dispatch, getState)
   }
 }
