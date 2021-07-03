@@ -5,6 +5,7 @@ import { randomString, stringToBuffer } from '../Library/Library'
 import { sendDataChannel, dataChannelBufferedAmount } from './Connection'
 
 import type { Dispatch } from 'redux'
+import type { GetState } from '../Types/Store'
 import type { SendFileInfo } from '../Types/FileInfo'
 
 export const ACTION_TYPE = {
@@ -21,13 +22,27 @@ let flagLength = 1
 // 1つのpacketは16KB以下にする
 let packetSize = 1024 * 16 - flagLength - idLength
 
-function updateSendFileList(id: any, property: any, value: any, dispatch: Dispatch, getState: any) {
-  // JSON.parse(JSON.stringify())は使わない
-  const sendFileList = {}
-  Object.assign(sendFileList, getState().sender.sendFileList)
-  // @ts-ignore
-  sendFileList[id][property] = value
-  dispatch(setSendFileList(sendFileList))
+function updateSendFileList(
+  id: string,
+  property: 'preSendInfo' | any,
+  value: any,
+  dispatch: Dispatch,
+  getState: GetState
+) {
+  const fileList = getState().sender.sendFileList
+  const targetFileInfo = fileList.find((fileInfo) => fileInfo.id === id)
+  // const targetIndex = fileList.findIndex((fileInfo) => fileInfo.id === id)
+  if (!targetFileInfo) return false
+  const newTargetFileInfo = {
+    ...targetFileInfo,
+    [property]: value,
+  }
+  const newFileList = fileList.map((fileInfo) => {
+    return fileInfo.id === targetFileInfo.id ? newTargetFileInfo : fileInfo
+  })
+  // const newFileList = fileList.splice(targetIndex, 1, targetFileInfo)
+
+  dispatch(setSendFileList(newFileList))
 }
 
 export const addFile = (fileList: FileList | null) => {

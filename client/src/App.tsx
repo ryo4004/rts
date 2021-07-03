@@ -10,7 +10,7 @@ import Main from './Component/Main/Main'
 import { routerMiddleware, ConnectedRouter } from 'connected-react-router'
 
 const history = createBrowserHistory()
-const store = createStore(
+export const store = createStore(
   createRootReducer(history),
   compose(
     applyMiddleware(
