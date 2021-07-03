@@ -50,11 +50,6 @@ function mapDispatchToProps(dispatch: any) {
 type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
 class FileController extends Component<Props> {
-
-  fileSelect(e: any) {
-    this.props.addFile(e.target.files)
-  }
-
   renderSendButton() {
     let button = false
     // ひとつでも送信処理未完了のものがあれば有効
@@ -80,11 +75,12 @@ class FileController extends Component<Props> {
   }
 
   renderAddFiles() {
+    const fileSelect = (e: React.ChangeEvent<HTMLInputElement>) => this.props.addFile(e.target.files)
     return (
       <div className="file-input">
         <label className="file">
           <i className="fas fa-plus-circle"></i>ファイルを追加<span>ファイルをドロップしても追加できます</span>
-          <input type="file" className="file" onChange={(e) => this.fileSelect(e)} multiple value="" />
+          <input type="file" className="file" onChange={(e) => fileSelect(e)} multiple value="" />
         </label>
       </div>
     )
