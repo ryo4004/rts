@@ -5,6 +5,7 @@ import { randomString, stringToBuffer } from '../Library/Library'
 import { sendDataChannel, dataChannelBufferedAmount } from './Connection'
 
 import type { Dispatch } from 'redux'
+import type { FileInfo } from '../Types/FileInfo'
 
 export const ACTION_TYPE = {
   setSendFileList: 'SENDER_SET_SEND_FILE_LIST',
@@ -138,32 +139,26 @@ export const dataChannelOnOpen = (dispatch: Dispatch, getState: any) => {
 function sendFileListOnDataChannel(dispatch: Dispatch, getState: any) {
   if (getState().connection.dataChannelOpenStatus) {
     const sendFileList = getState().sender.sendFileList
-    Object.keys(sendFileList)
-      .reverse()
-      .forEach((num) => {
-        const id = sendFileList[num].id
-        if (!sendFileList[num].preSendInfo) {
-          const sendFileInfo = {
-            to: 'receiver',
-            add: {
-              [id]: Object.assign({}, sendFileList[id]),
+    sendFileList.forEach((each: FileInfo, num: number) => {
+      // Receiverに不要な情報を取り除く
+      const { load, preSendInfo, send, sendPacketCount, idBuffer, file, ...attr } = each
+      if (!preSendInfo) {
+        const sendFileInfo = {
+          to: 'receiver',
+          add: {
+            file: {
+              ...attr,
+              order: num,
+              receive: false,
+              preReceiveInfo: false,
+              receivePacketCount: 0,
             },
-          }
-          // Receiverに不要な情報を削除
-          delete sendFileInfo.add[id].load
-          delete sendFileInfo.add[id].preSendInfo
-          delete sendFileInfo.add[id].send
-          delete sendFileInfo.add[id].sendPacketCount
-          delete sendFileInfo.add[id].idBuffer
-          delete sendFileInfo.add[id].file
-          sendFileInfo.add[id].receive = false
-          sendFileInfo.add[id].preReceiveInfo = false
-          sendFileInfo.add[id].receivePacketCount = 0
-          // console.log('preSendInfo')
-          sendDataChannel(JSON.stringify(sendFileInfo))
-          updateSendFileList(id, 'preSendInfo', true, dispatch, getState)
+          },
         }
-      })
+        sendDataChannel(JSON.stringify(sendFileInfo))
+        updateSendFileList(each.id, 'preSendInfo', true, dispatch, getState)
+      }
+    })
   }
 }
 
