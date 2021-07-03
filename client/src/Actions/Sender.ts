@@ -31,73 +31,64 @@ function updateSendFileList(id: any, property: any, value: any, dispatch: Dispat
 
 export const addFile = (fileList: FileList | null) => {
   return (dispatch: Dispatch, getState: any) => {
-    // @ts-ignore
-    Object.keys(fileList).forEach((num) => {
-      // ファイルごとにid生成
+    if (fileList === null) return false
+    const newFileList = [...Array(fileList.length)].map((_, num) => {
       const id = randomString()
-      // sendFileListに追加する
-      let sendFileList = {
-        [id]: {
-          id: id,
-          timestamp: new Date().getTime(),
-          add: true,
-          delete: false,
-          err: false,
+      return {
+        id,
+        timestamp: new Date().getTime(),
+        add: true,
+        delete: false,
+        err: false,
 
-          // Sender用プロパティ(変更不可)
-          // 読み込み状態
-          load: false,
-          // receiverへfileInfo送信フラグ
-          preSendInfo: false,
-          // ファイル送信フラグ
-          send: false,
-          // packet追加用
-          idBuffer: stringToBuffer(id),
-          // packetCount
-          sendPacketCount: 0,
-          // 送受信処理終了フラグ
-          receiveComplete: false,
-          // 送受信結果
-          receiveResult: false,
+        // Sender用プロパティ(変更不可)
+        // 読み込み状態
+        load: false,
+        // receiverへfileInfo送信フラグ
+        preSendInfo: false,
+        // ファイル送信フラグ
+        send: false,
+        // packet追加用
+        idBuffer: stringToBuffer(id),
+        // packetCount
+        sendPacketCount: 0,
+        // 送受信処理終了フラグ
+        receiveComplete: false,
+        // 送受信結果
+        receiveResult: false,
 
-          // Receiver用プロパティ(変更不可)
-          // receive: false, (ファイルリスト送信時に追加する)
-          // preReceiveInfo: false, (ファイルリスト送信時に追加する)
-          // receivePacketCount: 0, (ファイルリスト送信時に追加する)
+        // Receiver用プロパティ
+        receive: false, // (ファイルリスト送信時に追加する)
+        preReceiveInfo: false, // (ファイルリスト送信時に追加する)
+        receivePacketCount: 0, // (ファイルリスト送信時に追加する)
 
-          // ファイルサイズ情報
-          // @ts-ignore
-          byteLength: fileList[num].size,
-          // @ts-ignore
-          sendTime: Math.ceil(fileList[num].size / packetSize),
-          // @ts-ignore
-          rest: fileList[num].size % packetSize,
+        // ファイルサイズ情報
+        // @ts-ignore
+        byteLength: fileList[num].size,
+        // @ts-ignore
+        sendTime: Math.ceil(fileList[num].size / packetSize),
+        // @ts-ignore
+        rest: fileList[num].size % packetSize,
 
-          // ファイル情報
-          // @ts-ignore
-          lastModified: fileList[num].lastModified,
-          // @ts-ignore
-          name: fileList[num].name,
-          // @ts-ignore
-          size: fileList[num].size,
-          // @ts-ignore
-          type: fileList[num].type,
-          // @ts-ignore
-          webkitRelativePath: fileList[num].webkitRelativePath,
+        // ファイル情報
+        // @ts-ignore
+        lastModified: fileList[num].lastModified,
+        // @ts-ignore
+        name: fileList[num].name,
+        // @ts-ignore
+        size: fileList[num].size,
+        // @ts-ignore
+        type: fileList[num].type,
+        // @ts-ignore
+        webkitRelativePath: fileList[num].webkitRelativePath,
 
-          // file object (FileReaderで利用)
-          // @ts-ignore
-          file: fileList[num],
-        },
+        // file object (FileReaderで利用)
+        // 送信直前に開くのでここではファイルにアクセスしない
+        file: fileList[num],
       }
-      Object.assign(sendFileList, getState().sender.sendFileList)
-      dispatch(setSendFileList(sendFileList))
-      // 送信直前に開くのでここではファイルにアクセスしない
-      // openFile(id, fileList[num], dispatch, getState)
-
-      // ファイルリスト情報を送信する (dataChannelが閉じている場合はなにもしない)
-      // sendFileListOnDataChannel(id, sendFileList, dispatch, getState)
     })
+
+    dispatch(setSendFileList([...getState().sender.sendFileList, newFileList]))
     sendFileListOnDataChannel(dispatch, getState)
   }
 }
