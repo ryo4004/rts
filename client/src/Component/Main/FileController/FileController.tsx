@@ -11,7 +11,6 @@ import type { State } from '../../../Store/Store'
 import './FileController.scss'
 
 function mapStateToProps(state: State) {
-  console.log({ state })
   return {
     loading: state.status.loading,
     mobile: state.status.mobile,
@@ -112,20 +111,18 @@ class FileController extends Component<Props> {
   }
 
   renderSendFileList() {
-    if (!this.props.sendFileList || Object.keys(this.props.sendFileList).length === 0)
+    if (this.props.sendFileList.length === 0)
       return (
         <div className="no-file">
           <p>ファイルがありません</p>
           <p>追加してください</p>
         </div>
       )
-    const sendFileList = Object.keys(this.props.sendFileList).map((id, i) => {
-      // @ts-ignore
-      const each = this.props.sendFileList[id]
+    const sendFileList = this.props.sendFileList.map((each, i) => {
       const icon = <i className={fileIcon(each.name, each.type)}></i>
       const fileSize = fileSizeUnit(each.size)
       const count =
-        each.send === false
+        each.send === null
           ? false
           : each.receiveComplete === false
           ? each.delete
@@ -159,15 +156,15 @@ class FileController extends Component<Props> {
 
       // load はファイルをあらかじめ開く場合に必要
       const sendPercent =
-        each.send === false ? (
+        each.send === null ? (
           <div className="send-percent standby"></div>
         ) : each.send !== 100 ? (
-          <div className="send-percent sending">{each.send.toFixed(1) + '%'}</div>
+          <div className="send-percent sending">{each.send && each.send.toFixed(1) + '%'}</div>
         ) : (
           <div className={'send-percent' + (each.receiveComplete ? ' complete' : '')}>{each.send + '%'}</div>
         )
       const status =
-        each.send === false ? (
+        each.send === null ? (
           each.load ? (
             <span>ファイル読み込み中...</span>
           ) : (
@@ -183,7 +180,7 @@ class FileController extends Component<Props> {
           <span>送信失敗</span>
         )
       const statusClass =
-        each.send === false
+        each.send === null
           ? each.load
             ? 'loading'
             : 'not-send'
@@ -199,7 +196,7 @@ class FileController extends Component<Props> {
         return (
           <div
             className={
-              'send-progress-bar' + (each.send === false ? ' standby' : each.receiveComplete ? ' complete' : ' sending')
+              'send-progress-bar' + (each.send === null ? ' standby' : each.receiveComplete ? ' complete' : ' sending')
             }
           >
             <div className="send-progress" style={sendProgress}></div>

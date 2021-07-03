@@ -47,7 +47,7 @@ export const addFile = (fileList: FileList | null) => {
         // receiverへfileInfo送信フラグ
         preSendInfo: false,
         // ファイル送信フラグ
-        send: false,
+        send: null,
         // packet追加用
         idBuffer: stringToBuffer(id),
         // packetCount
