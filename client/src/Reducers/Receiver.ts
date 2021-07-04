@@ -1,6 +1,7 @@
 import { ACTION_TYPE } from '../Actions/Receiver'
 import type { Actions } from '../Actions/Receiver'
 import type { ReceiveFileInfo } from '../Types/FileInfo'
+import type { ReceiveFileStorage } from '../Types/FileStorage'
 
 export type ReceiverState = {
   loading: boolean
@@ -8,7 +9,7 @@ export type ReceiverState = {
   // 追加されたファイルと状態の管理
   receiveFileList: Array<ReceiveFileInfo>
   // ファイル一時置き場
-  receiveFileStorage: object
+  receiveFileStorage: Array<ReceiveFileStorage>
 
   // ファイルURLリスト
   receiveFileUrlList: object
@@ -24,7 +25,7 @@ const initialState: ReceiverState = {
   // 追加されたファイルと状態の管理
   receiveFileList: [],
   // ファイル一時置き場
-  receiveFileStorage: {},
+  receiveFileStorage: [],
 
   // ファイルURLリスト
   receiveFileUrlList: {},

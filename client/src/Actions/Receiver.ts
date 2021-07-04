@@ -5,6 +5,7 @@ import { sendDataChannel } from './Connection'
 import type { Dispatch } from 'redux'
 import type { GetState } from '../Types/Store'
 import type { ReceiveFileInfo } from '../Types/FileInfo'
+import type { ReceiveFileStorage } from '../Types/FileStorage'
 
 // 定数
 // ファイルIDは16文字
@@ -53,12 +54,10 @@ function updateReceiveFileList(
   dispatch(setReceiveFileList(newFileList))
 }
 
-function resetReceiveFileStorage(id: any, dispatch: Dispatch, getState: GetState) {
-  const receiveFileStorage = {}
-  Object.assign(receiveFileStorage, getState().receiver.receiveFileStorage)
-  // @ts-ignore
-  receiveFileStorage[id] = { packets: [] }
-  dispatch(setReceiveFileStorage(receiveFileStorage))
+function resetReceiveFileStorage(id: string, dispatch: Dispatch, getState: GetState) {
+  const receiveFileStorage = getState().receiver.receiveFileStorage
+  const newFileStorage = { id, packets: [] }
+  dispatch(setReceiveFileStorage([...receiveFileStorage, newFileStorage]))
 }
 
 function updateReceiveFileStorage(id: any, value: any, dispatch: Dispatch, getState: GetState) {
@@ -70,8 +69,9 @@ function updateReceiveFileStorage(id: any, value: any, dispatch: Dispatch, getSt
   dispatch(setReceiveFileStorage(receiveFileStorage))
 }
 
-function createReceiveFile(id: any, dispatch: Dispatch, getState: GetState) {
-  const receiveFileInfo = getState().receiver.receiveFileList[id]
+function createReceiveFile(id: string, dispatch: Dispatch, getState: GetState) {
+  const receiveFileInfo = getState().receiver.receiveFileList.find((fileInfo) => fileInfo.id === id)
+  if (!receiveFileInfo) return false
   const packets = getState().receiver.receiveFileStorage[id].packets
 
   const receiveResult = receiveFileInfo.receivePacketCount === receiveFileInfo.sendTime ? true : false
@@ -246,7 +246,7 @@ const setReceiveFileUrlList = (receiveFileUrlList: any) => ({
   payload: { receiveFileUrlList },
 })
 
-const setReceiveFileStorage = (receiveFileStorage: any) => ({
+const setReceiveFileStorage = (receiveFileStorage: Array<ReceiveFileStorage>) => ({
   type: ACTION_TYPE.setReceiveFileStorage,
   payload: { receiveFileStorage },
 })
