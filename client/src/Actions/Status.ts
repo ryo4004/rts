@@ -1,5 +1,4 @@
 import { divisionWidth } from '../Library/Library'
-// import { connectSocket } from './Socket'
 
 import type { Dispatch } from 'redux'
 

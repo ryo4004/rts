@@ -1,7 +1,6 @@
 import { io } from 'socket.io-client'
 
 import { senderReceiveData, dataChannelOnOpen } from './Sender'
-
 import { receiverReceiveData, receiverError } from './Receiver'
 
 import type { Dispatch } from 'redux'

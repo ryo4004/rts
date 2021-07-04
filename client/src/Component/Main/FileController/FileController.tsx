@@ -11,7 +11,6 @@ import type { State } from '../../../Store/Store'
 import './FileController.scss'
 
 function mapStateToProps(state: State) {
-  console.log(state)
   return {
     loading: state.status.loading,
     mobile: state.status.mobile,
@@ -360,11 +359,6 @@ class FileController extends Component<Props> {
     )
   }
 
-  // デバッグ用
-  show() {
-    console.log('send', this.props.sendFileList, 'receive', this.props.receiveFileList)
-  }
-
   render() {
     const addFiles = this.renderAddFiles()
     const sendButton = this.renderSendButton()
@@ -374,8 +368,6 @@ class FileController extends Component<Props> {
 
     return (
       <div className="file-controller">
-        {/* デバッグ用 */}
-        <button onClick={() => this.show()}>表示</button>
         <div className="file-send">
           <label>送信ファイル</label>
           {addFiles}

@@ -1,8 +1,5 @@
-import { bufferToString } from '../Library/Library'
-
+import { ID_LENGTH, FLAG_LENGTH, bufferToString } from '../Library/Library'
 import { sendDataChannel } from './Connection'
-
-import { ID_LENGTH, FLAG_LENGTH } from '../Library/Library'
 
 import type { Dispatch } from 'redux'
 import type { GetState } from '../Types/Store'

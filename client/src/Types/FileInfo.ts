@@ -34,7 +34,6 @@ export type SendFileInfo = {
   name: string
   size: number
   type: string
-  webkitRelativePath: any
 
   // file object (FileReaderで利用)
   // 送信直前に開くのでここではファイルにアクセスしない
