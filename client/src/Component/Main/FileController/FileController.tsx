@@ -227,16 +227,15 @@ class FileController extends Component<Props> {
   }
 
   renderReceiveFileList() {
-    if (!this.props.receiveFileList || Object.keys(this.props.receiveFileList).length === 0)
+    if (this.props.receiveFileList.length === 0) {
       return (
         <div className="no-file">
           <p>まだファイルがありません</p>
           <p>相手がファイルを追加するとここに表示されます</p>
         </div>
       )
-    const receiveFileList = Object.keys(this.props.receiveFileList).map((id, i) => {
-      // @ts-ignore
-      const each = this.props.receiveFileList[id]
+    }
+    const receiveFileList = this.props.receiveFileList.map((each, i) => {
       const icon = <i className={fileIcon(each.name, each.type)}></i>
       const fileSize = fileSizeUnit(each.size)
 
@@ -261,12 +260,11 @@ class FileController extends Component<Props> {
       }
 
       // 受信完了後
-      // @ts-ignore
-      if (this.props.receiveFileUrlList[each.id] && each.receiveResult) {
+      if (each.receiveResult) {
+        const fileUrl = this.props.receiveFileUrlList.find((fileUrl) => fileUrl.id === each.id)
         return (
           <li key={'filelist-' + i} className="receive-filelist complete">
-            {/* @ts-ignore */}
-            <a href={this.props.receiveFileUrlList[each.id]} download={each.name}>
+            <a href={fileUrl?.url} download={each.name}>
               <div className="receive-status complete">
                 <span>完了</span>
               </div>
@@ -283,7 +281,7 @@ class FileController extends Component<Props> {
       }
 
       const status =
-        each.receive === false ? (
+        each.receive === null ? (
           <span>未受信</span>
         ) : each.receive !== 100 ? (
           <span>受信中</span>
@@ -295,7 +293,7 @@ class FileController extends Component<Props> {
           <span>受信失敗</span>
         )
       const statusClass =
-        each.receive === false
+        each.receive === null
           ? 'not-receive'
           : each.receive !== 100
           ? 'receiving'
@@ -305,7 +303,7 @@ class FileController extends Component<Props> {
           ? 'complete'
           : 'failed'
       const receivePercent =
-        each.receive === false ? (
+        each.receive === null ? (
           <div className="receive-percent standby">{each.receive + '%'}</div>
         ) : each.receive !== 100 ? (
           <div className="receive-percent receiving">{each.receive.toFixed(1) + '%'}</div>
@@ -314,7 +312,7 @@ class FileController extends Component<Props> {
         )
       const receiveProgress = each.receive ? { backgroundSize: each.receive + '% 100%' } : { backgroundSize: '0% 100%' }
       const count =
-        each.receive === false
+        each.receive === null
           ? false
           : each.receiveResult === false
           ? each.receivePacketCount + '/' + each.sendTime
@@ -324,7 +322,7 @@ class FileController extends Component<Props> {
           <div
             className={
               'receive-progress-bar' +
-              (each.receive === false ? ' standby' : each.receive !== 100 ? ' receiving' : ' complete')
+              (each.receive === null ? ' standby' : each.receive !== 100 ? ' receiving' : ' complete')
             }
           >
             <div className="receive-progress" style={receiveProgress}></div>

@@ -34,7 +34,7 @@ export type ReceiveFileInfo = {
   err: boolean
   receiveComplete: boolean
   receiveResult: boolean
-  receive: boolean
+  receive: number | null
   preReceiveInfo: boolean
   receivePacketCount: number
   byteLength: number
