@@ -125,7 +125,7 @@ export function receiverReceiveData(event: any, dispatch: Dispatch, getState: Ge
       const receiveFile = JSON.parse(event.data).add
       const receiveFileInfo = receiveFile.file
       // console.log('受信ファイルリストに追加')
-      dispatch(setReceiveFileList([...getState().receiver.receiveFileList, receiveFileInfo]))
+      dispatch(setReceiveFileList([receiveFileInfo, ...getState().receiver.receiveFileList]))
       return false
     } else if (JSON.parse(event.data).delete !== undefined) {
       // ファイル削除通知

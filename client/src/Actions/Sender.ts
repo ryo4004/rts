@@ -57,7 +57,7 @@ export const addFile = (fileList: FileList | null) => {
       }
     })
 
-    dispatch(setSendFileList([...getState().sender.sendFileList, ...newFileList]))
+    dispatch(setSendFileList([...newFileList, ...getState().sender.sendFileList]))
     sendFileListOnDataChannel(dispatch, getState)
   }
 }
@@ -102,27 +102,29 @@ export const dataChannelOnOpen = (dispatch: Dispatch, getState: GetState) => {
 
 function sendFileListOnDataChannel(dispatch: Dispatch, getState: GetState) {
   if (getState().connection.dataChannelOpenStatus) {
-    const sendFileList = getState().sender.sendFileList
-    sendFileList.forEach((each: SendFileInfo, num: number) => {
-      // Receiverに不要な情報を取り除く
-      const { load, preSendInfo, send, sendPacketCount, idBuffer, file, ...attr } = each
-      if (!preSendInfo) {
-        const sendFileInfo: { to: 'receiver'; add: { file: ReceiveFileInfo } } = {
-          to: 'receiver',
-          add: {
-            file: {
-              ...attr,
-              order: num,
-              receive: null,
-              preReceiveInfo: false,
-              receivePacketCount: 0,
+    getState()
+      .sender.sendFileList.map((fileInfo) => fileInfo) // 別の配列にする
+      .reverse()
+      .forEach((each: SendFileInfo, num: number) => {
+        // Receiverに不要な情報を取り除く
+        const { load, preSendInfo, send, sendPacketCount, idBuffer, file, ...attr } = each
+        if (!preSendInfo) {
+          const sendFileInfo: { to: 'receiver'; add: { file: ReceiveFileInfo } } = {
+            to: 'receiver',
+            add: {
+              file: {
+                ...attr,
+                order: num,
+                receive: null,
+                preReceiveInfo: false,
+                receivePacketCount: 0,
+              },
             },
-          },
+          }
+          sendDataChannel(JSON.stringify(sendFileInfo))
+          updateSendFileList(each.id, 'preSendInfo', true, dispatch, getState)
         }
-        sendDataChannel(JSON.stringify(sendFileInfo))
-        updateSendFileList(each.id, 'preSendInfo', true, dispatch, getState)
-      }
-    })
+      })
   }
 }
 
