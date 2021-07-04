@@ -2,6 +2,7 @@ import { ACTION_TYPE } from '../Actions/Receiver'
 import type { Actions } from '../Actions/Receiver'
 import type { ReceiveFileInfo } from '../Types/FileInfo'
 import type { ReceiveFileStorage } from '../Types/FileStorage'
+import type { ReceiveFileUrl } from '../Types/FileUrl'
 
 export type ReceiverState = {
   loading: boolean
@@ -12,7 +13,7 @@ export type ReceiverState = {
   receiveFileStorage: Array<ReceiveFileStorage>
 
   // ファイルURLリスト
-  receiveFileUrlList: object
+  receiveFileUrlList: Array<ReceiveFileUrl>
   // receivedFileUrl: undefined,
 
   errorState: boolean | undefined
@@ -28,7 +29,7 @@ const initialState: ReceiverState = {
   receiveFileStorage: [],
 
   // ファイルURLリスト
-  receiveFileUrlList: {},
+  receiveFileUrlList: [],
   // receivedFileUrl: undefined,
 
   errorState: undefined,
