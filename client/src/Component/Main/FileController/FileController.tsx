@@ -11,6 +11,7 @@ import type { State } from '../../../Store/Store'
 import './FileController.scss'
 
 function mapStateToProps(state: State) {
+  console.log(state)
   return {
     loading: state.status.loading,
     mobile: state.status.mobile,

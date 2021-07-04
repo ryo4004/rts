@@ -29,7 +29,7 @@ export const receiverError = (errorTextClient: any, errorTextServer: any) => ({
   },
 })
 
-const setReceiveFileList = (receiveFileList: any) => ({
+const setReceiveFileList = (receiveFileList: Array<ReceiveFileInfo>) => ({
   type: ACTION_TYPE.setReceiveFileList,
   payload: { receiveFileList },
 })
@@ -59,20 +59,23 @@ function resetReceiveFileStorage(id: string, dispatch: Dispatch, getState: GetSt
   dispatch(setReceiveFileStorage(newReceiveFileStorage))
 }
 
-function updateReceiveFileStorage(id: string, value: any, dispatch: Dispatch, getState: GetState) {
+function updateReceiveFileStorage(id: string, value: Uint8Array, dispatch: Dispatch, getState: GetState) {
   const receiveFileStorage = getState().receiver.receiveFileStorage
   const targetFileStorage = receiveFileStorage.find((fileStorage) => fileStorage.id === id)
-  if (!targetFileStorage) return false
-  const newReceiveFileStorage = receiveFileStorage.map((fileStorage) => {
-    if (fileStorage.id === id) {
-      return {
-        ...targetFileStorage,
-        packets: [...targetFileStorage.packets, value],
+  if (!targetFileStorage) {
+    dispatch(setReceiveFileStorage([...receiveFileStorage, { id, packets: [value] }]))
+  } else {
+    const newReceiveFileStorage = receiveFileStorage.map((fileStorage) => {
+      if (fileStorage.id === id) {
+        return {
+          ...targetFileStorage,
+          packets: [...targetFileStorage.packets, value],
+        }
       }
-    }
-    return fileStorage
-  })
-  dispatch(setReceiveFileStorage(newReceiveFileStorage))
+      return fileStorage
+    })
+    dispatch(setReceiveFileStorage(newReceiveFileStorage))
+  }
 }
 
 function createReceiveFile(id: string, dispatch: Dispatch, getState: GetState) {

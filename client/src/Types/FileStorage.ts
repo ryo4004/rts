@@ -1,4 +1,4 @@
 export type ReceiveFileStorage = {
   id: string
-  packets: Array<any>
+  packets: Array<Uint8Array>
 }
