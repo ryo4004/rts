@@ -51,24 +51,12 @@ type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchT
 
 class FileController extends Component<Props> {
   renderSendButton() {
-    let button = false
     // ひとつでも送信処理未完了のものがあれば有効
-    Object.keys(this.props.sendFileList).forEach((id, i) => {
-      // @ts-ignore
-      if (this.props.sendFileList[id].send === false) {
-        button = true
-      }
-    })
-    if (!this.props.dataChannelOpenStatus) {
-      button = false
-    }
-    const onClickHander = button
-      ? () => this.props.sendData()
-      : () => {
-          return false
-        }
+    const buttonAvailable =
+      this.props.dataChannelOpenStatus && this.props.sendFileList.some((fileInfo) => fileInfo.send === null)
+    const onClickHander = buttonAvailable ? () => this.props.sendData() : () => false
     return (
-      <button className={'send-button' + (button ? ' true' : ' disable')} onClick={onClickHander}>
+      <button className={'send-button' + (buttonAvailable ? ' true' : ' disable')} onClick={onClickHander}>
         送信
       </button>
     )
