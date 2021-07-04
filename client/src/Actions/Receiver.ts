@@ -2,17 +2,13 @@ import { bufferToString } from '../Library/Library'
 
 import { sendDataChannel } from './Connection'
 
+import { ID_LENGTH, FLAG_LENGTH } from '../Library/Library'
+
 import type { Dispatch } from 'redux'
 import type { GetState } from '../Types/Store'
 import type { ReceiveFileInfo } from '../Types/FileInfo'
 import type { ReceiveFileStorage } from '../Types/FileStorage'
 import type { ReceiveFileUrl } from '../Types/FileUrl'
-
-// 定数
-// ファイルIDは16文字
-let idLength = 16
-// 終了フラグサイズ
-let flagLength = 1
 
 export const ACTION_TYPE = {
   receiverError: 'RECEIVER_SET_RECEIVE_ERROR',
@@ -102,7 +98,7 @@ function createReceiveFile(id: string, dispatch: Dispatch, getState: GetState) {
   let fileArray: any = []
 
   packets.forEach((packet: any, i: number) => {
-    fileArray.push(packet.slice(flagLength + idLength))
+    fileArray.push(packet.slice(FLAG_LENGTH + ID_LENGTH))
   })
 
   const file = new File(fileArray, receiveFileInfo.name, {
@@ -174,7 +170,7 @@ export function receiverReceiveData(event: any, dispatch: Dispatch, getState: Ge
   }
   // ファイル本体受信
   const receiveData = new Uint8Array(event.data)
-  const id = bufferToString(receiveData.slice(flagLength, flagLength + idLength))
+  const id = bufferToString(receiveData.slice(FLAG_LENGTH, FLAG_LENGTH + ID_LENGTH))
   const receiveFileList = getState().receiver.receiveFileList
   const receiveFileInfo = receiveFileList.find((fileInfo) => fileInfo.id === id)
   if (!receiveFileInfo) return false

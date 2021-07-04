@@ -4,6 +4,8 @@ import { randomString, stringToBuffer } from '../Library/Library'
 
 import { sendDataChannel, dataChannelBufferedAmount } from './Connection'
 
+import { ID_LENGTH, FLAG_LENGTH, PACKET_SIZE } from '../Library/Library'
+
 import type { Dispatch } from 'redux'
 import type { GetState } from '../Types/Store'
 import type { SendFileInfo, ReceiveFileInfo } from '../Types/FileInfo'
@@ -13,14 +15,6 @@ export const ACTION_TYPE = {
 } as const
 
 export type Actions = ReturnType<typeof setSendFileList>
-
-// 定数
-// ファイルIDは16文字
-let idLength = 16
-// 終了フラグサイズ
-let flagLength = 1
-// 1つのpacketは16KB以下にする
-let packetSize = 1024 * 16 - flagLength - idLength
 
 function updateSendFileList(
   id: string,
@@ -75,8 +69,8 @@ export const addFile = (fileList: FileList | null) => {
 
         // ファイルサイズ情報
         byteLength: fileList[num].size,
-        sendTime: Math.ceil(fileList[num].size / packetSize),
-        rest: fileList[num].size % packetSize,
+        sendTime: Math.ceil(fileList[num].size / PACKET_SIZE),
+        rest: fileList[num].size % PACKET_SIZE,
 
         // ファイル情報
         lastModified: fileList[num].lastModified,
@@ -224,8 +218,8 @@ function sendFileData(id: any, dispatch: Dispatch, getState: GetState) {
 
 //   // file.sizeとbyteLengthは同じっぽい(ファイル追加時に取得している)
 //   // updateSendFileList(id, 'byteLength', fileInfo.size, dispatch, getState)
-//   // updateSendFileList(id, 'sendTime', Math.ceil(fileInfo.size / packetSize), dispatch, getState)
-//   // updateSendFileList(id, 'rest', fileInfo.size % packetSize, dispatch, getState)
+//   // updateSendFileList(id, 'sendTime', Math.ceil(fileInfo.size / PACKET_SIZE), dispatch, getState)
+//   // updateSendFileList(id, 'rest', fileInfo.size % PACKET_SIZE, dispatch, getState)
 //   const startFileInfo = {
 //     to: 'receiver',
 //     start: {
@@ -257,16 +251,16 @@ function sendFileData(id: any, dispatch: Dispatch, getState: GetState) {
 //       // console.log('ファイル送信完了')
 //       return
 //     }
-//     let end = start + packetSize
+//     let end = start + PACKET_SIZE
 //     const fs = new FileReader()
 //     fs.onloadend = (event) => {
 //       if (event.target.readyState == FileReader.DONE) {
 //         // 送信するpacketの準備
 //         let packetData = event.target.result
-//         let packet = new Uint8Array(packetData.byteLength + flagLength + idLength)
+//         let packet = new Uint8Array(packetData.byteLength + FLAG_LENGTH + ID_LENGTH)
 //         packet[0] = (end >= file.size ? 1 : 0)
-//         packet.set(fileInfo.idBuffer, flagLength)
-//         packet.set(new Uint8Array(packetData), flagLength + idLength)
+//         packet.set(fileInfo.idBuffer, FLAG_LENGTH)
+//         packet.set(new Uint8Array(packetData), FLAG_LENGTH + ID_LENGTH)
 //         // Chrome待機用(不要になったかも)
 //         while (dataChannelBufferedAmount() > 0) {}
 //         // 送信および状態更新
@@ -317,16 +311,16 @@ function openSendFile(id: string, fileInfo: SendFileInfo, dispatch: Dispatch, ge
     // @ts-ignore
     let data = new Uint8Array(event.target.result)
     updateSendFileList(id, 'byteLength', data.byteLength, dispatch, getState)
-    updateSendFileList(id, 'sendTime', Math.ceil(data.byteLength / packetSize), dispatch, getState)
-    updateSendFileList(id, 'rest', data.byteLength % packetSize, dispatch, getState)
+    updateSendFileList(id, 'sendTime', Math.ceil(data.byteLength / PACKET_SIZE), dispatch, getState)
+    updateSendFileList(id, 'rest', data.byteLength % PACKET_SIZE, dispatch, getState)
     const startFileInfo = {
       start: {
         to: 'receiver',
         id,
         size: {
           byteLength: data.byteLength,
-          sendTime: Math.ceil(data.byteLength / packetSize),
-          rest: data.byteLength % packetSize,
+          sendTime: Math.ceil(data.byteLength / PACKET_SIZE),
+          rest: data.byteLength % PACKET_SIZE,
         },
       },
     }
@@ -347,12 +341,12 @@ function openSendFile(id: string, fileInfo: SendFileInfo, dispatch: Dispatch, ge
         return
       }
       if (dataChannelBufferedAmount() === 0) {
-        let end = start + packetSize
+        let end = start + PACKET_SIZE
         let packetData = data.slice(start, end)
-        let packet = new Uint8Array(packetData.byteLength + flagLength + idLength)
+        let packet = new Uint8Array(packetData.byteLength + FLAG_LENGTH + ID_LENGTH)
         packet[0] = end >= data.byteLength ? 1 : 0
-        packet.set(fileInfo.idBuffer, flagLength)
-        packet.set(new Uint8Array(packetData), flagLength + idLength)
+        packet.set(fileInfo.idBuffer, FLAG_LENGTH)
+        packet.set(new Uint8Array(packetData), FLAG_LENGTH + ID_LENGTH)
 
         // 送信および状態更新
         sendDataChannel(packet)
