@@ -57,8 +57,10 @@ function updateReceiveFileList(
 
 function resetReceiveFileStorage(id: string, dispatch: Dispatch, getState: GetState) {
   const receiveFileStorage = getState().receiver.receiveFileStorage
-  const newFileStorage = { id, packets: [] }
-  dispatch(setReceiveFileStorage([...receiveFileStorage, newFileStorage]))
+  const newReceiveFileStorage = receiveFileStorage.map((fileStorage) => {
+    return fileStorage.id === id ? { id, packets: [] } : fileStorage
+  })
+  dispatch(setReceiveFileStorage(newReceiveFileStorage))
 }
 
 function updateReceiveFileStorage(id: string, value: any, dispatch: Dispatch, getState: GetState) {
@@ -127,7 +129,6 @@ export function receiverReceiveData(event: any, dispatch: Dispatch, getState: Ge
       const receiveFile = JSON.parse(event.data).add
       const receiveFileInfo = receiveFile.file
       // console.log('受信ファイルリストに追加')
-      console.log({ receiveFileInfo })
       dispatch(setReceiveFileList([...getState().receiver.receiveFileList, receiveFileInfo]))
       return false
     } else if (JSON.parse(event.data).delete !== undefined) {
