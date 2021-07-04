@@ -3,6 +3,8 @@ import { bufferToString } from '../Library/Library'
 import { sendDataChannel } from './Connection'
 
 import type { Dispatch } from 'redux'
+import type { GetState } from '../Types/Store'
+import type { ReceiveFileInfo } from '../Types/FileInfo'
 
 // 定数
 // ファイルIDは16文字
@@ -34,24 +36,24 @@ const setReceiveFileList = (receiveFileList: any) => ({
   payload: { receiveFileList },
 })
 
-function updateReceiveFileList(id: any, property: any, value: any, dispatch: Dispatch, getState: any) {
-  // JSON.parse(JSON.stringify())は使わない
-  const receiveFileList = {}
-  Object.assign(receiveFileList, getState().receiver.receiveFileList)
-  // @ts-ignore
-  receiveFileList[id][property] = value
-  dispatch(setReceiveFileList(receiveFileList))
+function updateReceiveFileList(
+  id: string,
+  property: keyof ReceiveFileInfo,
+  value: any,
+  dispatch: Dispatch,
+  getState: GetState
+) {
+  const fileList = getState().receiver.receiveFileList
+  const targetFileInfo = fileList.find((fileInfo) => fileInfo.id === id)
+  if (!targetFileInfo) return false
+  const newTargetFileInfo = { ...targetFileInfo, [property]: value }
+  const newFileList = fileList.map((fileInfo) => {
+    return fileInfo.id === targetFileInfo.id ? newTargetFileInfo : fileInfo
+  })
+  dispatch(setReceiveFileList(newFileList))
 }
 
-// function updateReceiveFileInfo(property, value, dispatch, getState) {
-//   // JSON.parse(JSON.stringify())は使わない
-//   const receiveFileList = {}
-//   Object.assign(receiveFileList, getState().sender.receiveFileList)
-//   receiveFileList[id][property] = value
-//   dispatch(setReceiveFileList(receiveFileList))
-// }
-
-function resetReceiveFileStorage(id: any, dispatch: Dispatch, getState: any) {
+function resetReceiveFileStorage(id: any, dispatch: Dispatch, getState: GetState) {
   const receiveFileStorage = {}
   Object.assign(receiveFileStorage, getState().receiver.receiveFileStorage)
   // @ts-ignore
@@ -59,7 +61,7 @@ function resetReceiveFileStorage(id: any, dispatch: Dispatch, getState: any) {
   dispatch(setReceiveFileStorage(receiveFileStorage))
 }
 
-function updateReceiveFileStorage(id: any, value: any, dispatch: Dispatch, getState: any) {
+function updateReceiveFileStorage(id: any, value: any, dispatch: Dispatch, getState: GetState) {
   // JSON.parse(JSON.stringify())は使わない
   const receiveFileStorage = {}
   Object.assign(receiveFileStorage, getState().receiver.receiveFileStorage)
@@ -68,7 +70,7 @@ function updateReceiveFileStorage(id: any, value: any, dispatch: Dispatch, getSt
   dispatch(setReceiveFileStorage(receiveFileStorage))
 }
 
-function createReceiveFile(id: any, dispatch: Dispatch, getState: any) {
+function createReceiveFile(id: any, dispatch: Dispatch, getState: GetState) {
   const receiveFileInfo = getState().receiver.receiveFileList[id]
   const packets = getState().receiver.receiveFileStorage[id].packets
 
@@ -169,7 +171,7 @@ function createReceiveFile(id: any, dispatch: Dispatch, getState: any) {
 }
 
 // データ受信
-export function receiverReceiveData(event: any, dispatch: Dispatch, getState: any) {
+export function receiverReceiveData(event: any, dispatch: Dispatch, getState: GetState) {
   if (typeof event.data === 'string') {
     // オブジェクトのプロパティによって処理判定
     if (JSON.parse(event.data).add !== undefined) {
