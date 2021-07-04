@@ -45,7 +45,6 @@ export type ReceiveFileInfo = Omit<
   // keyof SenderInfo
   'load' | 'preSendInfo' | 'send' | 'sendPacketCount' | 'idBuffer' | 'file'
 > & {
-  order: number
   // Receiver用プロパティ(Sender側でファイルリスト送信時に追加する)
   receive: number | null
   preReceiveInfo: boolean

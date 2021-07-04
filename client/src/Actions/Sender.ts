@@ -114,7 +114,6 @@ function sendFileListOnDataChannel(dispatch: Dispatch, getState: GetState) {
             add: {
               file: {
                 ...attr,
-                order: num,
                 receive: null,
                 preReceiveInfo: false,
                 receivePacketCount: 0,
