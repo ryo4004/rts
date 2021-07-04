@@ -6,7 +6,7 @@ import { sendDataChannel, dataChannelBufferedAmount } from './Connection'
 
 import type { Dispatch } from 'redux'
 import type { GetState } from '../Types/Store'
-import type { SendFileInfo } from '../Types/FileInfo'
+import type { SendFileInfo, ReceiveFileInfo } from '../Types/FileInfo'
 
 export const ACTION_TYPE = {
   setSendFileList: 'SENDER_SET_SEND_FILE_LIST',
@@ -73,27 +73,15 @@ export const addFile = (fileList: FileList | null) => {
         // 送受信結果
         receiveResult: false,
 
-        // Receiver用プロパティ
-        receive: false, // (ファイルリスト送信時に追加する)
-        preReceiveInfo: false, // (ファイルリスト送信時に追加する)
-        receivePacketCount: 0, // (ファイルリスト送信時に追加する)
-
         // ファイルサイズ情報
-        // @ts-ignore
         byteLength: fileList[num].size,
-        // @ts-ignore
         sendTime: Math.ceil(fileList[num].size / packetSize),
-        // @ts-ignore
         rest: fileList[num].size % packetSize,
 
         // ファイル情報
-        // @ts-ignore
         lastModified: fileList[num].lastModified,
-        // @ts-ignore
         name: fileList[num].name,
-        // @ts-ignore
         size: fileList[num].size,
-        // @ts-ignore
         type: fileList[num].type,
         // @ts-ignore
         webkitRelativePath: fileList[num].webkitRelativePath,
@@ -154,13 +142,16 @@ function sendFileListOnDataChannel(dispatch: Dispatch, getState: GetState) {
       // Receiverに不要な情報を取り除く
       const { load, preSendInfo, send, sendPacketCount, idBuffer, file, ...attr } = each
       if (!preSendInfo) {
-        const sendFileInfo = {
+        const sendFileInfo: {
+          to: 'receiver'
+          add: { file: ReceiveFileInfo }
+        } = {
           to: 'receiver',
           add: {
             file: {
               ...attr,
               order: num,
-              receive: false,
+              receive: null,
               preReceiveInfo: false,
               receivePacketCount: 0,
             },
