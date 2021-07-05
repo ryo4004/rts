@@ -7,7 +7,6 @@
     "start": "ts-node ./server/app.ts",
     "start-dev": "ts-node-dev ./server/app.ts",
     "build": "tsc",
-    "preproduction": "tsc",
     "production": "PRODUCTION=true node ./build/app.js",
     "lint": "eslint ./server --config .eslintrc.json",
     "typecheck": "tsc --noEmit",

@@ -1,0 +1,2 @@
+name: rts
+script: yarn production
