@@ -9,6 +9,8 @@ import thunk from 'redux-thunk'
 import Main from './Component/Main/Main'
 import { routerMiddleware, ConnectedRouter } from 'connected-react-router'
 
+import { GA_ID } from './Library/Library'
+
 const history = createBrowserHistory()
 const store = createStore(
   createRootReducer(history),
@@ -22,8 +24,10 @@ const store = createStore(
 )
 
 history.listen((location) => {
-  // console.log('location change', location)
-  window.localStorage.setItem('location', location.pathname)
+  if (!window.gtag) return false
+  window.gtag('config', GA_ID, {
+    page_path: location.pathname,
+  })
 })
 
 const App = () => {
