@@ -52,6 +52,7 @@
     ]
   },
   "devDependencies": {
+    "@types/gtag.js": "^0.0.6",
     "@types/history": "^4.7.8",
     "@types/react-redux": "^7.1.16",
     "@types/react-router-dom": "^5.1.7",
