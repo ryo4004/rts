@@ -1,6 +1,6 @@
 import uniqid from 'uniqid'
 
-export const appName = 'blog'
+export const appName = 'real-time-file-transfer'
 export const version = '1.0.0'
 
 export const divisionWidth = 960
