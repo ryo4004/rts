@@ -1,5 +1,4 @@
 .home {
-
   .main {
     min-height: calc(100vh - 90px);
     padding: 0 0 48px;
@@ -41,12 +40,12 @@
             color: #fff;
             font-size: 14px;
             font-weight: bold;
-            background: rgba(255,255,255,0);
-            transition: all .2s ease-out 0s;
+            background: rgba(255, 255, 255, 0);
+            transition: all 0.2s ease-out 0s;
             text-decoration: none;
 
             &:hover {
-              background: rgba(56,128,255,.2);
+              background: rgba(56, 128, 255, 0.2);
             }
           }
         }
@@ -121,7 +120,7 @@
           }
 
           p.webrtc {
-            margin: .5em 0 0;
+            margin: 0.5em 0 0;
             font-size: 14px;
             line-height: 18px;
             text-align: center;
@@ -132,12 +131,12 @@
               padding: 6px 16px;
               border-radius: 8px;
               color: #000;
-              background: rgba(255,255,255,.2);
-              transition: background-color .2s ease-out 0s;
+              background: rgba(255, 255, 255, 0.2);
+              transition: background-color 0.2s ease-out 0s;
               text-decoration: none;
 
               &:hover {
-                background: rgba(255,255,255,.5);
+                background: rgba(255, 255, 255, 0.5);
               }
             }
           }

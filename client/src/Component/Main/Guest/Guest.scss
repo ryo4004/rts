@@ -1,5 +1,4 @@
 .guest {
-
   .main {
     min-height: calc(100vh - 4em - 90px);
     padding: 2em 0;
@@ -13,7 +12,7 @@
       margin: 0 auto 24px;
       padding: 24px;
       border-radius: 8px;
-      background: rgba(255,255,255,.5);
+      background: rgba(255, 255, 255, 0.5);
       box-sizing: border-box;
 
       h3 {
@@ -45,7 +44,7 @@
       margin: 0 auto;
       padding: 0;
       border-radius: 8px;
-      background: rgba(255,255,255,.5);
+      background: rgba(255, 255, 255, 0.5);
       text-align: center;
 
       .error-status {
@@ -78,11 +77,13 @@
             border-radius: 8px 0 0 8px;
           }
 
-          &.ok label, &.ok span {
+          &.ok label,
+          &.ok span {
             background: #3880ff;
           }
 
-          &.ng label, &.ng span {
+          &.ng label,
+          &.ng span {
             background: #f04141;
           }
         }
@@ -379,6 +380,5 @@
     // button.standby {
     //   background-image: linear-gradient(to right, #f83600 0%, #f9d423 100%);
     // }
-
   }
 }

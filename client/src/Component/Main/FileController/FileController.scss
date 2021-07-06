@@ -7,7 +7,7 @@
     margin: 24px 0;
     padding: 8px 24px 24px;
     border-radius: 8px;
-    background: rgba(255,255,255,.5);
+    background: rgba(255, 255, 255, 0.5);
 
     label {
       color: #333;
@@ -25,30 +25,30 @@
         padding: 8px 0;
         border-radius: 8px;
         // 084 Phoenix Start
-        background: rgba(255,255,255,.5);
+        background: rgba(255, 255, 255, 0.5);
         // background-image: linear-gradient(to right, #f83600 0%, #f9d423 100%);
         color: #333;
         font-size: 16px;
         cursor: pointer;
         text-align: center;
-        transition: all .1s ease-in-out;
+        transition: all 0.1s ease-in-out;
         box-sizing: border-box;
 
         i {
-          margin-right: .2em;
+          margin-right: 0.2em;
           color: #666;
         }
 
         span {
           display: block;
-          font-size: .6em;
+          font-size: 0.6em;
           color: #666;
         }
 
         &:hover {
           // 102 Happy Memories
           // background-image: linear-gradient(-60deg, #ff5858 0%, #f09819 100%);
-          background: rgba(255,255,255,.6);
+          background: rgba(255, 255, 255, 0.6);
         }
 
         input.file {
@@ -64,7 +64,7 @@
       padding: 8px 0;
       border: 2px solid #fff;
       border-radius: 8px;
-      background: rgba(255,255,255,0);
+      background: rgba(255, 255, 255, 0);
       // 084 Phoenix Start
       // background-image: linear-gradient(to right, #f83600 0%, #f9d423 100%);
       // 102 Happy Memories
@@ -75,7 +75,7 @@
       font-weight: bold;
       cursor: pointer;
       text-align: center;
-      transition: all .2s ease-in-out;
+      transition: all 0.2s ease-in-out;
       box-sizing: border-box;
 
       &:hover {
@@ -83,22 +83,21 @@
         // 102 Happy Memories
         // background-image: linear-gradient(-60deg, #ff5858 0%, #f09819 100%);
         color: #eee;
-        opacity: .8;
+        opacity: 0.8;
       }
 
       &.disable {
-        border-color: rgba(255,255,255,.6);
-        background: rgba(255,255,255,0);
-        color: rgba(255,255,255,.6);
+        border-color: rgba(255, 255, 255, 0.6);
+        background: rgba(255, 255, 255, 0);
+        color: rgba(255, 255, 255, 0.6);
         cursor: default;
 
         &:hover {
-          background: rgba(255,255,255,0);
-          color: rgba(255,255,255,.6);
+          background: rgba(255, 255, 255, 0);
+          color: rgba(255, 255, 255, 0.6);
         }
       }
-    }  
-
+    }
 
     ul.send-file-list {
       width: 100%;
@@ -108,19 +107,19 @@
       list-style: none;
 
       li {
-        -webkit-animation: fadein .2s 1 ease;
-        animation: fadein .2s 1 ease;
+        -webkit-animation: fadein 0.2s 1 ease;
+        animation: fadein 0.2s 1 ease;
 
         &.send-filelist {
           margin: 8px auto;
           padding: 0 24px 24px;
           border-radius: 8px;
-          background: rgba(255,255,255,.5);
+          background: rgba(255, 255, 255, 0.5);
           cursor: default;
-          transition: background-color .2s ease-in-out 0s;
+          transition: background-color 0.2s ease-in-out 0s;
 
           &:hover {
-            background: rgba(255,255,255,.6);
+            background: rgba(255, 255, 255, 0.6);
           }
 
           .send-status {
@@ -131,12 +130,12 @@
             & > span {
               display: inline-block;
               padding: 2px 6px;
-              background: rgba(0,0,0,.1);
-              transition: background-color .2s ease-in-out 0s;
+              background: rgba(0, 0, 0, 0.1);
+              transition: background-color 0.2s ease-in-out 0s;
               cursor: pointer;
 
               &:hover {
-                background: rgba(255,255,255,.6);
+                background: rgba(255, 255, 255, 0.6);
               }
 
               span.delete {
@@ -147,10 +146,10 @@
 
             &.complete > span {
               color: #fff;
-              background: rgba(56,128,255,.6);
+              background: rgba(56, 128, 255, 0.6);
 
               &:hover {
-                background: rgba(56,128,255,.8);
+                background: rgba(56, 128, 255, 0.8);
               }
 
               span.delete {
@@ -160,10 +159,10 @@
 
             &.failed > span {
               color: #fff;
-              background: rgba(240,65,65,.6);
+              background: rgba(240, 65, 65, 0.6);
 
               &:hover {
-                background: rgba(240,65,65,.8);
+                background: rgba(240, 65, 65, 0.8);
               }
 
               span.delete {
@@ -198,7 +197,7 @@
                 font-family: ocr-b-std, monospace;
                 font-size: 12px;
                 text-align: right;
-                background: rgba(255,255,0,.8);
+                background: rgba(255, 255, 0, 0.8);
 
                 &.standby {
                   opacity: 0;
@@ -210,7 +209,7 @@
 
                 &.complete {
                   opacity: 0;
-                  background: rgba(255,255,255,.8);
+                  background: rgba(255, 255, 255, 0.8);
                   transition: all 2s ease-in-out 0s;
                 }
               }
@@ -224,7 +223,7 @@
                 // font-family: "Hiragino Kaku Gothic ProN","メイリオ", sans-serif;
                 // font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", YuGothic, "ヒラギノ角ゴ ProN W3", Hiragino Kaku Gothic ProN, Arial, "メイリオ", Meiryo, sans-serif;
                 // font-family: ocr-b-std, monospace;
-                font-family: "Noto Sans JP",sans-serif;
+                font-family: 'Noto Sans JP', sans-serif;
                 line-height: 16px;
                 word-break: break-all;
               }
@@ -260,8 +259,8 @@
 
                 &.complete {
                   opacity: 0;
-                  background: rgba(255,255,255,.8);
-                  transition: all .5s ease-in-out 0s;
+                  background: rgba(255, 255, 255, 0.8);
+                  transition: all 0.5s ease-in-out 0s;
                 }
 
                 .send-progress {
@@ -272,7 +271,8 @@
                   height: 4px;
                   border-radius: 2px;
                   z-index: 2;
-                  background: linear-gradient(rgba(3,213,250,1),rgba(3,213,250,1)) no-repeat rgba(255,255,255,.8);
+                  background: linear-gradient(rgba(3, 213, 250, 1), rgba(3, 213, 250, 1)) no-repeat
+                    rgba(255, 255, 255, 0.8);
                   background-size: 0% 100%;
                 }
 
@@ -312,23 +312,23 @@
           margin: 8px auto;
           padding: 0 24px 24px;
           border-radius: 8px;
-          background: rgba(255,255,255,.2);
+          background: rgba(255, 255, 255, 0.2);
           cursor: default;
-          transition: background-color .6s ease-in-out 0s;
+          transition: background-color 0.6s ease-in-out 0s;
 
           &:hover {
-            background: rgba(255,255,255,.2);
+            background: rgba(255, 255, 255, 0.2);
           }
 
           .send-status {
             color: #000;
 
             & > span {
-              background: rgba(255,255,255,.2);
+              background: rgba(255, 255, 255, 0.2);
               cursor: default;
 
               &:hover {
-                background: rgba(255,255,255,.2);
+                background: rgba(255, 255, 255, 0.2);
               }
             }
           }
@@ -336,19 +336,19 @@
           .send-info {
             .file-icon {
               i {
-                color: rgba(0,0,0,.1);
-                transition: color .6s ease-in-out 0s;
+                color: rgba(0, 0, 0, 0.1);
+                transition: color 0.6s ease-in-out 0s;
               }
             }
           }
           .detail {
             .file-name {
               color: #888;
-              transition: color .6s ease-in-out 0s;
+              transition: color 0.6s ease-in-out 0s;
             }
             .send-size {
               color: #aaa;
-              transition: color .6s ease-in-out 0s;
+              transition: color 0.6s ease-in-out 0s;
             }
           }
         }
@@ -383,14 +383,13 @@
     //     opacity: .6;
     //   }
     // }
-
   }
 
   .file-receive {
     margin: 24px 0;
     padding: 8px 24px 24px;
     border-radius: 8px;
-    background: rgba(255,255,255,.5);
+    background: rgba(255, 255, 255, 0.5);
 
     label {
       color: #333;
@@ -415,19 +414,19 @@
       list-style: none;
 
       li {
-        -webkit-animation: fadein .2s 1 ease;
-        animation: fadein .2s 1 ease;
+        -webkit-animation: fadein 0.2s 1 ease;
+        animation: fadein 0.2s 1 ease;
 
         &.receive-filelist {
           margin: 8px auto;
           padding: 0 24px 24px;
           border-radius: 8px;
-          background: rgba(255,255,255,.5);
+          background: rgba(255, 255, 255, 0.5);
           cursor: default;
-          transition: background-color .2s ease-in-out 0s;
+          transition: background-color 0.2s ease-in-out 0s;
 
           &:hover {
-            background: rgba(255,255,255,.6);
+            background: rgba(255, 255, 255, 0.6);
           }
 
           .receive-status {
@@ -439,17 +438,17 @@
               display: inline-block;
               padding: 2px 6px;
               color: #333;
-              background: rgba(0,0,0,.1);
+              background: rgba(0, 0, 0, 0.1);
             }
 
             &.complete span {
               color: #fff;
-              background: rgba(56,128,255,.6);
+              background: rgba(56, 128, 255, 0.6);
             }
 
             &.failed span {
               color: #fff;
-              background: rgba(240,65,65,.6);
+              background: rgba(240, 65, 65, 0.6);
             }
           }
 
@@ -479,7 +478,7 @@
                 font-family: ocr-b-std, monospace;
                 font-size: 12px;
                 text-align: right;
-                background: rgba(255,255,0,.8);
+                background: rgba(255, 255, 0, 0.8);
 
                 &.standby {
                   opacity: 0;
@@ -491,7 +490,7 @@
 
                 &.complete {
                   opacity: 0;
-                  background: rgba(255,255,255,.8);
+                  background: rgba(255, 255, 255, 0.8);
                   transition: all 2s ease-in-out 0s;
                 }
               }
@@ -505,7 +504,7 @@
                 // font-family: "Hiragino Kaku Gothic ProN","メイリオ", sans-serif;
                 // font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", YuGothic, "ヒラギノ角ゴ ProN W3", Hiragino Kaku Gothic ProN, Arial, "メイリオ", Meiryo, sans-serif;
                 // font-family: ocr-b-std, monospace;
-                font-family: "Noto Sans JP",sans-serif;
+                font-family: 'Noto Sans JP', sans-serif;
                 line-height: 16px;
                 word-break: break-all;
 
@@ -536,7 +535,7 @@
 
                 span {
                   display: block;
-                }  
+                }
               }
 
               .receive-progress-bar {
@@ -554,8 +553,8 @@
 
                 &.complete {
                   opacity: 0;
-                  background: rgba(255,255,255,.8);
-                  transition: all .5s ease-in-out 0s;
+                  background: rgba(255, 255, 255, 0.8);
+                  transition: all 0.5s ease-in-out 0s;
                 }
 
                 .receive-progress {
@@ -566,7 +565,8 @@
                   height: 4px;
                   border-radius: 2px;
                   z-index: 2;
-                  background: linear-gradient(rgba(3,213,250,1),rgba(3,213,250,1)) no-repeat rgba(255,255,255,.8);
+                  background: linear-gradient(rgba(3, 213, 250, 1), rgba(3, 213, 250, 1)) no-repeat
+                    rgba(255, 255, 255, 0.8);
                   background-size: 0% 100%;
                 }
               }
@@ -578,7 +578,7 @@
           padding: 0;
 
           &:hover {
-            background: rgba(255,255,255,.8);
+            background: rgba(255, 255, 255, 0.8);
           }
 
           a {
@@ -598,23 +598,23 @@
           margin: 8px auto;
           padding: 0 24px 24px;
           border-radius: 8px;
-          background: rgba(255,255,255,.2);
+          background: rgba(255, 255, 255, 0.2);
           cursor: default;
-          transition: background-color .6s ease-in-out 0s;
+          transition: background-color 0.6s ease-in-out 0s;
 
           &:hover {
-            background: rgba(255,255,255,.2);
+            background: rgba(255, 255, 255, 0.2);
           }
 
           .receive-status {
             color: #000;
 
             & > span {
-              background: rgba(255,255,255,.2);
+              background: rgba(255, 255, 255, 0.2);
               cursor: default;
 
               &:hover {
-                background: rgba(255,255,255,.2);
+                background: rgba(255, 255, 255, 0.2);
               }
             }
           }
@@ -622,19 +622,19 @@
           .receive-info {
             .file-icon {
               i {
-                color: rgba(0,0,0,.1);
-                transition: color .6s ease-in-out 0s;
+                color: rgba(0, 0, 0, 0.1);
+                transition: color 0.6s ease-in-out 0s;
               }
             }
           }
           .detail {
             .file-name {
               color: #888;
-              transition: color .6s ease-in-out 0s;
+              transition: color 0.6s ease-in-out 0s;
             }
             .receive-size {
               color: #aaa;
-              transition: color .6s ease-in-out 0s;
+              transition: color 0.6s ease-in-out 0s;
             }
           }
         }
@@ -666,6 +666,5 @@
     //     opacity: .6;
     //   }
     // }
-
   }
 }

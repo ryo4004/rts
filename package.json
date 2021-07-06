@@ -10,7 +10,7 @@
     "production": "PRODUCTION=true node ./build/app.js",
     "lint": "eslint ./server --config .eslintrc.json",
     "typecheck": "tsc --noEmit",
-    "prettier": "prettier --write '{client/src,server}/**/*.{js,jsx,ts,tsx,json,md}'"
+    "prettier": "prettier --write '{client/src,server}/**/*.{js,jsx,ts,tsx,json,scss,md}'"
   },
   "repository": {
     "type": "git",
