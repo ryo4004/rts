@@ -49,12 +49,12 @@ header {
         color: #fff;
         font-size: 14px;
         font-weight: bold;
-        background: rgba(56,128,255,1);
-        transition: background-color .2s ease-out 0s;
+        background: rgba(56, 128, 255, 1);
+        transition: background-color 0.2s ease-out 0s;
         text-decoration: none;
 
         &:hover {
-          background: rgba(56,128,255,.8);
+          background: rgba(56, 128, 255, 0.8);
         }
       }
     }
@@ -68,12 +68,12 @@ footer {
   .title {
     width: 100%;
     max-width: 600px;
-    margin: 24px auto 12px;      
+    margin: 24px auto 12px;
   }
 
   h2 {
     display: flex;
-    align-items:center;
+    align-items: center;
     margin: 24px auto 12px 12px;
     font-size: 16px;
     font-weight: normal;
@@ -84,16 +84,16 @@ footer {
 
       &:hover {
         text-decoration: underline;
-      }  
+      }
     }
 
-    .version{
-      display:inline-block;
+    .version {
+      display: inline-block;
       margin-left: 6px;
       padding: 2px 6px;
       border-radius: 6px;
       background: #eee;
-      font-size:12px;
+      font-size: 12px;
     }
   }
 
@@ -122,7 +122,7 @@ footer {
         margin: 0 8px;
         color: #333;
         text-decoration: none;
-        transition: color .2s ease-out 0s;
+        transition: color 0.2s ease-out 0s;
 
         &:hover {
           color: #1da1f2;
