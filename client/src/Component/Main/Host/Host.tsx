@@ -159,6 +159,13 @@ class Host extends Component<Props> {
           {status}
           <FileController />
         </div>
+        <footer>
+          <div className="title">
+            <h2>
+              <Link to="/">Real-Time File Transfer</Link>
+            </h2>
+          </div>
+        </footer>
       </div>
     )
   }

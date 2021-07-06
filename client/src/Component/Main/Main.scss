@@ -1,0 +1,60 @@
+  footer {
+    margin: 48px 0;
+    width: 100%;
+
+    .title {
+      width: 100%;
+      max-width: 600px;
+      margin: 24px auto 12px;      
+    }
+
+    h2 {
+      display: block;
+      margin: 24px auto 12px 12px;
+      font-size: 16px;
+      font-weight: normal;
+
+      a {
+        text-decoration: none;
+        color: #333;
+  
+        &:hover {
+          text-decoration: underline;
+        }  
+      }
+    }
+
+    .author {
+      max-width: 600px;
+      margin: 0 auto;
+
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      img {
+        display: block;
+        width: 50px;
+        height: 50px;
+        margin: 0 0 0 12px;
+        border-radius: 100%;
+      }
+
+      p {
+        margin: 0 0 0 8px;
+        color: #666;
+
+        a {
+          display: inline-block;
+          margin: 0 8px;
+          color: #333;
+          text-decoration: none;
+          transition: color .2s ease-out 0s;
+
+          &:hover {
+            color: #1da1f2;
+          }
+        }
+      }
+    }
+  }
