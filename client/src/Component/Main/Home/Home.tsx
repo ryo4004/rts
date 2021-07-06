@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import { prepare } from '../../../Actions/Status'
-import { version, GA_ID } from '../../../Library/Library'
+import { version } from '../../../Library/Library'
 
 import Profile from '../../../Assets/profile-pic.jpg'
 
@@ -34,15 +34,11 @@ type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchT
 class Home extends Component<Props> {
   onClickStartHeader = () => {
     if (!window.gtag) return false
-    window.gtag('event', GA_ID, {
-      event_name: 'click_button_start_header',
-    })
+    window.gtag('event', 'click_button_start_header')
   }
   onClickStart = () => {
     if (!window.gtag) return false
-    window.gtag('event', GA_ID, {
-      event_name: 'click_button_start',
-    })
+    window.gtag('event', 'click_button_start')
   }
   render() {
     const mobileMode = this.props.mobile ? ' mobile' : ' pc'
