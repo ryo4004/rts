@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import { prepare } from '../../../Actions/Status'
-import { version } from '../../../Library/Library'
+import { version, GA_ID } from '../../../Library/Library'
 
 import Profile from '../../../Assets/profile-pic.jpg'
 
@@ -32,6 +32,18 @@ function mapDispatchToProps(dispatch: any) {
 type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
 class Home extends Component<Props> {
+  onClickStartHeader = () => {
+    if (!window.gtag) return false
+    window.gtag('event', GA_ID, {
+      event_name: 'click_button_start_header',
+    })
+  }
+  onClickStart = () => {
+    if (!window.gtag) return false
+    window.gtag('event', GA_ID, {
+      event_name: 'click_button_start',
+    })
+  }
   render() {
     const mobileMode = this.props.mobile ? ' mobile' : ' pc'
     return (
@@ -42,7 +54,9 @@ class Home extends Component<Props> {
               <Link to="/">Real-Time File Transfer</Link>
             </h2>
             <span>
-              <Link to="/host">はじめる</Link>
+              <Link to="/host" onClick={() => this.onClickStartHeader()}>
+                はじめる
+              </Link>
             </span>
           </div>
         </header>
@@ -52,7 +66,9 @@ class Home extends Component<Props> {
               <h1>リアルタイムファイル転送サービス</h1>
               <p>WebRTCを利用したファイル転送サービスです</p>
               <div>
-                <Link to="/host">はじめる</Link>
+                <Link to="/host" onClick={() => this.onClickStart()}>
+                  はじめる
+                </Link>
               </div>
             </div>
           </div>
