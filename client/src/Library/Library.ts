@@ -3,7 +3,7 @@ import uniqid from 'uniqid'
 export const GA_ID = 'G-4QY92612LZ'
 
 export const appName = 'real-time-file-transfer'
-export const version = '1.1.0'
+export const version = '1.2.0'
 
 export const divisionWidth = 960
 
