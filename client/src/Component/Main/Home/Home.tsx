@@ -32,6 +32,12 @@ function mapDispatchToProps(dispatch: any) {
 type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
 class Home extends Component<Props> {
+  onClickStartHeader = () => {
+    if (!window.gtag) return false
+    window.gtag('event', GA_ID, {
+      event_name: 'click_button_start_header',
+    })
+  }
   onClickStart = () => {
     if (!window.gtag) return false
     window.gtag('event', GA_ID, {
@@ -48,7 +54,7 @@ class Home extends Component<Props> {
               <Link to="/">Real-Time File Transfer</Link>
             </h2>
             <span>
-              <Link to="/host" onClick={() => this.onClickStart()}>
+              <Link to="/host" onClick={() => this.onClickStartHeader()}>
                 はじめる
               </Link>
             </span>
