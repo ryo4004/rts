@@ -1,45 +1,5 @@
 .guest {
 
-  header {
-    width: 100%;
-    height: 90px;
-    background: #fff;
-
-    // 055 Sharp Blues
-    // background-image: linear-gradient(to top, #00c6fb 0%, #005bea 100%);
-
-    // 030 Happy Fisher
-    // background-image: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
-
-    & > div {
-      max-width: 940px;
-      height: 90px;
-      margin: 0 auto;
-      padding: 0 16px;
-
-      display: flex;
-      align-items: center;
-
-      h2 {
-        margin: 0;
-        padding: 0;
-        color: #333;
-        font-size: 1.2rem;
-        font-weight: normal;
-
-        a {
-          color: #333;
-          text-decoration: none;
-
-          &:hover {
-            color: #666;
-            text-decoration: underline;
-          }
-        }
-      }
-    }
-  }
-
   .main {
     min-height: calc(100vh - 4em - 90px);
     padding: 2em 0;

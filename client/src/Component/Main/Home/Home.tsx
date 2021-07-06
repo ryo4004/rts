@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import { prepare } from '../../../Actions/Status'
+import { version } from '../../../Library/Library'
 
 import Profile from '../../../Assets/profile-pic.jpg'
 
@@ -162,6 +163,7 @@ class Home extends Component<Props> {
           <div className="title">
             <h2>
               <Link to="/">Real-Time File Transfer</Link>
+              <span className="version">{version}</span>
             </h2>
           </div>
           <div className="author">
