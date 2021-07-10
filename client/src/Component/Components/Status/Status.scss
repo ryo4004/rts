@@ -1,0 +1,108 @@
+.status {
+  width: 95vw;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.5);
+  box-sizing: border-box;
+
+  .error-status {
+    display: inline-block;
+    width: 100%;
+    margin: 0 auto 24px;
+    border-radius: 8px;
+    color: #f0506e;
+    background: #fef4f6;
+    text-align: center;
+  }
+
+  .url {
+    font-size: 14px;
+
+    span {
+      display: inline-block;
+      padding: 2px 8px 2px 6px;
+      border-radius: 8px 0 0 8px;
+      background: rgba(0, 0, 0, 0.1);
+      // line-height: 26px;
+    }
+
+    a {
+      display: inline-block;
+      padding: 2px 6px;
+      color: #333;
+      text-decoration: none;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.1);
+        text-decoration: underline;
+      }
+    }
+
+    .copy-button {
+      display: inline-block;
+      margin: 0;
+      padding: 2px 8px;
+      border-radius: 0 8px 8px 0;
+      background: inherit;
+      color: #666;
+      cursor: pointer;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.1);
+      }
+
+      &:active {
+        background: rgba(0, 0, 0, 0.2);
+      }
+
+      i {
+        margin-left: 0.2em;
+        font-size: 14px;
+      }
+    }
+  }
+
+  span.url-guide {
+    font-size: 0.6em;
+    color: #666;
+  }
+
+  img.qr-code {
+    display: block;
+    margin: 24px 0;
+    border-radius: 8px;
+  }
+
+  .data-channel-status {
+    padding: 0;
+    text-align: center;
+    font-size: 14px;
+
+    & > div {
+      display: inline-block;
+      color: #fff;
+
+      label {
+        padding: 2px 6px 2px 2px;
+        border-radius: 0 8px 8px 0;
+      }
+
+      span {
+        padding: 2px 2px 2px 6px;
+        border-radius: 8px 0 0 8px;
+      }
+
+      &.ok label,
+      &.ok span {
+        background: #3880ff;
+      }
+
+      &.ng label,
+      &.ng span {
+        background: #f04141;
+      }
+    }
+  }
+}

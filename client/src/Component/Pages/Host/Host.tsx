@@ -64,17 +64,6 @@ class Host extends Component<Props> {
   }
 
   renderTutorial() {
-    const selfID = this.props.selfID ? this.props.selfID : false
-    const url = selfID ? 'https://' + window.location.host + '/' + selfID : 'generating...'
-    const qrCode = selfID ? (
-      <img
-        className="qr-code"
-        src={'https://chart.apis.google.com/chart?cht=qr&chs=150x150&chl=' + url}
-        alt="qr-code"
-      />
-    ) : (
-      false
-    )
     return (
       <div className="tutorial">
         <h3>使い方</h3>
@@ -86,28 +75,8 @@ class Host extends Component<Props> {
           </li>
           <li>ファイルを追加して送信ボタンを押すとファイルを送信できます</li>
         </ol>
-        <div className="url">
-          <span>共有URL</span>
-          <div onClick={(e) => this.copy(e, url)} className="copy-button">
-            {url}
-            <i className="fas fa-clone"></i>
-          </div>
-        </div>
-        <span className="url-guide">URLをクリックでコピー</span>
-        {qrCode}
       </div>
     )
-  }
-
-  copy(e: any, url: string) {
-    e.preventDefault()
-    // console.log(url)
-    const div = document.createElement('div')
-    div.appendChild(document.createElement('pre')).textContent = url
-    document.body.appendChild(div)
-    document.getSelection()?.selectAllChildren(div)
-    document.execCommand('copy')
-    document.body.removeChild(div)
   }
 
   render() {
@@ -124,7 +93,7 @@ class Host extends Component<Props> {
         </header>
         <div className="main">
           {tutorial}
-          <Status dataChannelOpenStatus={this.props.dataChannelOpenStatus} />
+          <Status dataChannelOpenStatus={this.props.dataChannelOpenStatus} selfID={this.props.selfID} />
           <FileController />
         </div>
         <Footer author={false} />
