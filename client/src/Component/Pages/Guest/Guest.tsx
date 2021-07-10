@@ -6,7 +6,7 @@ import { prepare } from '../../../Actions/Status'
 import { receiverConnect, disconnect } from '../../../Actions/Connection'
 import { version } from '../../../Library/Library'
 
-import FileController from '../FileController/FileController'
+import FileController from '../../Components/FileController/FileController'
 
 import type { State } from '../../../Store/Store'
 
