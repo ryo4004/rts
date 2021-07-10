@@ -371,9 +371,9 @@ class FileController extends Component<Props> {
       <div className={'file-controller' + mobileMode}>
         <div className={'file-send' + mobileMode}>
           <label>送信ファイル</label>
+          {sendButton}
           {addFiles}
           {sendFileList}
-          {sendButton}
         </div>
         <div className={'file-receive' + mobileMode}>
           <label>受信ファイル</label>
