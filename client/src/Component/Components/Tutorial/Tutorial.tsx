@@ -10,7 +10,7 @@ export const Tutorial = ({ isHost }: { isHost: boolean }) => {
             <li>共有URLをファイルを受け取る相手に通知します</li>
             <li>自動的に相手との間にP2P接続を試みます</li>
             <li>
-              相手との間に接続が確立するとdataChannelマークが<i className="fas fa-check-circle"></i>になります
+              相手との間に接続が確立すると接続マークが<i className="fas fa-check-circle"></i>になります
             </li>
             <li>ファイルを追加して送信ボタンを押すとファイルを送信できます</li>
           </>
@@ -19,7 +19,7 @@ export const Tutorial = ({ isHost }: { isHost: boolean }) => {
           <>
             <li>自動的に相手との間にP2P接続を試みます</li>
             <li>
-              相手との間に接続が確立するとdataChannelマークが<i className="fas fa-check-circle"></i>になります
+              相手との間に接続が確立すると接続マークが<i className="fas fa-check-circle"></i>になります
             </li>
             <li>ファイルを追加して送信ボタンを押すとファイルを送信できます</li>
           </>
