@@ -79,17 +79,9 @@ class Guest extends Component<Props> {
   }
 
   renderStatus() {
-    // const available = this.props.available === true ? 'OK' : 'NG'
-    // const socketID = this.props.socket ? this.props.socket.id : '-'
-    // const selfID = this.props.selfID ? this.props.selfID : '-'
-    // const senderID = this.props.senderID ? this.props.senderID : '-'
     const renderError = this.props.errorState ? <div className="error-status">{this.props.errorText}</div> : false
     return (
       <div className="status">
-        {/* <div>status: {available}</div>
-        <div>socketid: {socketID}</div>
-        <div>selfID: {selfID}</div>
-        <div>senderID: {senderID}</div> */}
         {renderError}
         <div className="data-channel-status">
           <div className={this.props.dataChannelOpenStatus ? 'ok' : 'ng'}>

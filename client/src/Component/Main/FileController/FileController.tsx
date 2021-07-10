@@ -12,7 +12,6 @@ import './FileController.scss'
 
 function mapStateToProps(state: State) {
   return {
-    loading: state.status.loading,
     mobile: state.status.mobile,
     fileAPI: state.status.fileAPI,
     available: state.status.available,

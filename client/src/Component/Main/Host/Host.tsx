@@ -85,7 +85,6 @@ class Host extends Component<Props> {
           </li>
           <li>ファイルを追加して送信ボタンを押すとファイルを送信できます</li>
         </ol>
-        {/* <div className='url'><span>共有URL</span><a href={url} target='_blank'>{url}</a><button onClick={(e) => this.copy(e, url)} className='copy-button'><i className='fas fa-clone'></i></button></div> */}
         <div className="url">
           <span>共有URL</span>
           <div onClick={(e) => this.copy(e, url)} className="copy-button">
@@ -100,16 +99,8 @@ class Host extends Component<Props> {
   }
 
   renderStatus() {
-    // const available = this.props.available === true ? 'OK' : 'NG'
-    // const socketID = this.props.socket ? this.props.socket.id : '-'
-    // const selfID = this.props.selfID ? this.props.selfID : '-'
-    // const receiverID = this.props.receiverID ? this.props.receiverID : '-'
     return (
       <div className="status">
-        {/* <div>status: {available}</div>
-        <div>socketID: {socketID}</div>
-        <div>selfID: {selfID}</div>
-        <div>receiverID: {receiverID}</div> */}
         <div className="data-channel-status">
           <div className={this.props.dataChannelOpenStatus ? 'ok' : 'ng'}>
             <span>
