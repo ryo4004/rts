@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import { prepare } from '../../../Actions/Status'
-import { version } from '../../../Library/Library'
+import { Footer } from '../../Components/Footer/Footer'
 
-import Profile from '../../../Assets/profile-pic.jpg'
+import { mobileClass } from '../../../Library/Library'
 
 import type { State } from '../../../Store/Store'
 
@@ -40,7 +40,7 @@ class Home extends Component<Props> {
     window.gtag('event', 'click_button_start')
   }
   render() {
-    const mobileMode = this.props.mobile ? ' mobile' : ' pc'
+    const mobileMode = mobileClass(this.props.mobile)
     return (
       <div className={'home' + mobileMode}>
         <header>
@@ -67,7 +67,7 @@ class Home extends Component<Props> {
               </div>
             </div>
           </div>
-          <div className="tutorial">
+          <div className="guide">
             <div className={'feature' + mobileMode}>
               <div>
                 <div className="icon">
@@ -164,29 +164,13 @@ class Home extends Component<Props> {
               <li>共有URLをファイルを共有する相手に通知します</li>
               <li>自動的に相手との間にP2P接続を試みます</li>
               <li>
-                相手との間に接続が確立するとdataChannelマークが<i className="fas fa-check-circle"></i>になります
+                相手との間に接続が確立すると接続マークが<i className="fas fa-check-circle"></i>になります
               </li>
               <li>ファイルを追加して送信ボタンを押すとファイルを送信できます</li>
             </ol>
           </div>
         </div>
-        <footer>
-          <div className="title">
-            <h2>
-              <Link to="/">Real-Time File Transfer</Link>
-              <span className="version">{version}</span>
-            </h2>
-          </div>
-          <div className="author">
-            <img src={Profile} alt="profile" />
-            <p>
-              akanewz
-              <a href="https://twitter.com/akanewz" target="_blank" rel="noreferrer">
-                <i className="fab fa-twitter"></i>
-              </a>
-            </p>
-          </div>
-        </footer>
+        <Footer author={true} />
       </div>
     )
   }

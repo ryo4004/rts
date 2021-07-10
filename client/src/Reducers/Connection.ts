@@ -4,23 +4,23 @@ import type { Actions } from '../Actions/Connection'
 export type ConnectionState = {
   loading: boolean
 
-  socket: string | undefined
-  selfSocketID: string | undefined
-  senderSocketID: string | undefined
-  receiverSocketID: string | undefined
+  socket: any | null
+  selfSocketID: string | null
+  senderSocketID: string | null
+  receiverSocketID: string | null
 
-  dataChannelOpenStatus: boolean
+  dataChannelOpenStatus: boolean | null
 }
 
 const initialState: ConnectionState = {
   loading: false,
 
-  socket: undefined,
-  selfSocketID: undefined,
-  senderSocketID: undefined,
-  receiverSocketID: undefined,
+  socket: null,
+  selfSocketID: null,
+  senderSocketID: null,
+  receiverSocketID: null,
 
-  dataChannelOpenStatus: false,
+  dataChannelOpenStatus: null,
 }
 
 export default function connectionReducer(state = initialState, action: Actions): ConnectionState {

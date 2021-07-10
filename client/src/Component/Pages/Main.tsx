@@ -9,6 +9,8 @@ import Home from './Home/Home'
 import Host from './Host/Host'
 import Guest from './Guest/Guest'
 
+import { mobileClass } from '../../Library/Library'
+
 import type { State } from '../../Store/Store'
 
 import './Main.scss'
@@ -65,8 +67,7 @@ class Main extends Component<Props> {
   }
 
   render() {
-    const { mobile } = this.props
-    const mobileMode = mobile ? ' mobile' : ' pc'
+    const mobileMode = mobileClass(this.props.mobile)
     // console.log('location',location)
     // if (loading) return <div className='full-loading'><div className="loading"><div className="loading1"></div><div className="loading2"></div><div className="loading3"></div></div></div>
     return (
