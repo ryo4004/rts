@@ -6,6 +6,7 @@ import { prepare } from '../../../Actions/Status'
 import { receiverConnect, disconnect } from '../../../Actions/Connection'
 
 import FileController from '../../Components/FileController/FileController'
+import { Tutorial } from '../../Components/Tutorial/Tutorial'
 import { Status } from '../../Components/Status/Status'
 import { Footer } from '../../Components/Footer/Footer'
 
@@ -64,24 +65,8 @@ class Guest extends Component<Props> {
     this.props.disconnect()
   }
 
-  renderTutorial() {
-    return (
-      <div className="tutorial">
-        <h3>使い方</h3>
-        <ol>
-          <li>自動的に相手との間にP2P接続を試みます</li>
-          <li>
-            相手との間に接続が確立するとdataChannelマークが<i className="fas fa-check-circle"></i>になります
-          </li>
-          <li>ファイルを追加して送信ボタンを押すとファイルを送信できます</li>
-        </ol>
-      </div>
-    )
-  }
-
   render() {
     const mobileMode = this.props.mobile ? ' mobile' : ' pc'
-    const tutorial = this.renderTutorial()
     return (
       <div className={'guest' + mobileMode}>
         <header>
@@ -92,7 +77,7 @@ class Guest extends Component<Props> {
           </div>
         </header>
         <div className="main">
-          {tutorial}
+          <Tutorial isHost={false} />
           <Status
             dataChannelOpenStatus={this.props.dataChannelOpenStatus}
             errorState={this.props.errorState}
