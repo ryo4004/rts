@@ -40,24 +40,6 @@ statusDB.remove({}, { multi: true }, (err: NeDBError, numRemoved: number) => {
   console.log('[' + lib.showTime() + '] statusDB refresh: ' + numRemoved)
 })
 
-// api設定
-app.post('/api/presenter', (req, res) => {
-  const id = req.body.id
-  console.log('[' + lib.showTime() + '] api/presenter: ' + id)
-  statusDB.find({ type: 'presenter' }, (err: NeDBError, doc: Array<Status>) => {
-    res.json({ status: true, doc })
-  })
-})
-
-app.post('/api/recorder', (req, res) => {
-  const id = req.body.id
-  console.log('[' + lib.showTime() + '] api/recorder: ' + id)
-  statusDB.find({ type: 'recorder' }, (err: NeDBError, doc: Array<Status>) => {
-    if (err || !doc || doc.length === 0) return res.json({ status: true, recorder: false })
-    res.json({ status: true, recorder: true })
-  })
-})
-
 // WebSocketサーバを使用
 const options = {
   key: fs.readFileSync('./keys/privkey1.pem'),
