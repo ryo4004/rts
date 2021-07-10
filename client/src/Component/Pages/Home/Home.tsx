@@ -67,7 +67,7 @@ class Home extends Component<Props> {
               </div>
             </div>
           </div>
-          <div className="tutorial">
+          <div className="guide">
             <div className={'feature' + mobileMode}>
               <div>
                 <div className="icon">
