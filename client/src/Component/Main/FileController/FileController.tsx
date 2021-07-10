@@ -35,7 +35,7 @@ function mapDispatchToProps(dispatch: any) {
     prepare() {
       dispatch(prepare())
     },
-    addFile(fileList: any) {
+    addFile(fileList: FileList | null) {
       dispatch(addFile(fileList))
     },
     sendData() {
@@ -50,59 +50,25 @@ function mapDispatchToProps(dispatch: any) {
 type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
 class FileController extends Component<Props> {
-  // componentDidMount () {
-  //   this.props.senderConnect()
-  // }
-
-  // onDragover (e) {
-  //   e.preventDefault()
-  // }
-
-  // onDrop (e) {
-  //   console.log('Drop')
-  //   e.preventDefault()
-  //   console.log(e)
-  //   console.log(e.dataTransfer.files)
-  //   // if (e.dataTransfer.files.length !== 1) return false
-  //   this.props.addFile(e.dataTransfer.files)
-  // }
-
-  fileSelect(e: any) {
-    // console.log('fileSelect', e.target.files)
-    this.props.addFile(e.target.files)
-  }
-
   renderSendButton() {
-    let button = false
     // ひとつでも送信処理未完了のものがあれば有効
-    Object.keys(this.props.sendFileList).forEach((id, i) => {
-      // @ts-ignore
-      if (this.props.sendFileList[id].send === false) {
-        button = true
-      }
-    })
-    if (!this.props.dataChannelOpenStatus) {
-      button = false
-    }
-    const onClickHander = button
-      ? () => this.props.sendData()
-      : () => {
-          return false
-        }
+    const buttonAvailable =
+      this.props.dataChannelOpenStatus && this.props.sendFileList.some((fileInfo) => fileInfo.send === null)
+    const onClickHander = buttonAvailable ? () => this.props.sendData() : () => false
     return (
-      <button className={'send-button' + (button ? ' true' : ' disable')} onClick={onClickHander}>
+      <button className={'send-button' + (buttonAvailable ? ' true' : ' disable')} onClick={onClickHander}>
         送信
       </button>
     )
   }
 
   renderAddFiles() {
+    const fileSelect = (e: React.ChangeEvent<HTMLInputElement>) => this.props.addFile(e.target.files)
     return (
-      // <div className='file-input' onDragOver={(e) => this.onDragover(e)} onDrop={(e) => this.onDrop(e)}>
       <div className="file-input">
         <label className="file">
           <i className="fas fa-plus-circle"></i>ファイルを追加<span>ファイルをドロップしても追加できます</span>
-          <input type="file" className="file" onChange={(e) => this.fileSelect(e)} multiple value="" />
+          <input type="file" className="file" onChange={(e) => fileSelect(e)} multiple value="" />
         </label>
       </div>
     )
@@ -120,7 +86,6 @@ class FileController extends Component<Props> {
               <button
                 onClick={() => {
                   this.props.deleteFile(id)
-                  // Actions.toastShow('ログアウトしました')
                   onClose()
                 }}
               >
@@ -134,21 +99,18 @@ class FileController extends Component<Props> {
   }
 
   renderSendFileList() {
-    if (!this.props.sendFileList || Object.keys(this.props.sendFileList).length === 0)
+    if (this.props.sendFileList.length === 0)
       return (
         <div className="no-file">
           <p>ファイルがありません</p>
           <p>追加してください</p>
         </div>
       )
-    const sendFileList = Object.keys(this.props.sendFileList).map((id, i) => {
-      // @ts-ignore
-      const each = this.props.sendFileList[id]
+    const sendFileList = this.props.sendFileList.map((each, i) => {
       const icon = <i className={fileIcon(each.name, each.type)}></i>
       const fileSize = fileSizeUnit(each.size)
-      // '\u00A0'.repeat(String(each.sendTime).length - String(each.sendPacketCount).length) + each.sendPacketCount
       const count =
-        each.send === false
+        each.send === null
           ? false
           : each.receiveComplete === false
           ? each.delete
@@ -181,18 +143,16 @@ class FileController extends Component<Props> {
       }
 
       // load はファイルをあらかじめ開く場合に必要
-      // const load = each.load === false ? 'wait' : each.load + '%'
-      // const loadProgress = each.load ? {backgroundSize: each.load + '% 100%'} : {backgroundSize: '0% 100%'}
       const sendPercent =
-        each.send === false ? (
+        each.send === null ? (
           <div className="send-percent standby"></div>
         ) : each.send !== 100 ? (
-          <div className="send-percent sending">{each.send.toFixed(1) + '%'}</div>
+          <div className="send-percent sending">{each.send && each.send.toFixed(1) + '%'}</div>
         ) : (
           <div className={'send-percent' + (each.receiveComplete ? ' complete' : '')}>{each.send + '%'}</div>
         )
       const status =
-        each.send === false ? (
+        each.send === null ? (
           each.load ? (
             <span>ファイル読み込み中...</span>
           ) : (
@@ -208,7 +168,7 @@ class FileController extends Component<Props> {
           <span>送信失敗</span>
         )
       const statusClass =
-        each.send === false
+        each.send === null
           ? each.load
             ? 'loading'
             : 'not-send'
@@ -220,16 +180,14 @@ class FileController extends Component<Props> {
           ? 'complete'
           : 'failed'
       const sendProgress = each.send ? { backgroundSize: each.send + '% 100%' } : { backgroundSize: '0% 100%' }
-      // const sendSize = isNaN(each.send) ? '-' : fileSizeUnit(each.size * each.send / 100)
       const progressBar = () => {
         return (
           <div
             className={
-              'send-progress-bar' + (each.send === false ? ' standby' : each.receiveComplete ? ' complete' : ' sending')
+              'send-progress-bar' + (each.send === null ? ' standby' : each.receiveComplete ? ' complete' : ' sending')
             }
           >
             <div className="send-progress" style={sendProgress}></div>
-            {/* <div className='load-progress' style={loadProgress}></div> */}
           </div>
         )
       }
@@ -269,17 +227,15 @@ class FileController extends Component<Props> {
   }
 
   renderReceiveFileList() {
-    if (!this.props.receiveFileList || Object.keys(this.props.receiveFileList).length === 0)
+    if (this.props.receiveFileList.length === 0) {
       return (
         <div className="no-file">
           <p>まだファイルがありません</p>
           <p>相手がファイルを追加するとここに表示されます</p>
         </div>
       )
-    // console.warn('render', this.props.receiveFileList)
-    const receiveFileList = Object.keys(this.props.receiveFileList).map((id, i) => {
-      // @ts-ignore
-      const each = this.props.receiveFileList[id]
+    }
+    const receiveFileList = this.props.receiveFileList.map((each, i) => {
       const icon = <i className={fileIcon(each.name, each.type)}></i>
       const fileSize = fileSizeUnit(each.size)
 
@@ -304,12 +260,11 @@ class FileController extends Component<Props> {
       }
 
       // 受信完了後
-      // @ts-ignore
-      if (this.props.receiveFileUrlList[each.id] && each.receiveResult) {
+      if (each.receiveResult) {
+        const fileUrl = this.props.receiveFileUrlList.find((fileUrl) => fileUrl.id === each.id)
         return (
           <li key={'filelist-' + i} className="receive-filelist complete">
-            {/* @ts-ignore */}
-            <a href={this.props.receiveFileUrlList[each.id]} download={each.name}>
+            <a href={fileUrl?.url} download={each.name}>
               <div className="receive-status complete">
                 <span>完了</span>
               </div>
@@ -326,7 +281,7 @@ class FileController extends Component<Props> {
       }
 
       const status =
-        each.receive === false ? (
+        each.receive === null ? (
           <span>未受信</span>
         ) : each.receive !== 100 ? (
           <span>受信中</span>
@@ -338,7 +293,7 @@ class FileController extends Component<Props> {
           <span>受信失敗</span>
         )
       const statusClass =
-        each.receive === false
+        each.receive === null
           ? 'not-receive'
           : each.receive !== 100
           ? 'receiving'
@@ -347,9 +302,8 @@ class FileController extends Component<Props> {
           : each.receiveResult
           ? 'complete'
           : 'failed'
-      // const receiveSize = isNaN(each.receive) ? '-' : fileSizeUnit(each.size * each.receive / 100)
       const receivePercent =
-        each.receive === false ? (
+        each.receive === null ? (
           <div className="receive-percent standby">{each.receive + '%'}</div>
         ) : each.receive !== 100 ? (
           <div className="receive-percent receiving">{each.receive.toFixed(1) + '%'}</div>
@@ -357,9 +311,8 @@ class FileController extends Component<Props> {
           <div className="receive-percent complete">{each.receive + '%'}</div>
         )
       const receiveProgress = each.receive ? { backgroundSize: each.receive + '% 100%' } : { backgroundSize: '0% 100%' }
-      // const count = each.receivePacketCount + '/' + each.sendTime
       const count =
-        each.receive === false
+        each.receive === null
           ? false
           : each.receiveResult === false
           ? each.receivePacketCount + '/' + each.sendTime
@@ -369,7 +322,7 @@ class FileController extends Component<Props> {
           <div
             className={
               'receive-progress-bar' +
-              (each.receive === false ? ' standby' : each.receive !== 100 ? ' receiving' : ' complete')
+              (each.receive === null ? ' standby' : each.receive !== 100 ? ' receiving' : ' complete')
             }
           >
             <div className="receive-progress" style={receiveProgress}></div>
@@ -406,11 +359,6 @@ class FileController extends Component<Props> {
     )
   }
 
-  // デバッグ用
-  show() {
-    // console.log('send', this.props.sendFileList, 'receive', this.props.receiveFileList)
-  }
-
   render() {
     const addFiles = this.renderAddFiles()
     const sendButton = this.renderSendButton()
@@ -420,8 +368,6 @@ class FileController extends Component<Props> {
 
     return (
       <div className="file-controller">
-        {/* デバッグ用 */}
-        {/* <button onClick={() => this.show()}>表示</button> */}
         <div className="file-send">
           <label>送信ファイル</label>
           {addFiles}

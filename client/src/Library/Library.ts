@@ -7,6 +7,14 @@ export const version = '1.2.1'
 
 export const divisionWidth = 960
 
+// 定数
+// ファイルIDは16文字
+export const ID_LENGTH = 16
+// 終了フラグサイズ
+export const FLAG_LENGTH = 1
+// 1つのpacketは16KB以下にする
+export const PACKET_SIZE = 1024 * 16 - FLAG_LENGTH - ID_LENGTH
+
 // // yyyy-mm-ddThh:mm:ss.sssZ
 // export function getDate (str) {
 //   return str.split('T')[0].replace(/-/g, '/')
