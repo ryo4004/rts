@@ -6,7 +6,7 @@ export const Status = ({
   errorState = false,
   errorText = '',
 }: {
-  dataChannelOpenStatus: boolean
+  dataChannelOpenStatus: boolean | null
   selfID?: string | null
   errorState?: boolean
   errorText?: string
@@ -18,7 +18,7 @@ export const Status = ({
   return (
     <div className="status">
       {errorState && <div className="error-status">{errorText}</div>}
-      {selfID && (
+      {selfID && dataChannelOpenStatus === null && (
         <>
           <div className="url">
             <span>共有URL</span>
@@ -32,13 +32,30 @@ export const Status = ({
         </>
       )}
       <div className="data-channel-status">
-        <div className={dataChannelOpenStatus ? 'ok' : 'ng'}>
-          <span>
-            {dataChannelOpenStatus && <i className="fas fa-check-circle"></i>}
-            {!dataChannelOpenStatus && <i className="fas fa-times-circle"></i>}
-          </span>
-          <label>dataChannel</label>
-        </div>
+        {dataChannelOpenStatus === null && (
+          <div className="before">
+            <span>
+              <i className="fas fa-minus-circle"></i>
+            </span>
+            <label>未接続</label>
+          </div>
+        )}
+        {dataChannelOpenStatus === true && (
+          <div className="ok">
+            <span>
+              <i className="fas fa-check-circle"></i>
+            </span>
+            <label>接続中</label>
+          </div>
+        )}
+        {dataChannelOpenStatus === false && (
+          <div className="ng">
+            <span>
+              <i className="fas fa-times-circle"></i>
+            </span>
+            <label>切断しました</label>
+          </div>
+        )}
       </div>
     </div>
   )

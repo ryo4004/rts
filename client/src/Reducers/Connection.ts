@@ -9,7 +9,7 @@ export type ConnectionState = {
   senderSocketID: string | null
   receiverSocketID: string | null
 
-  dataChannelOpenStatus: boolean
+  dataChannelOpenStatus: boolean | null
 }
 
 const initialState: ConnectionState = {
@@ -20,7 +20,7 @@ const initialState: ConnectionState = {
   senderSocketID: null,
   receiverSocketID: null,
 
-  dataChannelOpenStatus: false,
+  dataChannelOpenStatus: null,
 }
 
 export default function connectionReducer(state = initialState, action: Actions): ConnectionState {

@@ -77,9 +77,9 @@ const setReceiverSocketID = (receiverSocketID: string): SetReceiverSocketID => (
 
 type DataChannelOpenStatus = {
   type: typeof ACTION_TYPE.dataChannelOpenStatus
-  payload: { dataChannelOpenStatus: any }
+  payload: { dataChannelOpenStatus: boolean }
 }
-const dataChannelOpenStatus = (dataChannelOpenStatus: any): DataChannelOpenStatus => ({
+const dataChannelOpenStatus = (dataChannelOpenStatus: boolean): DataChannelOpenStatus => ({
   type: ACTION_TYPE.dataChannelOpenStatus,
   payload: { dataChannelOpenStatus },
 })

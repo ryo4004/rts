@@ -94,6 +94,11 @@
         border-radius: 8px 0 0 8px;
       }
 
+      &.before label,
+      &.before span {
+        background: rgb(142, 142, 147);
+      }
+
       &.ok label,
       &.ok span {
         background: #3880ff;
