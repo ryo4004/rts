@@ -5,10 +5,10 @@ import { connect } from 'react-redux'
 import { prepare } from '../../../Actions/Status'
 import { senderConnect, disconnect } from '../../../Actions/Connection'
 import { sendData, deleteFile } from '../../../Actions/Sender'
-import { version } from '../../../Library/Library'
 
 import FileController from '../../Components/FileController/FileController'
 import { Status } from '../../Components/Status/Status'
+import { Footer } from '../../Components/Footer/Footer'
 
 import type { State } from '../../../Store/Store'
 
@@ -127,14 +127,7 @@ class Host extends Component<Props> {
           <Status dataChannelOpenStatus={this.props.dataChannelOpenStatus} />
           <FileController />
         </div>
-        <footer>
-          <div className="title">
-            <h2>
-              <Link to="/">Real-Time File Transfer</Link>
-              <span className="version">{version}</span>
-            </h2>
-          </div>
-        </footer>
+        <Footer author={false} />
       </div>
     )
   }

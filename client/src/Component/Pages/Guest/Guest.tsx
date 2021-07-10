@@ -4,10 +4,10 @@ import { connect } from 'react-redux'
 
 import { prepare } from '../../../Actions/Status'
 import { receiverConnect, disconnect } from '../../../Actions/Connection'
-import { version } from '../../../Library/Library'
 
 import FileController from '../../Components/FileController/FileController'
 import { Status } from '../../Components/Status/Status'
+import { Footer } from '../../Components/Footer/Footer'
 
 import type { State } from '../../../Store/Store'
 
@@ -100,14 +100,7 @@ class Guest extends Component<Props> {
           />
           <FileController />
         </div>
-        <footer>
-          <div className="title">
-            <h2>
-              <Link to="/">Real-Time File Transfer</Link>
-              <span className="version">{version}</span>
-            </h2>
-          </div>
-        </footer>
+        <Footer author={false} />
       </div>
     )
   }

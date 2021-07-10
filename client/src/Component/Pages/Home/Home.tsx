@@ -3,9 +3,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import { prepare } from '../../../Actions/Status'
-import { version } from '../../../Library/Library'
-
-import Profile from '../../../Assets/profile-pic.jpg'
+import { Footer } from '../../Components/Footer/Footer'
 
 import type { State } from '../../../Store/Store'
 
@@ -170,23 +168,7 @@ class Home extends Component<Props> {
             </ol>
           </div>
         </div>
-        <footer>
-          <div className="title">
-            <h2>
-              <Link to="/">Real-Time File Transfer</Link>
-              <span className="version">{version}</span>
-            </h2>
-          </div>
-          <div className="author">
-            <img src={Profile} alt="profile" />
-            <p>
-              akanewz
-              <a href="https://twitter.com/akanewz" target="_blank" rel="noreferrer">
-                <i className="fab fa-twitter"></i>
-              </a>
-            </p>
-          </div>
-        </footer>
+        <Footer author={true} />
       </div>
     )
   }
