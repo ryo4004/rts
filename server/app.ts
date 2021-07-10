@@ -36,6 +36,7 @@ type Status = {
 
 type NeDBError = Error | null
 
+// 起動直後にデータベースをリセット
 statusDB.remove({}, { multi: true }, (err: NeDBError, numRemoved: number) => {
   console.log('[' + lib.showTime() + '] statusDB refresh: ' + numRemoved)
 })
