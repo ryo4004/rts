@@ -5,6 +5,8 @@ import { connect } from 'react-redux'
 import { prepare } from '../../../Actions/Status'
 import { Footer } from '../../Components/Footer/Footer'
 
+import { mobileClass } from '../../../Library/Library'
+
 import type { State } from '../../../Store/Store'
 
 import './Home.scss'
@@ -38,7 +40,7 @@ class Home extends Component<Props> {
     window.gtag('event', 'click_button_start')
   }
   render() {
-    const mobileMode = this.props.mobile ? ' mobile' : ' pc'
+    const mobileMode = mobileClass(this.props.mobile)
     return (
       <div className={'home' + mobileMode}>
         <header>

@@ -7,6 +7,10 @@
   background: rgba(255, 255, 255, 0.5);
   box-sizing: border-box;
 
+  &.pc {
+    max-width: 940px;
+  }
+
   h3 {
     margin: 0 0 8px;
     padding: 0;

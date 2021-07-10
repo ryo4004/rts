@@ -1,3 +1,5 @@
+import { mobileClass } from '../../../Library/Library'
+
 import './Status.scss'
 
 export const Status = ({
@@ -5,18 +7,20 @@ export const Status = ({
   selfID = null,
   errorState = false,
   errorText = '',
+  mobile,
 }: {
   dataChannelOpenStatus: boolean | null
   selfID?: string | null
   errorState?: boolean
   errorText?: string
+  mobile: boolean
 }) => {
   const url = selfID ? 'https://' + window.location.host + '/' + selfID : '生成中...'
   const qrCode = selfID && (
     <img className="qr-code" src={'https://chart.apis.google.com/chart?cht=qr&chs=150x150&chl=' + url} alt="qr-code" />
   )
   return (
-    <div className="status">
+    <div className={'status' + mobileClass(mobile)}>
       {errorState && <div className="error-status">{errorText}</div>}
       {selfID && dataChannelOpenStatus === null && (
         <>

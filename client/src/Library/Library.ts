@@ -131,4 +131,6 @@ export function bufferToString(buffer: any) {
   return String.fromCharCode.apply('', new Uint8Array(buffer))
 }
 
+export const mobileClass = (mobile: boolean) => (mobile ? ' mobile' : ' pc')
+
 export const noop = () => void 0

@@ -4,7 +4,7 @@ import { confirmAlert } from 'react-confirm-alert'
 
 import { prepare } from '../../../Actions/Status'
 import { addFile, sendData, deleteFile } from '../../../Actions/Sender'
-import { fileSizeUnit, fileIcon } from '../../../Library/Library'
+import { fileSizeUnit, fileIcon, mobileClass } from '../../../Library/Library'
 
 import type { State } from '../../../Store/Store'
 
@@ -359,6 +359,8 @@ class FileController extends Component<Props> {
   }
 
   render() {
+    const mobileMode = mobileClass(this.props.mobile)
+
     const addFiles = this.renderAddFiles()
     const sendButton = this.renderSendButton()
     const sendFileList = this.renderSendFileList()
@@ -366,14 +368,14 @@ class FileController extends Component<Props> {
     const receiveFileList = this.renderReceiveFileList()
 
     return (
-      <div className="file-controller">
-        <div className="file-send">
+      <div className={'file-controller' + mobileMode}>
+        <div className={'file-send' + mobileMode}>
           <label>送信ファイル</label>
           {addFiles}
           {sendFileList}
           {sendButton}
         </div>
-        <div className="file-receive">
+        <div className={'file-receive' + mobileMode}>
           <label>受信ファイル</label>
           {receiveFileList}
         </div>

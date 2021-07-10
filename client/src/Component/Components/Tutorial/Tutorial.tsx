@@ -1,8 +1,10 @@
+import { mobileClass } from '../../../Library/Library'
+
 import './Tutorial.scss'
 
-export const Tutorial = ({ isHost }: { isHost: boolean }) => {
+export const Tutorial = ({ isHost, mobile }: { isHost: boolean; mobile: boolean }) => {
   return (
-    <div className="tutorial">
+    <div className={'tutorial' + mobileClass(mobile)}>
       <h3>使い方</h3>
       <ol>
         {isHost && (

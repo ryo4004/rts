@@ -10,6 +10,8 @@ import { Tutorial } from '../../Components/Tutorial/Tutorial'
 import { Status } from '../../Components/Status/Status'
 import { Footer } from '../../Components/Footer/Footer'
 
+import { mobileClass } from '../../../Library/Library'
+
 import type { State } from '../../../Store/Store'
 
 import './Guest.scss'
@@ -66,7 +68,7 @@ class Guest extends Component<Props> {
   }
 
   render() {
-    const mobileMode = this.props.mobile ? ' mobile' : ' pc'
+    const mobileMode = mobileClass(this.props.mobile)
     return (
       <div className={'guest' + mobileMode}>
         <header>
@@ -77,11 +79,12 @@ class Guest extends Component<Props> {
           </div>
         </header>
         <div className="main">
-          <Tutorial isHost={false} />
+          <Tutorial isHost={false} mobile={this.props.mobile} />
           <Status
             dataChannelOpenStatus={this.props.dataChannelOpenStatus}
             errorState={this.props.errorState}
             errorText={this.props.errorText}
+            mobile={this.props.mobile}
           />
           <FileController />
         </div>

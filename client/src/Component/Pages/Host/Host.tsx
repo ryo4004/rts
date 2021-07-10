@@ -11,6 +11,8 @@ import { Tutorial } from '../../Components/Tutorial/Tutorial'
 import { Status } from '../../Components/Status/Status'
 import { Footer } from '../../Components/Footer/Footer'
 
+import { mobileClass } from '../../../Library/Library'
+
 import type { State } from '../../../Store/Store'
 
 import './Host.scss'
@@ -65,7 +67,7 @@ class Host extends Component<Props> {
   }
 
   render() {
-    const mobileMode = this.props.mobile ? ' mobile' : ' pc'
+    const mobileMode = mobileClass(this.props.mobile)
     return (
       <div className={'host' + mobileMode}>
         <header>
@@ -76,8 +78,12 @@ class Host extends Component<Props> {
           </div>
         </header>
         <div className="main">
-          <Tutorial isHost={true} />
-          <Status dataChannelOpenStatus={this.props.dataChannelOpenStatus} selfID={this.props.selfID} />
+          <Tutorial isHost={true} mobile={this.props.mobile} />
+          <Status
+            dataChannelOpenStatus={this.props.dataChannelOpenStatus}
+            selfID={this.props.selfID}
+            mobile={this.props.mobile}
+          />
           <FileController />
         </div>
         <Footer author={false} />

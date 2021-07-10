@@ -3,11 +3,22 @@
   max-width: 600px;
   margin: 0 auto;
 
+  &.pc {
+    display: flex;
+    flex-direction: row;
+    max-width: 940px;
+  }
+
   .file-send {
     margin: 24px 0;
     padding: 8px 24px 24px;
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.5);
+
+    &.pc {
+      flex: 1;
+      margin-right: 12px;
+    }
 
     label {
       color: #333;
@@ -390,6 +401,11 @@
     padding: 8px 24px 24px;
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.5);
+
+    &.pc {
+      flex: 1;
+      margin-left: 12px;
+    }
 
     label {
       color: #333;
