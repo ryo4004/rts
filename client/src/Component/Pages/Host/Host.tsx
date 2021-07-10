@@ -8,6 +8,7 @@ import { sendData, deleteFile } from '../../../Actions/Sender'
 import { version } from '../../../Library/Library'
 
 import FileController from '../../Components/FileController/FileController'
+import { Status } from '../../Components/Status/Status'
 
 import type { State } from '../../../Store/Store'
 
@@ -98,25 +99,6 @@ class Host extends Component<Props> {
     )
   }
 
-  renderStatus() {
-    return (
-      <div className="status">
-        <div className="data-channel-status">
-          <div className={this.props.dataChannelOpenStatus ? 'ok' : 'ng'}>
-            <span>
-              {this.props.dataChannelOpenStatus ? (
-                <i className="fas fa-check-circle"></i>
-              ) : (
-                <i className="fas fa-times-circle"></i>
-              )}
-            </span>
-            <label>dataChannel</label>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   copy(e: any, url: string) {
     e.preventDefault()
     // console.log(url)
@@ -131,7 +113,6 @@ class Host extends Component<Props> {
   render() {
     const mobileMode = this.props.mobile ? ' mobile' : ' pc'
     const tutorial = this.renderTutorial()
-    const status = this.renderStatus()
     return (
       <div className={'host' + mobileMode}>
         <header>
@@ -143,7 +124,7 @@ class Host extends Component<Props> {
         </header>
         <div className="main">
           {tutorial}
-          {status}
+          <Status dataChannelOpenStatus={this.props.dataChannelOpenStatus} />
           <FileController />
         </div>
         <footer>

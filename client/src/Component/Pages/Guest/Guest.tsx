@@ -7,6 +7,7 @@ import { receiverConnect, disconnect } from '../../../Actions/Connection'
 import { version } from '../../../Library/Library'
 
 import FileController from '../../Components/FileController/FileController'
+import { Status } from '../../Components/Status/Status'
 
 import type { State } from '../../../Store/Store'
 
@@ -78,31 +79,9 @@ class Guest extends Component<Props> {
     )
   }
 
-  renderStatus() {
-    const renderError = this.props.errorState ? <div className="error-status">{this.props.errorText}</div> : false
-    return (
-      <div className="status">
-        {renderError}
-        <div className="data-channel-status">
-          <div className={this.props.dataChannelOpenStatus ? 'ok' : 'ng'}>
-            <span>
-              {this.props.dataChannelOpenStatus ? (
-                <i className="fas fa-check-circle"></i>
-              ) : (
-                <i className="fas fa-times-circle"></i>
-              )}
-            </span>
-            <label>dataChannel</label>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   render() {
     const mobileMode = this.props.mobile ? ' mobile' : ' pc'
     const tutorial = this.renderTutorial()
-    const status = this.renderStatus()
     return (
       <div className={'guest' + mobileMode}>
         <header>
@@ -114,7 +93,11 @@ class Guest extends Component<Props> {
         </header>
         <div className="main">
           {tutorial}
-          {status}
+          <Status
+            dataChannelOpenStatus={this.props.dataChannelOpenStatus}
+            errorState={this.props.errorState}
+            errorText={this.props.errorText}
+          />
           <FileController />
         </div>
         <footer>
