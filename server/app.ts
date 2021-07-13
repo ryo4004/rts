@@ -36,26 +36,9 @@ type Status = {
 
 type NeDBError = Error | null
 
+// 起動直後にデータベースをリセット
 statusDB.remove({}, { multi: true }, (err: NeDBError, numRemoved: number) => {
   console.log('[' + lib.showTime() + '] statusDB refresh: ' + numRemoved)
-})
-
-// api設定
-app.post('/api/presenter', (req, res) => {
-  const id = req.body.id
-  console.log('[' + lib.showTime() + '] api/presenter: ' + id)
-  statusDB.find({ type: 'presenter' }, (err: NeDBError, doc: Array<Status>) => {
-    res.json({ status: true, doc })
-  })
-})
-
-app.post('/api/recorder', (req, res) => {
-  const id = req.body.id
-  console.log('[' + lib.showTime() + '] api/recorder: ' + id)
-  statusDB.find({ type: 'recorder' }, (err: NeDBError, doc: Array<Status>) => {
-    if (err || !doc || doc.length === 0) return res.json({ status: true, recorder: false })
-    res.json({ status: true, recorder: true })
-  })
 })
 
 // WebSocketサーバを使用
@@ -98,9 +81,14 @@ function disableSocket(id: string) {
 }
 
 // 接続処理
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
   // URL用ID作成
   const id = lib.shuffle(lib.randomString())
+  // idの重複確認
+  const [existId] = await getSocketIDWithCheck(id)
+  if (existId) {
+    return io.to(socket.id).emit('id_error', { error: 'create_failed' })
+  }
   const reg = { status: 'connection', socketid: socket.id, id, disable: false }
   statusDB.insert(reg, (err: NeDBError) => {
     if (err) return console.log('database error')

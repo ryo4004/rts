@@ -26,12 +26,12 @@ export function getRandomString(length: number): string {
 }
 
 export function randomString(): string {
-  const character = 'abcdefghijklmnopqrstuvwxyz0123456789'
+  const character = '0123456789'
   let id = ''
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 6; i++) {
     id += character[Math.floor(Math.random() * character.length)]
   }
-  return uniqid.time() + id
+  return id
 }
 
 export function escapeReg(string: string): string {
