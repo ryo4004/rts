@@ -32,6 +32,10 @@ function mapStateToProps(state: State) {
     // ファイル送信用
     sendFileList: state.sender.sendFileList,
     sendFileStorage: state.sender.sendFileStorage,
+
+    // エラー
+    errorState: state.sender.errorState,
+    errorText: state.sender.errorText,
   }
 }
 
@@ -82,6 +86,8 @@ class Host extends Component<Props> {
           <Status
             dataChannelOpenStatus={this.props.dataChannelOpenStatus}
             selfID={this.props.selfID}
+            errorState={this.props.errorState}
+            errorText={this.props.errorText}
             mobile={this.props.mobile}
           />
           <FileController />
