@@ -81,9 +81,14 @@ function disableSocket(id: string) {
 }
 
 // 接続処理
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
   // URL用ID作成
   const id = lib.shuffle(lib.randomString())
+  // idの重複確認
+  const [existId] = await getSocketIDWithCheck(id)
+  if (existId) {
+    return io.to(socket.id).emit('id_error', { error: 'create_failed' })
+  }
   const reg = { status: 'connection', socketid: socket.id, id, disable: false }
   statusDB.insert(reg, (err: NeDBError) => {
     if (err) return console.log('database error')
