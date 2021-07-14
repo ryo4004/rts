@@ -1,5 +1,4 @@
 import { Component } from 'react'
-import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import { prepare } from '../../../Actions/Status'
@@ -77,7 +76,7 @@ class Host extends Component<Props> {
         <header>
           <div>
             <h2>
-              <Link to="/">Real-Time File Transfer</Link>
+              <a href={'https://' + window.location.host}>Real-Time File Transfer</a>
             </h2>
           </div>
         </header>

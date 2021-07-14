@@ -51,7 +51,7 @@ class Home extends Component<Props> {
         <header>
           <div>
             <h2>
-              <Link to="/">Real-Time File Transfer</Link>
+              <a href={'https://' + window.location.host}>Real-Time File Transfer</a>
             </h2>
             <span>
               <Link to="/host" onClick={() => this.onClickStartHeader()}>
