@@ -2,8 +2,10 @@ import { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import { prepare } from '../../../Actions/Status'
+import { prepare, openGuest } from '../../../Actions/Status'
 import { Footer } from '../../Components/Footer/Footer'
+
+import { InputModal } from '../../Components/InputModal/InputModal'
 
 import { mobileClass } from '../../../Library/Library'
 
@@ -24,6 +26,9 @@ function mapDispatchToProps(dispatch: any) {
   return {
     prepare() {
       dispatch(prepare())
+    },
+    openGuest(location: string) {
+      dispatch(openGuest(location))
     },
   }
 }
@@ -66,6 +71,11 @@ class Home extends Component<Props> {
                 </Link>
               </div>
             </div>
+          </div>
+          <div className="guest-input">
+            <h2>ゲストはこちらから</h2>
+            <p>6桁のIDを共有されている場合は以下に入力してください</p>
+            <InputModal replace={this.props.openGuest} />
           </div>
           <div className="guide">
             <div className={'feature' + mobileMode}>

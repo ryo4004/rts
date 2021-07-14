@@ -6,10 +6,19 @@ import type { GetState } from '../Types/Store'
 import type { SendFileInfo, ReceiveFileInfo } from '../Types/FileInfo'
 
 export const ACTION_TYPE = {
+  senderError: 'SENDER_SET_SENDER_ERROR',
   setSendFileList: 'SENDER_SET_SEND_FILE_LIST',
 } as const
 
-export type Actions = ReturnType<typeof setSendFileList>
+export type Actions = ReturnType<typeof setSendFileList | typeof senderError>
+
+export const senderError = (errorTextClient: any, errorTextServer: any) => ({
+  type: ACTION_TYPE.senderError,
+  payload: {
+    errorState: true,
+    errorText: errorTextClient + ' ' + errorTextServer,
+  },
+})
 
 function updateSendFileList(
   id: string,

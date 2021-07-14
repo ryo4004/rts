@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client'
 
-import { senderReceiveData, dataChannelOnOpen } from './Sender'
+import { senderReceiveData, dataChannelOnOpen, senderError } from './Sender'
 import { receiverReceiveData, receiverError } from './Receiver'
 
 import type { Dispatch } from 'redux'
@@ -92,6 +92,11 @@ export const senderConnect = () => {
     const socket = io('https://' + window.location.host + '/', { secure: true })
     socket.on('connect', () => {
       dispatch(setSocket(socket))
+    })
+    // id_errorに対するエラー(id登録に失敗)
+    socket.on('id_error', (obj) => {
+      console.error('id_error', obj.error)
+      dispatch(senderError('id_error', obj.error))
     })
     // 受信 connection_complete で自分のIDを取得
     socket.on('connection_complete', (obj: any) => {
@@ -221,6 +226,11 @@ export const receiverConnect = (senderSocketID: string) => {
     socket.on('connect', () => {
       dispatch(setSocket(socket))
     })
+    // id_errorに対するエラー(id登録に失敗)
+    socket.on('id_error', (obj) => {
+      console.error('id_error', obj.error)
+      dispatch(receiverError('id_error', obj.error))
+    })
     // connection_complete で自分のIDを取得
     socket.on('connection_complete', async (obj) => {
       dispatch(loading(false))
@@ -235,7 +245,6 @@ export const receiverConnect = (senderSocketID: string) => {
         // console.error('request_to_sender_error', obj.error)
         dispatch(receiverError('request_to_sender_error', obj.error))
       })
-
       // peerConnectionを作成
       peerConnection = new RTCPeerConnection({
         iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],

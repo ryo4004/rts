@@ -52,6 +52,24 @@
       }
     }
 
+    .guest-input {
+      width: 100%;
+      max-width: 600px;
+      margin: 20px auto;
+
+      h2 {
+        font-size: 14px;
+        text-align:center;
+      }
+
+      p {
+        margin: 2px 0;
+        text-align: center;
+        color: #666;
+        font-size: 12px;
+      }
+    }
+
     .guide {
       width: 95%;
       max-width: 600px;

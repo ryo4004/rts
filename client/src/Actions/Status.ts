@@ -1,3 +1,5 @@
+import { push } from 'react-router-redux'
+
 import { divisionWidth } from '../Library/Library'
 
 import type { Dispatch } from 'redux'
@@ -57,3 +59,9 @@ const setAvailable = (available: boolean) => ({
   type: ACTION_TYPE.setAvailable,
   payload: { available },
 })
+
+export const openGuest = (location: string) => {
+  return (dispatch: Dispatch) => {
+    dispatch(push(location))
+  }
+}

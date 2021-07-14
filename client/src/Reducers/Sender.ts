@@ -8,6 +8,9 @@ export type SenderState = {
 
   sendFileList: Array<SendFileInfo>
   sendFileStorage: object // 使用しているか確認する
+
+  errorState: boolean | undefined
+  errorText: any | undefined
 }
 
 const initialState: SenderState = {
@@ -16,6 +19,9 @@ const initialState: SenderState = {
   // 追加されたファイルと状態の管理
   sendFileList: [],
   sendFileStorage: {},
+
+  errorState: undefined,
+  errorText: undefined,
 }
 
 export default function senderReducer(state = initialState, action: Actions): SenderState {
@@ -24,6 +30,12 @@ export default function senderReducer(state = initialState, action: Actions): Se
       return {
         ...state,
         sendFileList: action.payload.sendFileList,
+      }
+    case ACTION_TYPE.senderError:
+      return {
+        ...state,
+        errorState: action.payload.errorState,
+        errorText: action.payload.errorText,
       }
     default:
       return state

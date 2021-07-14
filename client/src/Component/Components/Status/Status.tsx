@@ -11,8 +11,8 @@ export const Status = ({
 }: {
   dataChannelOpenStatus: boolean | null
   selfID?: string | null
-  errorState?: boolean
-  errorText?: string
+  errorState: boolean | undefined
+  errorText: string | undefined
   mobile: boolean
 }) => {
   const url = selfID ? 'https://' + window.location.host + '/' + selfID : '生成中...'
@@ -22,7 +22,7 @@ export const Status = ({
   return (
     <div className={'status' + mobileClass(mobile)}>
       {errorState && <div className="error-status">{errorText}</div>}
-      {selfID && dataChannelOpenStatus === null && (
+      {!errorState && selfID && dataChannelOpenStatus === null && (
         <>
           <div className="url">
             <span>共有URL</span>
