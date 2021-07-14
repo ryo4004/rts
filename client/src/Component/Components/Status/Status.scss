@@ -21,6 +21,32 @@
     text-align: center;
   }
 
+  .selfid {
+    display: flex;
+    align-items: center;
+    margin: 8px 0 0;
+
+    label {
+      display: inline-block;
+      margin-right: 8px;
+      padding: 2px 8px 2px 6px;
+      border-radius: 8px 0 0 8px;
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    span {
+      font-size: 24px;
+      letter-spacing: 8px;
+    }
+  }
+
+  span.id-guide {
+    display: inline-block;
+    margin-bottom: 12px;
+    font-size: 0.6em;
+    color: #666;
+  }
+
   .url {
     font-size: 14px;
 

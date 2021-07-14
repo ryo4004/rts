@@ -24,6 +24,11 @@ export const Status = ({
       {errorState && <div className="error-status">{errorText}</div>}
       {!errorState && selfID && dataChannelOpenStatus === null && (
         <>
+          <div className="selfid">
+            <label>あなたのID</label>
+            <span>{selfID}</span>
+          </div>
+          <span className="id-guide">接続先でこのIDを指定してください</span>
           <div className="url">
             <span>共有URL</span>
             <div onClick={(e) => copy(e, url)} className="copy-button">
