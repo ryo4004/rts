@@ -72,7 +72,11 @@ class Home extends Component<Props> {
               </div>
             </div>
           </div>
-          <InputModal replace={this.props.openGuest} />
+          <div className="guest-input">
+            <h2>ゲストはこちらから</h2>
+            <p>6桁のIDを共有されている場合は以下に入力してください</p>
+            <InputModal replace={this.props.openGuest} />
+          </div>
           <div className="guide">
             <div className={'feature' + mobileMode}>
               <div>

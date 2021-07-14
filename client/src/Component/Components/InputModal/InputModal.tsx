@@ -27,7 +27,8 @@ class Input extends Component<InputProps, InputState> {
 
   componentDidMount() {
     if (this.inputRef) {
-      this.inputRef.current?.focus()
+      // とりあえずfocusはしない
+      // this.inputRef.current?.focus()
     }
   }
 
