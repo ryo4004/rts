@@ -1,4 +1,3 @@
-import uniqid from 'uniqid'
 import crypto from 'crypto'
 
 export const noop = (): void => void 0
