@@ -3,7 +3,7 @@ import uniqid from 'uniqid'
 export const GA_ID = 'G-4QY92612LZ'
 
 export const appName = 'real-time-file-transfer'
-export const version = '1.2.1'
+export const version = process.env.REACT_APP_VERSION
 
 export const divisionWidth = 960
 
