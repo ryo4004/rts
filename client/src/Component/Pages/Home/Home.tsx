@@ -65,11 +65,6 @@ class Home extends Component<Props> {
             <div>
               <h1>リアルタイムファイル転送サービス</h1>
               <p>WebRTCを利用したファイル転送サービスです</p>
-              <div>
-                <Link to="/host" onClick={() => this.onClickStart()}>
-                  はじめる
-                </Link>
-              </div>
             </div>
           </div>
           <div className="start">
@@ -89,11 +84,6 @@ class Home extends Component<Props> {
                 <InputModal replace={this.props.openGuest} />
               </div>
             </div>
-          </div>
-          <div className="guest-input">
-            <h2>ゲストはこちらから</h2>
-            <p>6桁のIDを共有されている場合は以下に入力してください</p>
-            <InputModal replace={this.props.openGuest} />
           </div>
           <div className="guide">
             <div className={'feature' + mobileMode}>

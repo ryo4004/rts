@@ -26,29 +26,6 @@
           padding: 0;
           text-align: center;
         }
-
-        & > div {
-          margin: 24px auto 0;
-          text-align: center;
-
-          a {
-            display: inline-block;
-            margin: 0;
-            padding: 6px 96px;
-            border: 2px #fff solid;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 14px;
-            font-weight: bold;
-            background: rgba(255, 255, 255, 0);
-            transition: all 0.2s ease-out 0s;
-            text-decoration: none;
-
-            &:hover {
-              background: rgba(56, 128, 255, 0.2);
-            }
-          }
-        }
       }
     }
 
@@ -176,24 +153,6 @@
           color: #666;
           font-size: 14px;
         }
-      }
-    }
-
-    .guest-input {
-      width: 100%;
-      max-width: 600px;
-      margin: 20px auto;
-
-      h2 {
-        font-size: 14px;
-        text-align: center;
-      }
-
-      p {
-        margin: 2px 0;
-        text-align: center;
-        color: #666;
-        font-size: 12px;
       }
     }
 
