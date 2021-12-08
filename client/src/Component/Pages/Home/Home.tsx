@@ -133,7 +133,7 @@ class Home extends Component<Props> {
                 </div>
                 <h3>Security</h3>
                 <p>
-                  WebRTC DataChannel の通信はSSLを使用したDTLSにより暗号化されます。
+                  WebRTC DataChannel の通信はDTLSにより暗号化されます。
                   <br />
                   これによりデータの改竄や盗聴などの中間者攻撃を防止します。
                 </p>
