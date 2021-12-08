@@ -6,11 +6,11 @@ import createRootReducer from './Store/Store'
 // import logger from 'redux-logger'
 import thunk from 'redux-thunk'
 
-import Main from './Component/Main/Main'
+import Main from './Component/Pages/Main'
 import { routerMiddleware, ConnectedRouter } from 'connected-react-router'
 
 const history = createBrowserHistory()
-const store = createStore(
+export const store = createStore(
   createRootReducer(history),
   compose(
     applyMiddleware(

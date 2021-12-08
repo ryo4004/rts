@@ -1,5 +1,5 @@
 import express from 'express'
-import NeDB from 'nedb'
+import NeDB from '@seald-io/nedb'
 import path from 'path'
 import { createServer as createServerHttps } from 'https'
 import { createServer as createServerHttp } from 'http'
@@ -27,10 +27,6 @@ const statusDB = new NeDB({
   timestampData: true,
 })
 
-statusDB.remove({}, { multi: true }, (err, numRemoved) => {
-  console.log('[' + lib.showTime() + '] statusDB refresh: ' + numRemoved)
-})
-
 type Status = {
   status: string
   socketid: string
@@ -38,22 +34,11 @@ type Status = {
   disable: boolean
 }
 
-// api設定
-app.post('/api/presenter', (req, res) => {
-  const id = req.body.id
-  console.log('[' + lib.showTime() + '] api/presenter: ' + id)
-  statusDB.find({ type: 'presenter' }, (err: unknown, doc: Array<Status>) => {
-    res.json({ status: true, doc })
-  })
-})
+type NeDBError = Error | null
 
-app.post('/api/recorder', (req, res) => {
-  const id = req.body.id
-  console.log('[' + lib.showTime() + '] api/recorder: ' + id)
-  statusDB.find({ type: 'recorder' }, (err: unknown, doc: Array<Status>) => {
-    if (err || !doc || doc.length === 0) return res.json({ status: true, recorder: false })
-    res.json({ status: true, recorder: true })
-  })
+// 起動直後にデータベースをリセット
+statusDB.remove({}, { multi: true }, (err: NeDBError, numRemoved: number) => {
+  console.log('[' + lib.showTime() + '] statusDB refresh: ' + numRemoved)
 })
 
 // WebSocketサーバを使用
@@ -66,7 +51,7 @@ const io = new Server(server)
 
 const getSocketID = (id: string): Promise<[string, null] | [null, string]> => {
   return new Promise((resolve) => {
-    statusDB.findOne({ id }, (err, status) => {
+    statusDB.findOne({ id }, (err: NeDBError, status: Status) => {
       if (err) return resolve([null, 'id error'])
       if (!status) return resolve([null, 'id error'])
       return resolve([status.socketid, null])
@@ -76,7 +61,7 @@ const getSocketID = (id: string): Promise<[string, null] | [null, string]> => {
 
 const getSocketIDWithCheck = (id: string): Promise<[string, null] | [null, string]> => {
   return new Promise((resolve) => {
-    statusDB.findOne({ id }, (err, status) => {
+    statusDB.findOne({ id }, (err: NeDBError, status: Status) => {
       if (err) return resolve([null, 'id error'])
       if (!status) return resolve([null, 'id error'])
       if (status.disable === true) return resolve([null, 'id error'])
@@ -86,7 +71,7 @@ const getSocketIDWithCheck = (id: string): Promise<[string, null] | [null, strin
 }
 
 function disableSocket(id: string) {
-  statusDB.findOne({ id }, (err, status) => {
+  statusDB.findOne({ id }, (err: NeDBError, status: Status) => {
     if (!status) return
     status.disable = true
     statusDB.update({ id }, status, {}, () => {
@@ -96,11 +81,16 @@ function disableSocket(id: string) {
 }
 
 // 接続処理
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
   // URL用ID作成
   const id = lib.shuffle(lib.randomString())
+  // idの重複確認
+  const [existId] = await getSocketIDWithCheck(id)
+  if (existId) {
+    return io.to(socket.id).emit('id_error', { error: 'create_failed' })
+  }
   const reg = { status: 'connection', socketid: socket.id, id, disable: false }
-  statusDB.insert(reg, (err) => {
+  statusDB.insert(reg, (err: NeDBError) => {
     if (err) return console.log('database error')
     // id を通知
     io.to(socket.id).emit('connection_complete', { id })
@@ -144,10 +134,10 @@ io.on('connection', (socket) => {
 
   // 接続解除
   socket.on('disconnecting', (reason) => {
-    statusDB.findOne({ socketid: socket.id }, (err, status) => {
+    statusDB.findOne({ socketid: socket.id }, (err: NeDBError, status: Status) => {
       if (err) return console.log('database error: findOneエラー')
       if (!status) return console.log(socket.id + ' not found')
-      statusDB.remove({ socketid: socket.id }, { multi: false }, (err, numRemoved) => {
+      statusDB.remove({ socketid: socket.id }, { multi: false }, (err: NeDBError, numRemoved: number) => {
         if (err || !numRemoved) return console.log('database error: removeエラー')
         console.log('(socket)[' + lib.showTime() + '] disconnect complete: ' + socket.id, reason)
       })

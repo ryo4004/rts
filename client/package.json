@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "1.2.1",
+  "version": "2.0.0",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
@@ -16,6 +16,7 @@
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.4",
     "react-router-dom": "^5.2.0",
+    "react-router-redux": "^4.0.8",
     "react-scripts": "4.0.3",
     "redux": "^4.1.0",
     "redux-logger": "^3.0.6",
@@ -26,7 +27,9 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
+    "prestart": "echo REACT_APP_VERSION=$npm_package_version > .env",
     "start": "react-scripts start",
+    "prebuild": "echo REACT_APP_VERSION=$npm_package_version > .env",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -56,6 +59,7 @@
     "@types/history": "^4.7.8",
     "@types/react-redux": "^7.1.16",
     "@types/react-router-dom": "^5.1.7",
+    "@types/react-router-redux": "^5.0.19",
     "@types/redux-thunk": "^2.1.0",
     "@types/socket.io-client": "^3.0.0",
     "@types/superagent": "^4.1.11",

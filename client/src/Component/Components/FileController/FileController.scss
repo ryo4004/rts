@@ -3,15 +3,68 @@
   max-width: 600px;
   margin: 0 auto;
 
+  &.pc {
+    display: flex;
+    flex-direction: row;
+    max-width: 940px;
+  }
+
   .file-send {
     margin: 24px 0;
-    padding: 8px 24px 24px;
+    padding: 8px 24px 0;
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.5);
+
+    &.pc {
+      flex: 1;
+      margin-right: 12px;
+    }
 
     label {
       color: #333;
       font-size: 14px;
+    }
+
+    button.send-button {
+      display: block;
+      width: 100%;
+      margin: 12px auto;
+      padding: 8px 0;
+      border: 0.55px solid #fff;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0);
+      // 084 Phoenix Start
+      // background-image: linear-gradient(to right, #f83600 0%, #f9d423 100%);
+      // 102 Happy Memories
+      background-image: linear-gradient(-60deg, #ff5858 0%, #f09819 100%);
+
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease-in-out;
+      box-sizing: border-box;
+
+      &:hover {
+        // background: rgba(255,255,255,.1);
+        // 102 Happy Memories
+        // background-image: linear-gradient(-60deg, #ff5858 0%, #f09819 100%);
+        color: #eee;
+        opacity: 0.8;
+      }
+
+      &.disable {
+        border-color: rgba(255, 255, 255, 0.6);
+        background: rgba(255, 255, 255, 0);
+        color: rgba(255, 255, 255, 0.6);
+        cursor: default;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0);
+          color: rgba(255, 255, 255, 0.6);
+        }
+      }
     }
 
     .file-input {
@@ -57,53 +110,11 @@
       }
     }
 
-    button.send-button {
-      display: block;
-      width: 100%;
-      margin: 0 auto;
-      padding: 8px 0;
-      border: 2px solid #fff;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0);
-      // 084 Phoenix Start
-      // background-image: linear-gradient(to right, #f83600 0%, #f9d423 100%);
-      // 102 Happy Memories
-      background-image: linear-gradient(-60deg, #ff5858 0%, #f09819 100%);
-
-      color: #fff;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.2s ease-in-out;
-      box-sizing: border-box;
-
-      &:hover {
-        // background: rgba(255,255,255,.1);
-        // 102 Happy Memories
-        // background-image: linear-gradient(-60deg, #ff5858 0%, #f09819 100%);
-        color: #eee;
-        opacity: 0.8;
-      }
-
-      &.disable {
-        border-color: rgba(255, 255, 255, 0.6);
-        background: rgba(255, 255, 255, 0);
-        color: rgba(255, 255, 255, 0.6);
-        cursor: default;
-
-        &:hover {
-          background: rgba(255, 255, 255, 0);
-          color: rgba(255, 255, 255, 0.6);
-        }
-      }
-    }
-
     ul.send-file-list {
       width: 100%;
       max-width: 600px;
       margin: 0 auto;
-      padding: 0;
+      padding: 0 0 16px;
       list-style: none;
 
       li {
@@ -356,7 +367,8 @@
     }
 
     .no-file {
-      margin: 24px auto;
+      margin: 24px auto 0;
+      padding: 0 0 24px;
       font-size: 14px;
       text-align: center;
       color: #666;
@@ -387,9 +399,14 @@
 
   .file-receive {
     margin: 24px 0;
-    padding: 8px 24px 24px;
+    padding: 8px 24px 0;
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.5);
+
+    &.pc {
+      flex: 1;
+      margin-left: 12px;
+    }
 
     label {
       color: #333;
@@ -410,7 +427,7 @@
       width: 100%;
       max-width: 600px;
       margin: 0 auto;
-      padding: 0;
+      padding: 0 0 16px;
       list-style: none;
 
       li {
@@ -642,8 +659,11 @@
     }
 
     .no-file {
+      margin: 24px auto 0;
+      padding: 0 0 24px;
       font-size: 14px;
       text-align: center;
+      color: #666;
 
       p {
         margin: 0;

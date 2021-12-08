@@ -3,9 +3,17 @@ import uniqid from 'uniqid'
 export const GA_ID = 'G-4QY92612LZ'
 
 export const appName = 'real-time-file-transfer'
-export const version = '1.2.1'
+export const version = process.env.REACT_APP_VERSION
 
 export const divisionWidth = 960
+
+// 定数
+// ファイルIDは16文字
+export const ID_LENGTH = 16
+// 終了フラグサイズ
+export const FLAG_LENGTH = 1
+// 1つのpacketは16KB以下にする
+export const PACKET_SIZE = 1024 * 16 - FLAG_LENGTH - ID_LENGTH
 
 // // yyyy-mm-ddThh:mm:ss.sssZ
 // export function getDate (str) {
@@ -122,5 +130,7 @@ export function bufferToString(buffer: any) {
   // @ts-ignore
   return String.fromCharCode.apply('', new Uint8Array(buffer))
 }
+
+export const mobileClass = (mobile: boolean) => (mobile ? ' mobile' : ' pc')
 
 export const noop = () => void 0

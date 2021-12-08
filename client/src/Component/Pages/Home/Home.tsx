@@ -1,12 +1,13 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { Link } from 'react-router-dom'
-
 import { connect } from 'react-redux'
 
-import { prepare } from '../../../Actions/Status'
-import { version } from '../../../Library/Library'
+import { prepare, openGuest } from '../../../Actions/Status'
+import { Footer } from '../../Components/Footer/Footer'
 
-import Profile from '../../../Assets/profile-pic.jpg'
+import { InputModal } from '../../Components/InputModal/InputModal'
+
+import { mobileClass } from '../../../Library/Library'
 
 import type { State } from '../../../Store/Store'
 
@@ -26,6 +27,9 @@ function mapDispatchToProps(dispatch: any) {
     prepare() {
       dispatch(prepare())
     },
+    openGuest(location: string) {
+      dispatch(openGuest(location))
+    },
   }
 }
 
@@ -41,13 +45,13 @@ class Home extends Component<Props> {
     window.gtag('event', 'click_button_start')
   }
   render() {
-    const mobileMode = this.props.mobile ? ' mobile' : ' pc'
+    const mobileMode = mobileClass(this.props.mobile)
     return (
       <div className={'home' + mobileMode}>
         <header>
           <div>
             <h2>
-              <Link to="/">Real-Time File Transfer</Link>
+              <a href={'https://' + window.location.host}>Real-Time File Transfer</a>
             </h2>
             <span>
               <Link to="/host" onClick={() => this.onClickStartHeader()}>
@@ -61,14 +65,27 @@ class Home extends Component<Props> {
             <div>
               <h1>リアルタイムファイル転送サービス</h1>
               <p>WebRTCを利用したファイル転送サービスです</p>
+            </div>
+          </div>
+          <div className="start">
+            <div className="host">
               <div>
+                <h2>新しく部屋を作る</h2>
+                <div className="text">　</div>
                 <Link to="/host" onClick={() => this.onClickStart()}>
-                  はじめる
+                  新しい接続をはじめる
                 </Link>
               </div>
             </div>
+            <div className="guest">
+              <div>
+                <h2>部屋に参加する</h2>
+                <div className="text">共有された6桁のIDを入力してください</div>
+                <InputModal replace={this.props.openGuest} />
+              </div>
+            </div>
           </div>
-          <div className="tutorial">
+          <div className="guide">
             <div className={'feature' + mobileMode}>
               <div>
                 <div className="icon">
@@ -165,29 +182,13 @@ class Home extends Component<Props> {
               <li>共有URLをファイルを共有する相手に通知します</li>
               <li>自動的に相手との間にP2P接続を試みます</li>
               <li>
-                相手との間に接続が確立するとdataChannelマークが<i className="fas fa-check-circle"></i>になります
+                相手との間に接続が確立すると接続マークが<i className="fas fa-check-circle"></i>になります
               </li>
               <li>ファイルを追加して送信ボタンを押すとファイルを送信できます</li>
             </ol>
           </div>
         </div>
-        <footer>
-          <div className="title">
-            <h2>
-              <Link to="/">Real-Time File Transfer</Link>
-              <span className="version">{version}</span>
-            </h2>
-          </div>
-          <div className="author">
-            <img src={Profile} alt="profile" />
-            <p>
-              akanewz
-              <a href="https://twitter.com/akanewz" target="_blank" rel="noreferrer">
-                <i className="fab fa-twitter"></i>
-              </a>
-            </p>
-          </div>
-        </footer>
+        <Footer author={true} />
       </div>
     )
   }

@@ -1,6 +1,6 @@
 {
   "name": "rts",
-  "version": "1.2.1",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -23,14 +23,13 @@
   },
   "homepage": "https://github.com/ryo4004/rts#readme",
   "dependencies": {
+    "@seald-io/nedb": "^2.0.3",
     "express": "^4.17.1",
-    "nedb": "^1.8.0",
     "socket.io": "^4.1.2",
     "uniqid": "^5.3.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.12",
-    "@types/nedb": "^1.8.11",
     "@types/node": "^15.12.4",
     "@types/uniqid": "^5.3.0",
     "@typescript-eslint/eslint-plugin": "^4.28.0",

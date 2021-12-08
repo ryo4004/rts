@@ -20,6 +20,7 @@ export interface State {
   connection: ConnectionState
   sender: SenderState
   receiver: ReceiverState
+  router: any
 }
 
 // historyはsrc/App.jsから渡す
