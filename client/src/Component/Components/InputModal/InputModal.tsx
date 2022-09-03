@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import './InputModal.scss'
 
 export const InputModal = ({ replace }: { replace: (location: string) => void }) => {
@@ -15,20 +15,10 @@ type InputState = {
 }
 
 class Input extends Component<InputProps, InputState> {
-  private inputRef = React.createRef<HTMLInputElement>()
-
   constructor(props: InputProps) {
     super(props)
-    this.inputRef = React.createRef()
     this.state = {
       input: '',
-    }
-  }
-
-  componentDidMount() {
-    if (this.inputRef) {
-      // とりあえずfocusはしない
-      // this.inputRef.current?.focus()
     }
   }
 
@@ -44,7 +34,6 @@ class Input extends Component<InputProps, InputState> {
     return (
       <div className="input">
         <input
-          ref={this.inputRef}
           value={this.state.input}
           onChange={(e) => this.setState({ input: e.target.value })}
           type="number"
