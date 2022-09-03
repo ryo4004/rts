@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import { prepare, openGuest } from '../../../Actions/Status'
+import { Header } from '../../Components/Header/Header'
 import { Footer } from '../../Components/Footer/Footer'
 
 import { InputModal } from '../../Components/InputModal/InputModal'
@@ -40,26 +41,17 @@ class Home extends Component<Props> {
     if (!window.gtag) return false
     window.gtag('event', 'click_button_start_header')
   }
+
   onClickStart = () => {
     if (!window.gtag) return false
     window.gtag('event', 'click_button_start')
   }
+
   render() {
     const mobileMode = mobileClass(this.props.mobile)
     return (
       <div className={'home' + mobileMode}>
-        <header>
-          <div>
-            <h2>
-              <a href={'https://' + window.location.host}>Real-Time File Transfer</a>
-            </h2>
-            <span>
-              <Link to="/host" onClick={() => this.onClickStartHeader()}>
-                はじめる
-              </Link>
-            </span>
-          </div>
-        </header>
+        <Header onClickHeader={() => this.onClickStartHeader()} />
         <div className="main">
           <div className="title">
             <div>
