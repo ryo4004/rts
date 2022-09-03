@@ -5,6 +5,7 @@ import { prepare } from '../../../Actions/Status'
 import { receiverConnect, disconnect } from '../../../Actions/Connection'
 
 import FileController from '../../Components/FileController/FileController'
+import { Header } from '../../Components/Header/Header'
 import { Tutorial } from '../../Components/Tutorial/Tutorial'
 import { Status } from '../../Components/Status/Status'
 import { Footer } from '../../Components/Footer/Footer'
@@ -70,13 +71,7 @@ class Guest extends Component<Props> {
     const mobileMode = mobileClass(this.props.mobile)
     return (
       <div className={'guest' + mobileMode}>
-        <header>
-          <div>
-            <h2>
-              <a href={'https://' + window.location.host}>Real-Time File Transfer</a>
-            </h2>
-          </div>
-        </header>
+        <Header />
         <div className="main">
           <Tutorial isHost={false} mobile={this.props.mobile} />
           <Status

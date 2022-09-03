@@ -178,18 +178,6 @@ class FileController extends Component<Props> {
           : each.receiveResult
           ? 'complete'
           : 'failed'
-      const sendProgress = each.send ? { backgroundSize: each.send + '% 100%' } : { backgroundSize: '0% 100%' }
-      const progressBar = () => {
-        return (
-          <div
-            className={
-              'send-progress-bar' + (each.send === null ? ' standby' : each.receiveComplete ? ' complete' : ' sending')
-            }
-          >
-            <div className="send-progress" style={sendProgress}></div>
-          </div>
-        )
-      }
 
       return (
         <li key={'filelist-' + i} className="send-filelist">
@@ -212,7 +200,10 @@ class FileController extends Component<Props> {
                 <span>{fileSize}</span>
                 <span>{count}</span>
               </div>
-              {progressBar()}
+              <ProgressBar
+                className={each.send === null ? ' standby' : each.receiveComplete ? ' complete' : ' sending'}
+                progressStyle={each.send ? { backgroundSize: each.send + '% 100%' } : { backgroundSize: '0% 100%' }}
+              />
             </div>
           </div>
         </li>
@@ -309,25 +300,12 @@ class FileController extends Component<Props> {
         ) : (
           <div className="receive-percent complete">{each.receive + '%'}</div>
         )
-      const receiveProgress = each.receive ? { backgroundSize: each.receive + '% 100%' } : { backgroundSize: '0% 100%' }
       const count =
         each.receive === null
           ? false
           : each.receiveResult === false
           ? each.receivePacketCount + '/' + each.sendTime
           : false
-      const progressBar = () => {
-        return (
-          <div
-            className={
-              'receive-progress-bar' +
-              (each.receive === null ? ' standby' : each.receive !== 100 ? ' receiving' : ' complete')
-            }
-          >
-            <div className="receive-progress" style={receiveProgress}></div>
-          </div>
-        )
-      }
 
       return (
         <li key={'filelist-' + i} className="receive-filelist">
@@ -345,7 +323,12 @@ class FileController extends Component<Props> {
                 <span>{fileSize}</span>
                 <span>{count}</span>
               </div>
-              {progressBar()}
+              <ProgressBar
+                className={each.receive === null ? ' standby' : each.receive !== 100 ? ' receiving' : ' complete'}
+                progressStyle={
+                  each.receive ? { backgroundSize: each.receive + '% 100%' } : { backgroundSize: '0% 100%' }
+                }
+              />
             </div>
           </div>
         </li>
@@ -382,6 +365,20 @@ class FileController extends Component<Props> {
       </div>
     )
   }
+}
+
+const ProgressBar = ({
+  className,
+  progressStyle,
+}: {
+  className: string
+  progressStyle: { backgroundSize: string }
+}) => {
+  return (
+    <div className={'progress-bar' + className}>
+      <div className="progress" style={progressStyle}></div>
+    </div>
+  )
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(FileController)

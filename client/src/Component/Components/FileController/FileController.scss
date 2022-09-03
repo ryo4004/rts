@@ -255,65 +255,8 @@
                 }
               }
 
-              .send-progress-bar {
-                position: relative;
-                margin: 0;
-                padding: 0;
-
-                &.standby {
-                  opacity: 0;
-                }
-
-                &.sending {
-                  // transition: all .1s ease-in-out 0s;
-                }
-
-                &.complete {
-                  opacity: 0;
-                  background: rgba(255, 255, 255, 0.8);
-                  transition: all 0.5s ease-in-out 0s;
-                }
-
-                .send-progress {
-                  position: absolute;
-                  top: 0;
-                  left: 0;
-                  width: 100%;
-                  height: 4px;
-                  border-radius: 2px;
-                  z-index: 2;
-                  background: linear-gradient(rgba(3, 213, 250, 1), rgba(3, 213, 250, 1)) no-repeat
-                    rgba(255, 255, 255, 0.8);
-                  background-size: 0% 100%;
-                }
-
-                // .load-progress {
-                //   position: absolute;
-                //   top: 0;
-                //   left: 0;
-                //   width: 100%;
-                //   height: 4px;
-                //   border-radius: 2px;
-                //   z-index: 1;
-                //   background: linear-gradient(rgba(255,255,255,.8),rgba(255,255,255,.8)) no-repeat rgba(255,255,255,.2);
-                //   background-size: 0% 100%;
-                // }
-              }
+              // progress-bar
             }
-
-            // .delete {
-            //   width: 48px;
-            //   margin-left: 32px;
-
-            //   display: flex;
-            //   justify-content: center;
-            //   align-items: center;
-
-            //   i {
-            //     color: #888;
-            //     font-size: 12px;
-            //   }
-            // }
           }
         }
 
@@ -555,38 +498,7 @@
                 }
               }
 
-              .receive-progress-bar {
-                position: relative;
-                margin: 0;
-                padding: 0;
-
-                &.standby {
-                  opacity: 0;
-                }
-
-                &.receiving {
-                  // transition: all .1s ease-in-out 0s;
-                }
-
-                &.complete {
-                  opacity: 0;
-                  background: rgba(255, 255, 255, 0.8);
-                  transition: all 0.5s ease-in-out 0s;
-                }
-
-                .receive-progress {
-                  position: absolute;
-                  top: 0;
-                  left: 0;
-                  width: 100%;
-                  height: 4px;
-                  border-radius: 2px;
-                  z-index: 2;
-                  background: linear-gradient(rgba(3, 213, 250, 1), rgba(3, 213, 250, 1)) no-repeat
-                    rgba(255, 255, 255, 0.8);
-                  background-size: 0% 100%;
-                }
-              }
+              // progress-bar
             }
           }
         }
@@ -686,5 +598,37 @@
     //     opacity: .6;
     //   }
     // }
+  }
+
+  .progress-bar {
+    position: relative;
+    margin: 0;
+    padding: 0;
+
+    &.standby {
+      opacity: 0;
+    }
+
+    &.sending &.receiving {
+      transition: all 0.1s ease-in-out 0s;
+    }
+
+    &.complete {
+      opacity: 0;
+      background: rgba(255, 255, 255, 0.8);
+      transition: all 0.5s ease-in-out 0s;
+    }
+
+    .progress {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      border-radius: 2px;
+      z-index: 2;
+      background: linear-gradient(rgba(3, 213, 250, 1), rgba(3, 213, 250, 1)) no-repeat rgba(255, 255, 255, 0.8);
+      background-size: 0% 100%;
+    }
   }
 }
