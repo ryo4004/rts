@@ -132,5 +132,6 @@ export function bufferToString(buffer: any) {
 }
 
 export const mobileClass = (mobile: boolean) => (mobile ? ' mobile' : ' pc')
+export type MobileClassType = ' mobile' | ' pc'
 
 export const noop = () => void 0
